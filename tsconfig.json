@@ -1,23 +1,24 @@
 {
   "compilerOptions": {
-    // 언어 / 모듈
+    // Language / module (언어 / 모듈)
     "target": "es2024",
     "lib": ["es2024"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "types": ["node"],
 
+    // Use .ts extensions in imports → works with both plain node and the tsc build
     // import 경로에 .ts 확장자 사용 → node 직접 실행과 tsc 빌드 모두 동작
     "rewriteRelativeImportExtensions": true,
     "verbatimModuleSyntax": true,
 
-    // 엄격 모드
+    // Strict mode (엄격 모드)
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
 
-    // 출력 / 디버깅
+    // Output / debugging (출력 / 디버깅)
     "rootDir": ".",
     "outDir": "dist",
     "sourceMap": true,

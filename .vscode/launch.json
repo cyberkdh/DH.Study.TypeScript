@@ -1,11 +1,14 @@
 {
+  // Run with F5. Open the .ts file to debug in the editor, then pick a configuration.
   // F5 로 실행. 디버깅할 .ts 파일을 에디터에서 열어 둔 상태에서 구성(Configuration)을 선택한다.
   "version": "0.2.0",
   "configurations": [
     {
-      // 1) Node.js 타입 제거(Type Stripping)로 .ts 를 바로 실행 - 빌드 불필요, 가장 빠름
+      // 1) Run .ts directly with Node.js type stripping - no build, fastest
+      //    Node.js 타입 제거(Type Stripping)로 .ts 를 바로 실행 - 빌드 불필요, 가장 빠름
+      //    Syntax that generates runtime code (enum / namespace) is not supported → use 3)
       //    enum / namespace 등 런타임 코드를 만드는 문법은 지원하지 않음 → 3) 사용
-      "name": "① 현재 TS 파일 (Node 직접 실행)",
+      "name": "① Current TS file (Node directly)",
       "type": "node",
       "request": "launch",
       "program": "${file}",
@@ -14,8 +17,9 @@
       "skipFiles": ["<node_internals>/**"]
     },
     {
-      // 2) tsc 로 빌드한 JS 를 실행하고 소스맵(Source Map)으로 .ts 에 중단점(Breakpoint) 매핑
-      "name": "② 현재 TS 파일 (tsc 빌드 후 실행)",
+      // 2) Run the JS built by tsc; source maps map breakpoints back to .ts
+      //    tsc 로 빌드한 JS 를 실행하고 소스맵(Source Map)으로 .ts 에 중단점(Breakpoint) 매핑
+      "name": "② Current TS file (tsc build, then run)",
       "type": "node",
       "request": "launch",
       "preLaunchTask": "tsc: build",
@@ -27,8 +31,9 @@
       "skipFiles": ["<node_internals>/**"]
     },
     {
-      // 3) tsx 로 실행 - enum, namespace, 파라미터 프로퍼티 등 모든 TS 문법 지원
-      "name": "③ 현재 TS 파일 (tsx)",
+      // 3) Run with tsx - supports all TS syntax (enum, namespace, parameter properties, ...)
+      //    tsx 로 실행 - enum, namespace, 파라미터 프로퍼티 등 모든 TS 문법 지원
+      "name": "③ Current TS file (tsx)",
       "type": "node",
       "request": "launch",
       "program": "${file}",
@@ -38,8 +43,9 @@
       "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
     },
     {
-      // 4) 명령줄에서 `node --inspect-brk 파일.ts` 로 띄운 프로세스에 연결(Attach)
-      "name": "④ 실행 중인 Node 에 연결 (Attach :9229)",
+      // 4) Attach to a process started with `node --inspect-brk file.ts`
+      //    명령줄에서 `node --inspect-brk 파일.ts` 로 띄운 프로세스에 연결(Attach)
+      "name": "④ Attach to running Node (Attach :9229)",
       "type": "node",
       "request": "attach",
       "port": 9229,

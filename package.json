@@ -2,7 +2,7 @@
   "name": "dh-study-typescript",
   "version": "0.1.0",
   "private": true,
-  "description": "TypeScript 공부 기록 (DH.Study.TypeScript)",
+  "description": "TypeScript study lessons, building a developer calculator (DevCalc)",
   "license": "MIT",
   "author": "CYBERKDH",
   "type": "module",

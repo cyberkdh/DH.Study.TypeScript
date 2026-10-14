@@ -1,174 +1,176 @@
-**한국어** · [English](README.en.md)
+**English** · [한국어](README.ko.md)
 
-[← 이전: 00. 개발 환경 구성](../00-setup/README.md) · [목차](../../README.md) · 다음: 02. 함수와 객체 (준비 중)
+[← Previous: 00. Development Setup](../00-setup/README.md) · [Contents](../../README.md) · Next: 02. Functions and Objects (coming soon)
 
-# 01. 기본 타입과 bigint — 진법 변환기 만들기 (DevCalc Lv1)
+# 01. Basic Types and bigint — Building a Radix Converter (DevCalc Lv1)
 
-> 시리즈: DH.Study.TypeScript · 01강
-> 환경: Node.js v24 · TypeScript 7 · VS Code
+> Series: DH.Study.TypeScript · Lesson 01
+> Environment: Node.js v24 · TypeScript 7 · VS Code
 
-## 목표
+## Goals
 
-이 강의를 마치면 다음을 할 수 있다.
+After this lesson you can:
 
-- [ ] 변수에 타입을 표기(Type Annotation)하고, 표기를 생략해도 되는 경우(Type Inference)를 안다
-- [ ] `number` 의 한계(2^53 - 1)를 설명하고, 큰 정수에는 `bigint` 를 쓴다
-- [ ] `any` 와 `unknown` 의 차이, `void` 와 `never` 의 쓰임을 안다
-- [ ] 배운 타입으로 진법 변환 함수(ToHex/ToBin/ToDec/ToBigInt)를 직접 만든다
-- [ ] DevCalc 에 진법 변환 기능(ToHex/ToBin/ToDec)을 추가한다
+- [ ] Annotate variables with types, and know when you can leave the annotation out (type inference)
+- [ ] Explain the limit of `number` (2^53 - 1) and use `bigint` for large integers
+- [ ] Tell `any` from `unknown`, and know what `void` and `never` are for
+- [ ] Build radix conversion functions (ToHex/ToBin/ToDec/ToBigInt) with what you learned
+- [ ] Add radix conversion (ToHex/ToBin/ToDec) to DevCalc
 
-## 이 강의의 목차
+## Contents
 
-1. [타입 표기와 타입 추론](#1-타입-표기와-타입-추론)
-2. [기본 타입 — C# 과 비교](#2-기본-타입--c-과-비교)
-3. [number 의 함정](#3-number-의-함정)
+1. [Type annotations and type inference](#1-type-annotations-and-type-inference)
+2. [Basic types compared with C#](#2-basic-types-compared-with-c)
+3. [The number trap](#3-the-number-trap)
 4. [bigint](#4-bigint)
 5. [any / unknown / void / never](#5-any--unknown--void--never)
-6. [따라하기](#6-따라하기)
-7. [직접 만들기 — 진법 변환 함수](#7-직접-만들기--진법-변환-함수)
-8. [DevCalc 스텝 — Lv1 진법 변환기](#8-devcalc-스텝--lv1-진법-변환기)
-9. [정리](#정리)
+6. [Try it](#6-try-it)
+7. [Build it — radix conversion functions](#7-build-it--radix-conversion-functions)
+8. [DevCalc step — Lv1 radix converter](#8-devcalc-step--lv1-radix-converter)
+9. [Summary](#summary)
 
-이 강의의 예제 파일: [primitives.ts](primitives.ts) · [bigint.ts](bigint.ts) · [special-types.ts](special-types.ts) · [convert.ts](convert.ts)
+Example files for this lesson: [primitives.ts](primitives.ts) · [bigint.ts](bigint.ts) · [special-types.ts](special-types.ts) · [convert.ts](convert.ts)
+
+> Comments in the example code are written in English first, followed by Korean.
 
 ---
 
-## 1. 타입 표기와 타입 추론
+## 1. Type annotations and type inference
 
 ```ts
-const strName: string = "DevCalc";   // 타입 표기 (Type Annotation)
-const strVersion = "0.1.0";          // 타입 추론 (Type Inference) → string
+const strName: string = "DevCalc";   // type annotation
+const strVersion = "0.1.0";          // type inference → string
 ```
 
-- 이름 뒤에 `: 타입` 을 붙인다. C# 의 `string strName = ...` 와 순서가 반대다.
-- 값이 있으면 TS 가 타입을 알아서 정한다. C# 의 `var` 와 같은 개념이고, **대부분 표기를 생략한다.**
-- 표기가 꼭 필요한 곳: 함수의 매개변수(Parameter), 공개 함수의 반환 타입(Return Type).
+- Put `: type` after the name. The order is the reverse of C#'s `string strName = ...`.
+- When there is a value, TS works out the type itself. Same idea as C#'s `var` — **you usually leave the annotation out.**
+- Where annotations are required: function parameters, and return types of public functions.
 
-## 2. 기본 타입 — C# 과 비교
+## 2. Basic types compared with C#
 
-| TypeScript | C# | 비고 |
+| TypeScript | C# | Notes |
 |---|---|---|
-| `string` | `string` | `"..."`, `'...'`, 템플릿 문자열 `` `값: ${n}` `` |
-| `number` | `double` | **정수/실수 구분 없음.** `int`, `long`, `float` 가 따로 없다 |
-| `bigint` | `BigInteger` | `255n` 처럼 끝에 `n`. 크기 제한 없는 정수 |
+| `string` | `string` | `"..."`, `'...'`, template strings `` `value: ${n}` `` |
+| `number` | `double` | **No integer/float split.** There is no separate `int`, `long` or `float` |
+| `bigint` | `BigInteger` | Add `n`, as in `255n`. Integers of unlimited size |
 | `boolean` | `bool` | |
-| `null`, `undefined` | `null` | 값이 없음을 나타내는 것이 **두 개** |
-| `T[]`, `[T1, T2]` | `T[]`, `(T1, T2)` | 배열(Array), 튜플(Tuple) |
-| `any` | `dynamic` | 타입 검사를 끈다 |
-| `unknown` | `object` | 확인하기 전에는 쓸 수 없다 |
-| `void` / `never` | `void` / — | `never` 는 "절대 정상 종료하지 않음" |
+| `null`, `undefined` | `null` | **Two** ways to say "no value" |
+| `T[]`, `[T1, T2]` | `T[]`, `(T1, T2)` | Array, tuple |
+| `any` | `dynamic` | Turns type checking off |
+| `unknown` | `object` | Can't be used until you check what it is |
+| `void` / `never` | `void` / — | `never` means "never finishes normally" |
 
-## 3. number 의 함정
+## 3. The number trap
 
 ```ts
 0.1 + 0.2        // 0.30000000000000004
-7 / 2            // 3.5   ← C# 의 int 나눗셈(3)과 다르다
-2 ** 53 + 1      // 9007199254740992  ← 1 이 사라진다!
+7 / 2            // 3.5   ← unlike C# integer division (3)
+2 ** 53 + 1      // 9007199254740992  ← the 1 is lost!
 ```
 
-`number` 는 64비트 부동소수점(double)이라 정확한 정수는 `Number.MAX_SAFE_INTEGER`(2^53 - 1)까지만 표현한다.
-개발자 계산기는 64비트 값(`0xFFFFFFFFFFFFFFFF`)을 다뤄야 하므로 `number` 로는 부족하다.
+`number` is a 64-bit floating-point value (double), so it represents integers exactly only up to `Number.MAX_SAFE_INTEGER` (2^53 - 1).
+A developer calculator must handle 64-bit values (`0xFFFFFFFFFFFFFFFF`), so `number` is not enough.
 
 ## 4. bigint
 
 ```ts
 const biMax64 = 0xffff_ffff_ffff_ffffn;   // 18446744073709551615n
 biMax64.toString(16);                      // "ffffffffffffffff"
-biMax64.toString(2);                       // "1111...1111" (64개)
-7n / 2n;                                   // 3n  (정수 나눗셈)
+biMax64.toString(2);                       // "1111...1111" (64 ones)
+7n / 2n;                                   // 3n  (integer division)
 ```
 
-- 리터럴 끝에 `n`. `_` 로 자릿수를 끊어 읽기 쉽게 할 수 있다.
-- `toString(진법)` 으로 2/8/16진수 문자열을 만든다.
-- **`number` 와 섞어 쓸 수 없다**:
+- Literals end in `n`. Use `_` to group digits for readability.
+- `toString(radix)` produces binary, octal or hex strings.
+- **It can't be mixed with `number`**:
 
 ```ts
-const biWrong = 1n + 1;    // TS: 작성 즉시 빨간 줄 / JS: 실행 중 TypeError
+const biWrong = 1n + 1;    // TS: red squiggle as you type / JS: TypeError at runtime
 const biRight = 1n + BigInt(1);
 ```
 
-> 이것이 TypeScript 를 쓰는 이유의 좋은 예다. JS 라면 실행해 봐야 알 수 있는 오류를 **쓰는 순간** 알려 준다.
+> This is a good example of why TypeScript is worth using. An error that JS only reveals when the code runs, TS reports **the moment you write it**.
 
 ## 5. any / unknown / void / never
 
 ```ts
 const vAny: any = "hello";
-vAny.toFixed;                    // 통과 (검사 안 함) → 실행하면 undefined
+vAny.toFixed;                    // compiles (no checking) → undefined at runtime
 
 const vUnknown: unknown = JSON.parse("255");
-vUnknown.toString(16);           // 오류: 먼저 무엇인지 확인해야 함
+vUnknown.toString(16);           // error: check what it is first
 if (typeof vUnknown === "number") vUnknown.toString(16);   // OK
 ```
 
-- 외부에서 들어온 값(JSON, 사용자 입력)은 `any` 대신 **`unknown`** 으로 받고 확인한 뒤 쓴다.
-- `void`: 반환값이 없는 함수. `never`: 항상 예외를 던지거나 끝나지 않는 함수.
+- Take values from outside (JSON, user input) as **`unknown`** rather than `any`, and check them before use.
+- `void`: a function that returns nothing. `never`: a function that always throws or never ends.
 
-> 이름 규칙: 헝가리언 표기법(Hungarian Notation)에서 `any`/`unknown` 값은 `v`(variant) 접두어를 쓴다.
+> Naming: in Hungarian notation, `any`/`unknown` values use the `v` (variant) prefix.
 
 ---
 
-## 6. 따라하기
+## 6. Try it
 
-각 파일을 열고 `F5` 로 실행하거나, 명령줄에서 실행한다. 실행할 수 없는 환경이라면 아래 실행 결과를 보며 코드를 읽어도 된다.
+Open each file and press `F5`, or run it from the command line. If you can't run code, read the code alongside the output below.
 
-### [primitives.ts](primitives.ts) — 타입 표기·추론, number, 배열·튜플
+### [primitives.ts](primitives.ts) — annotations, inference, number, arrays and tuples
 
 ```
 > node lessons/01-basic-types/primitives.ts
 0.1 + 0.2 = 0.30000000000000004
 7 / 2 = 3.5
 Math.trunc(7 / 2) = 3
-0xff = 255 / 16진수: ff / 2진수: 11111111
+0xff = 255 / hex: ff / bin: 11111111
 [ 8, 16, 32, 64 ] [ 'WORD', 16 ]
-첫 번째 비트 수: 16
+first bits x 2: 16
 DevCalc 0.1.0 64 true 1
 ```
 
-해 볼 것: `nCount = "1";` 주석을 풀어 빨간 줄 확인, 변수 위에 마우스를 올려 추론된 타입(Hover) 확인.
+Things to try: uncomment `nCount = "1";` to see the red squiggle, and hover over variables to see the inferred types.
 
-### [bigint.ts](bigint.ts) — bigint, number 와 섞으면?
+### [bigint.ts](bigint.ts) — bigint, and what happens if you mix it with number
 
 ```
 > node lessons/01-basic-types/bigint.ts
 MAX_SAFE_INTEGER = 9007199254740991
 2^53 + 1 = 9007199254740992
-64비트 최댓값 = 18446744073709551615n
-16진수 = ffffffffffffffff
+64-bit max = 18446744073709551615n
+hex = ffffffffffffffff
 2^53 + 1 = 9007199254740993n
 7n / 2n = 3n
 TypeError: Cannot mix BigInt and other types, use explicit conversions
 ```
 
-마지막 `TypeError` 는 **일부러** 낸 오류다. `// @ts-expect-error` 를 지우면 에디터가 미리 빨간 줄로 알려 준다.
+The final `TypeError` is **intentional**. Remove `// @ts-expect-error` and the editor flags it in advance with a red squiggle.
 
 ### [special-types.ts](special-types.ts) — any, unknown, null, void, never
 
 ```
 > node lessons/01-basic-types/special-types.ts
 undefined
-16진수: ff
-이제 값이 있음
-void 함수 호출
-잡은 예외: never 함수는 항상 예외를 던진다
+hex: ff
+now it has a value
+void function called
+caught: a never function always throws
 ```
 
-## 7. 직접 만들기 — 진법 변환 함수
+## 7. Build it — radix conversion functions
 
-배운 타입으로 DevCalc 의 첫 부품을 만든다. 전체 코드는 [convert.ts](convert.ts).
+Use the types you just learned to build DevCalc's first part. Full code: [convert.ts](convert.ts).
 
 ### ToHex : 255n → "0xFF"
 
 ```ts
 function ToHex(biValue: bigint): string {
-	const strSign = biValue < 0n ? "-" : "";            // 부호는 따로 떼어 맨 앞에
-	const biAbs = biValue < 0n ? -biValue : biValue;    // 절댓값
+	const strSign = biValue < 0n ? "-" : "";            // keep the sign separate, at the front
+	const biAbs = biValue < 0n ? -biValue : biValue;    // absolute value
 	return `${strSign}0x${biAbs.toString(16).toUpperCase()}`;
 }
 ```
 
-- 매개변수 `biValue: bigint`, 반환 `: string` — 함수에는 타입을 표기한다.
-- `0n` 처럼 **bigint 끼리** 비교한다. `biValue < 0` 도 동작은 하지만 bigint 코드에서는 `0n` 으로 맞추는 것이 읽기 좋다.
-- 음수를 그대로 `toString(16)` 하면 `"-ff"` 가 되어 접두어 위치가 어색하므로 부호를 분리했다.
+- Parameter `biValue: bigint`, return `: string` — annotate functions.
+- Compare **bigint with bigint**, as in `0n`. `biValue < 0` also works, but `0n` reads better in bigint code.
+- Calling `toString(16)` on a negative value gives `"-ff"`, which puts the prefix in an awkward place, so the sign is handled separately.
 
 ### ToBin, ToDec
 
@@ -177,23 +179,23 @@ function ToBin(biValue: bigint): string { ... `${strSign}0b${biAbs.toString(2)}`
 function ToDec(biValue: bigint): string { return biValue.toString(10); }
 ```
 
-`ToBin` 은 `ToHex` 와 진법·접두어만 다르다. 이 중복은 DevCalc 스텝에서 하나로 묶는다.
+`ToBin` differs from `ToHex` only in radix and prefix. We merge the duplication in the DevCalc step.
 
 ### ToBigInt : number → bigint
 
 ```ts
 function ToBigInt(nValue: number): bigint {
 	if (!Number.isSafeInteger(nValue)) {
-		throw new RangeError(`안전한 정수가 아닙니다: ${nValue}`);
+		throw new RangeError(`Not a safe integer: ${nValue}`);
 	}
 	return BigInt(nValue);
 }
 ```
 
-- `1.5`, `NaN`, `Infinity`, `2 ** 53` 은 정확한 정수가 아니므로 거부한다.
-- 3장의 "number 의 함정"을 코드로 막는 방법이다.
+- `1.5`, `NaN`, `Infinity` and `2 ** 53` are not exact integers, so they are rejected.
+- This guards against "the number trap" from section 3 in code.
 
-### 실행
+### Run it
 
 ```
 > node lessons/01-basic-types/convert.ts
@@ -202,14 +204,14 @@ function ToBigInt(nValue: number): bigint {
                 -255 |               -0xFF | -0b11111111
 18446744073709551615 |  0xFFFFFFFFFFFFFFFF | 0b1111...1111
 255n
-RangeError: 안전한 정수가 아닙니다: 1.5
+RangeError: Not a safe integer: 1.5
 ```
 
-> `ToBigInt(1.5)` 줄에 중단점(Breakpoint)을 걸고 `F11` 로 함수 안에 들어가 `nValue` 값을 확인해 보자.
+> Set a breakpoint on the `ToBigInt(1.5)` line, press `F11` to step into the function, and look at `nValue`.
 
-## 8. DevCalc 스텝 — Lv1 진법 변환기
+## 8. DevCalc step — Lv1 radix converter
 
-7장에서 만든 함수를 [devcalc/src/core/Format.ts](../../devcalc/src/core/Format.ts) 로 옮겼다. 중복되는 부호 처리는 `FormatRadix` 하나로 묶었다.
+The functions from section 7 move into [devcalc/src/core/Format.ts](../../devcalc/src/core/Format.ts). The duplicated sign handling is merged into a single `FormatRadix`.
 
 ```ts
 function FormatRadix(biValue: bigint, nRadix: number, strPrefix: string): string {
@@ -220,7 +222,7 @@ function FormatRadix(biValue: bigint, nRadix: number, strPrefix: string): string
 export function ToHex(biValue: bigint): string { return FormatRadix(biValue, 16, "0x"); }
 ```
 
-실행:
+Run it:
 
 ```
 > node devcalc/src/main.ts 255
@@ -229,17 +231,17 @@ DEC : 255
 BIN : 0b11111111
 ```
 
-> 지금은 입력 해석을 `BigInt("255")` 에 맡긴다. 03강에서 `0xFF`, `0b1010`, `1_000` 을 직접 해석하는 함수로 바꾼다.
+> For now, input parsing is left to `BigInt("255")`. In lesson 03 we replace it with our own parser for `0xFF`, `0b1010` and `1_000`.
 
-## 정리
+## Summary
 
-- 타입은 이름 뒤 `: 타입`. 값이 있으면 대부분 추론에 맡긴다.
-- `number` 는 double 하나뿐이고, 2^53 - 1 을 넘는 정수는 `bigint` 로 다룬다.
-- `bigint` 와 `number` 는 섞을 수 없다. TS 는 이 실수를 실행 전에 잡아 준다.
-- 외부 값은 `unknown` 으로 받는다. `any` 는 피한다.
+- Types go after the name as `: type`. When there is a value, inference usually does the job.
+- `number` is just a double; integers beyond 2^53 - 1 need `bigint`.
+- `bigint` and `number` can't be mixed, and TS catches that mistake before the code runs.
+- Take outside values as `unknown`. Avoid `any`.
 
-**다음 강의 → 02. 함수와 객체 (준비 중)**: 함수 타입, 선택적 매개변수(Optional Parameter), `interface` 와 `type`. DevCalc 에는 자릿수 묶기(`0xFFFF_FFFF`)와 출력 옵션을 추가한다.
+**Next → 02. Functions and Objects (coming soon)**: function types, optional parameters, `interface` vs `type`. DevCalc gains digit grouping (`0xFFFF_FFFF`) and output options.
 
 ---
 
-[← 이전: 00. 개발 환경 구성](../00-setup/README.md) · [목차](../../README.md) · 다음: 02. 함수와 객체 (준비 중)
+[← Previous: 00. Development Setup](../00-setup/README.md) · [Contents](../../README.md) · Next: 02. Functions and Objects (coming soon)

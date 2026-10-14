@@ -1,10 +1,10 @@
-**한국어** · [English](README.en.md)
+**English** · [한국어](README.ko.md)
 
 # DevCalc
 
-이 강의 시리즈의 최종 결과물인 개발자용 계산기. 강의가 진행될 때마다 부품이 하나씩 추가된다.
+The developer calculator that this lesson series builds. Each lesson adds one more part.
 
-## 현재 단계: Lv1 진법 변환기 (01강)
+## Current stage: Lv1 radix converter (lesson 01)
 
 ```bash
 node devcalc/src/main.ts 255
@@ -12,13 +12,13 @@ node devcalc/src/main.ts 255
 # DEC : 255
 # BIN : 0b11111111
 
-npm test        # devcalc 테스트
+npm test        # DevCalc tests
 ```
 
-## 진행 기록
+## History
 
-| 강 | 추가된 것 |
+| Lesson | Added |
 |---|---|
-| [01](../lessons/01-basic-types/README.md) | `core/Format.ts` (ToHex/ToBin/ToDec), `main.ts` 명령줄 실행 |
+| [01](../lessons/01-basic-types/README.md) | `core/Format.ts` (ToHex/ToBin/ToDec), command-line `main.ts` |
 
-강의별 상태는 git 태그(Tag)로 볼 수 있다: `git checkout lesson-01`
+Each lesson's state is tagged in git: `git checkout lesson-01`
