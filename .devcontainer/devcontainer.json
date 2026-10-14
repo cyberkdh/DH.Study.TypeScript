@@ -1,0 +1,14 @@
+{
+	// GitHub Codespaces / Dev Containers: 설치 없이 브라우저에서 강의 예제 실행
+	"name": "DH.Study.TypeScript",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": { "version": "24" }
+	},
+	"postCreateCommand": "npm ci",
+	"customizations": {
+		"vscode": {
+			"extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "yoavbls.pretty-ts-errors"]
+		}
+	}
+}

@@ -1,9 +1,13 @@
+**한국어** · [English](README.en.md)
+
+[← 이전: 00. 개발 환경 구성](../00-setup/README.md) · [목차](../../README.md) · 다음: 02. 함수와 객체 (준비 중)
+
 # 01. 기본 타입과 bigint — 진법 변환기 만들기 (DevCalc Lv1)
 
 > 시리즈: DH.Study.TypeScript · 01강
 > 환경: Node.js v24 · TypeScript 7 · VS Code
 
-## 목표 (Goals)
+## 목표
 
 이 강의를 마치면 다음을 할 수 있다.
 
@@ -12,6 +16,20 @@
 - [ ] `any` 와 `unknown` 의 차이, `void` 와 `never` 의 쓰임을 안다
 - [ ] 배운 타입으로 진법 변환 함수(ToHex/ToBin/ToDec/ToBigInt)를 직접 만든다
 - [ ] DevCalc 에 진법 변환 기능(ToHex/ToBin/ToDec)을 추가한다
+
+## 이 강의의 목차
+
+1. [타입 표기와 타입 추론](#1-타입-표기와-타입-추론)
+2. [기본 타입 — C# 과 비교](#2-기본-타입--c-과-비교)
+3. [number 의 함정](#3-number-의-함정)
+4. [bigint](#4-bigint)
+5. [any / unknown / void / never](#5-any--unknown--void--never)
+6. [따라하기](#6-따라하기)
+7. [직접 만들기 — 진법 변환 함수](#7-직접-만들기--진법-변환-함수)
+8. [DevCalc 스텝 — Lv1 진법 변환기](#8-devcalc-스텝--lv1-진법-변환기)
+9. [정리](#정리)
+
+이 강의의 예제 파일: [primitives.ts](primitives.ts) · [bigint.ts](bigint.ts) · [special-types.ts](special-types.ts) · [convert.ts](convert.ts)
 
 ---
 
@@ -89,24 +107,54 @@ if (typeof vUnknown === "number") vUnknown.toString(16);   // OK
 
 ---
 
-## 6. 따라하기 (examples)
+## 6. 따라하기
 
-각 파일을 열고 `F5` 로 실행하거나, 명령줄에서 실행한다.
+각 파일을 열고 `F5` 로 실행하거나, 명령줄에서 실행한다. 실행할 수 없는 환경이라면 아래 실행 결과를 보며 코드를 읽어도 된다.
 
-```bash
-node lessons/01-basic-types/examples/primitives.ts      # 타입 표기·추론, number, 배열·튜플
-node lessons/01-basic-types/examples/bigint.ts          # bigint, number 와 섞으면? (마지막에 일부러 오류)
-node lessons/01-basic-types/examples/special-types.ts   # any, unknown, null, void, never
+### [primitives.ts](primitives.ts) — 타입 표기·추론, number, 배열·튜플
+
+```
+> node lessons/01-basic-types/primitives.ts
+0.1 + 0.2 = 0.30000000000000004
+7 / 2 = 3.5
+Math.trunc(7 / 2) = 3
+0xff = 255 / 16진수: ff / 2진수: 11111111
+[ 8, 16, 32, 64 ] [ 'WORD', 16 ]
+첫 번째 비트 수: 16
+DevCalc 0.1.0 64 true 1
 ```
 
-해 볼 것:
-- `primitives.ts` 에서 `nCount = "1";` 주석을 풀어 빨간 줄을 확인한다.
-- 변수 위에 마우스를 올려 추론된 타입(Hover)을 확인한다.
-- `bigint.ts` 의 `// @ts-expect-error` 를 지워 보고, 실행해서 `TypeError` 를 확인한다.
+해 볼 것: `nCount = "1";` 주석을 풀어 빨간 줄 확인, 변수 위에 마우스를 올려 추론된 타입(Hover) 확인.
+
+### [bigint.ts](bigint.ts) — bigint, number 와 섞으면?
+
+```
+> node lessons/01-basic-types/bigint.ts
+MAX_SAFE_INTEGER = 9007199254740991
+2^53 + 1 = 9007199254740992
+64비트 최댓값 = 18446744073709551615n
+16진수 = ffffffffffffffff
+2^53 + 1 = 9007199254740993n
+7n / 2n = 3n
+TypeError: Cannot mix BigInt and other types, use explicit conversions
+```
+
+마지막 `TypeError` 는 **일부러** 낸 오류다. `// @ts-expect-error` 를 지우면 에디터가 미리 빨간 줄로 알려 준다.
+
+### [special-types.ts](special-types.ts) — any, unknown, null, void, never
+
+```
+> node lessons/01-basic-types/special-types.ts
+undefined
+16진수: ff
+이제 값이 있음
+void 함수 호출
+잡은 예외: never 함수는 항상 예외를 던진다
+```
 
 ## 7. 직접 만들기 — 진법 변환 함수
 
-배운 타입으로 DevCalc 의 첫 부품을 만든다. 전체 코드는 `examples/convert.ts`.
+배운 타입으로 DevCalc 의 첫 부품을 만든다. 전체 코드는 [convert.ts](convert.ts).
 
 ### ToHex : 255n → "0xFF"
 
@@ -147,11 +195,8 @@ function ToBigInt(nValue: number): bigint {
 
 ### 실행
 
-```bash
-node lessons/01-basic-types/examples/convert.ts
 ```
-
-```
+> node lessons/01-basic-types/convert.ts
                  255 |                0xFF | 0b11111111
                    0 |                 0x0 | 0b0
                 -255 |               -0xFF | -0b11111111
@@ -161,9 +206,10 @@ RangeError: 안전한 정수가 아닙니다: 1.5
 ```
 
 > `ToBigInt(1.5)` 줄에 중단점(Breakpoint)을 걸고 `F11` 로 함수 안에 들어가 `nValue` 값을 확인해 보자.
+
 ## 8. DevCalc 스텝 — Lv1 진법 변환기
 
-7장에서 만든 함수를 `devcalc/src/core/Format.ts` 로 옮겼다. 중복되는 부호 처리는 `FormatRadix` 하나로 묶었다.
+7장에서 만든 함수를 [devcalc/src/core/Format.ts](../../devcalc/src/core/Format.ts) 로 옮겼다. 중복되는 부호 처리는 `FormatRadix` 하나로 묶었다.
 
 ```ts
 function FormatRadix(biValue: bigint, nRadix: number, strPrefix: string): string {
@@ -176,13 +222,11 @@ export function ToHex(biValue: bigint): string { return FormatRadix(biValue, 16,
 
 실행:
 
-```bash
-node devcalc/src/main.ts 255
-# HEX : 0xFF
-# DEC : 255
-# BIN : 0b11111111
-
-npm test     # devcalc 테스트
+```
+> node devcalc/src/main.ts 255
+HEX : 0xFF
+DEC : 255
+BIN : 0b11111111
 ```
 
 > 지금은 입력 해석을 `BigInt("255")` 에 맡긴다. 03강에서 `0xFF`, `0b1010`, `1_000` 을 직접 해석하는 함수로 바꾼다.
@@ -194,6 +238,8 @@ npm test     # devcalc 테스트
 - `bigint` 와 `number` 는 섞을 수 없다. TS 는 이 실수를 실행 전에 잡아 준다.
 - 외부 값은 `unknown` 으로 받는다. `any` 는 피한다.
 
-## 다음 강의
+**다음 강의 → 02. 함수와 객체 (준비 중)**: 함수 타입, 선택적 매개변수(Optional Parameter), `interface` 와 `type`. DevCalc 에는 자릿수 묶기(`0xFFFF_FFFF`)와 출력 옵션을 추가한다.
 
-**02. 함수와 객체** — 함수 타입, 선택적 매개변수(Optional Parameter), `interface` 와 `type`. DevCalc 에는 자릿수 묶기(`0xFFFF_FFFF`)와 출력 옵션을 추가한다.
+---
+
+[← 이전: 00. 개발 환경 구성](../00-setup/README.md) · [목차](../../README.md) · 다음: 02. 함수와 객체 (준비 중)

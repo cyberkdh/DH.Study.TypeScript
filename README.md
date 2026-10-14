@@ -1,10 +1,42 @@
+**한국어** · [English](README.en.md)
+
 # DH.Study.TypeScript
 
 TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산기(DevCalc)** 를 직접 완성하는 강의 저장소.
 
-- 강의 본문 = 각 강의 폴더의 `README.md` (GitHub 에서 바로 읽힘)
-- 강의를 읽으며 예제(examples)를 직접 실행·디버깅하는 방식으로 진행
-- 강의마다 `devcalc/` 에 부품이 하나씩 추가되어 최종 앱이 완성됨
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cyberkdh/DH.Study.TypeScript?quickstart=1)
+
+## 목차
+
+| 강 | 제목 | 배우는 것 | DevCalc 스텝 | 상태 |
+|---|---|---|---|---|
+| 00 | [개발 환경 구성](lessons/00-setup/README.md) | 실행 3가지 방법, VS Code 디버깅, TS → JS | — | ✅ |
+| 01 | [기본 타입과 bigint](lessons/01-basic-types/README.md) | 타입 표기·추론, `number` 의 한계, `bigint`, `any`/`unknown` | Lv1 진법 변환 (ToHex/ToBin/ToDec) | ✅ |
+| 02 | 함수와 객체 | 함수 타입, `interface`/`type` | 자릿수 묶기, 출력 옵션 | 준비 중 |
+| 03 | 유니온과 타입 좁히기 | 유니온(Union), 타입 좁히기(Narrowing) | Lv2 입력 형식 해석 `0x`/`0b`/`1_000` | 준비 중 |
+| 04 | 클래스와 에러 처리 | 클래스(Class), 예외(Exception) | Lv3 워드 크기, 두 수 계산 | 준비 중 |
+| 05 | 제네릭 | 제네릭(Generics) | `TResult<T, E>`, 히스토리 | 준비 중 |
+| 06 | 모듈과 비동기 | 모듈(Module), `async`/`await` | core 분리, 클립보드 | 준비 중 |
+| 07 | 브라우저와 DOM | DOM, 이벤트(Event) | Lv4 웹 화면 | 준비 중 |
+| 08 | 고급 타입 | 유틸리티·매핑·조건부 타입 | 함수 표 타입 안정성 | 준비 중 |
+| 09 | 테스트와 도구 | Vitest, ESLint | 테스트, 이름 규칙 자동 검사 | 준비 중 |
+| 10 | (도전) 렉서와 파서 | 재귀, 판별 유니온 | Lv5 수식 계산 | 준비 중 |
+| 11 | 빌드와 배포 | 번들(Bundle), GitHub Pages | 단일 HTML 배포 | 준비 중 |
+
+## 공부하는 방법
+
+1. **환경 준비** — 둘 중 하나
+   - 내 PC: `git clone` → `npm install` ([00강 1장](lessons/00-setup/README.md#1-준비물))
+   - 설치 없이: 위의 **Open in GitHub Codespaces** 버튼 → 브라우저에서 VS Code 가 열림
+2. **위 목차 순서대로** 강의를 연다. 각 강의는 같은 순서로 되어 있다.
+   - **목표** → **이 강의의 목차** → 본문 → **따라하기**(예제 실행) → **DevCalc 스텝** → **정리** → 다음 강의 링크
+3. 예제 파일은 강의 글 **바로 옆**에 있다. 파일을 열고 `F5` 로 실행·디버깅한다.
+   - 실행할 수 없을 때는 강의 글에 적힌 **실행 결과**를 보며 읽어도 된다.
+4. 강의 맨 위·아래의 `← 이전 · 목차 · 다음 →` 링크로 이동한다.
+5. 강의별 완성 코드는 git 태그(Tag)로 볼 수 있다: `git checkout lesson-01`
+
+> GitHub 웹 페이지에서는 코드를 **읽을** 수는 있지만 **실행**할 수는 없다. 실행은 내 PC 또는 Codespaces 에서 한다.
+> DevCalc 는 07강부터 웹 화면이 생기고, 11강에서 GitHub Pages 에 배포해 브라우저에서 바로 써 볼 수 있게 된다.
 
 ## 목적 (Purpose)
 
@@ -42,47 +74,28 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 
 > Lv3 까지만 해도 "쓸 만한 개발자용 진법 변환 계산기"가 된다.
 
-## 시작하기
-
-- Node.js 24 · TypeScript 7 · VS Code
+## 명령 모음
 
 ```bash
-npm install
+npm install                                # 처음 한 번
+node lessons/00-setup/hello.ts             # 예제 실행 (다른 강의도 같은 방식)
 npm run typecheck                          # 타입 검사
 npm run build                              # dist/ 로 빌드
-node lessons/00-setup/examples/hello.ts    # 예제 실행
+npm run devcalc -- 255                     # DevCalc 실행
 npm test                                   # DevCalc 테스트
-npm run devcalc -- 255                      # DevCalc 실행
 ```
-
-디버깅: VS Code 에서 이 폴더를 열고 `.ts` 파일을 연 뒤 `F5`. 자세한 내용은 [00-setup](lessons/00-setup/README.md).
 
 ## 저장소 구조
 
 ```
 ├─ lessons/
 │  └─ NN-주제/
-│     ├─ README.md     강의 본문
-│     └─ examples/     따라 치는 예제
-└─ devcalc/            최종 앱 (강의마다 자람)
+│     ├─ README.md      강의 (한국어)
+│     ├─ README.en.md   강의 (English)
+│     └─ *.ts           강의에 나오는 예제
+├─ devcalc/             최종 앱 (강의마다 자람)
+└─ .devcontainer/       Codespaces 환경
 ```
-
-## 커리큘럼
-
-| 강 | 폴더 | 주제 | DevCalc 스텝 | 상태 |
-|---|---|---|---|---|
-| 00 | [00-setup](lessons/00-setup/README.md) | 환경 구성, 실행, 디버깅, TS → JS | — | ✅ |
-| 01 | [01-basic-types](lessons/01-basic-types/README.md) | 기본 타입, `bigint` | ToHex/ToBin/ToDec (Lv1) | ✅ |
-| 02 | 02-functions-objects | 함수, 객체, `interface`/`type` | 자릿수 묶기, 출력 옵션 | |
-| 03 | 03-narrowing | 유니온, 타입 좁히기 | 입력 형식 해석 `0x`/`0b`/`1_000` (Lv2) | |
-| 04 | 04-classes-errors | 클래스, 에러 처리 | CWordSize, CCalcError, 두 수 계산 (Lv3) | |
-| 05 | 05-generics | 제네릭 | `TResult<T, E>`, 히스토리 | |
-| 06 | 06-modules-async | 모듈, 비동기 | core 분리, 클립보드 | |
-| 07 | 07-dom | 브라우저, DOM | 웹 화면 (Lv4) | |
-| 08 | 08-advanced-types | 고급 타입 | 함수 표 타입 안정성 | |
-| 09 | 09-tooling-test | 테스트, 도구 | Vitest, ESLint | |
-| 10 | 10-lexer-parser | (도전) 렉서 + 파서 | 수식 계산 (Lv5) | |
-| 11 | 11-build-deploy | 빌드, 배포 | 단일 HTML + GitHub Pages | |
 
 ## 이름 규칙 (Naming Convention)
 

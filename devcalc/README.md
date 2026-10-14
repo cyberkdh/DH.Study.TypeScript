@@ -1,3 +1,5 @@
+**한국어** · [English](README.en.md)
+
 # DevCalc
 
 이 강의 시리즈의 최종 결과물인 개발자용 계산기. 강의가 진행될 때마다 부품이 하나씩 추가된다.
@@ -17,6 +19,6 @@ npm test        # devcalc 테스트
 
 | 강 | 추가된 것 |
 |---|---|
-| 01 | `core/Format.ts` (ToHex/ToBin/ToDec), `main.ts` 명령줄 실행 |
+| [01](../lessons/01-basic-types/README.md) | `core/Format.ts` (ToHex/ToBin/ToDec), `main.ts` 명령줄 실행 |
 
 강의별 상태는 git 태그(Tag)로 볼 수 있다: `git checkout lesson-01`

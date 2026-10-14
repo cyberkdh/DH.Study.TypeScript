@@ -1,9 +1,13 @@
+**한국어** · [English](README.en.md)
+
+[목차](../../README.md) · [다음: 01. 기본 타입과 bigint →](../01-basic-types/README.md)
+
 # 00. 개발 환경 구성 — VS Code에서 TypeScript 실행 & 디버깅
 
-> 시리즈: DH.Study.TypeScript · 1주차
+> 시리즈: DH.Study.TypeScript · 00강
 > 환경: Windows · Node.js v24.15.0 · TypeScript 7.0.2 · VS Code
 
-## 목표 (Goals)
+## 목표
 
 이 강의를 마치면 다음을 할 수 있다.
 
@@ -14,15 +18,25 @@
 
 > 시리즈 전체의 목적과 최종 목표(DevCalc)는 [루트 README](../../README.md#목적-purpose) 참고.
 
-## 이 글에서 다루는 것
+## 이 강의의 목차
 
-- TypeScript 프로젝트 기본 파일 (`package.json`, `tsconfig.json`)
-- `.ts` 파일을 실행하는 세 가지 방법과 차이
-- VS Code에서 F5로 중단점(Breakpoint) 디버깅하기
+1. [준비물](#1-준비물) — 내 PC 또는 브라우저(Codespaces)
+2. [프로젝트 구조](#2-프로젝트-구조)
+3. [tsconfig.json 핵심 옵션](#3-tsconfigjson-핵심-옵션)
+4. [.ts 파일을 실행하는 세 가지 방법](#4-ts-파일을-실행하는-세-가지-방법)
+5. [VS Code 디버깅](#5-vs-code-디버깅)
+6. [명령줄에서 실행과 디버깅](#6-명령줄에서-실행과-디버깅)
+7. [TS 를 JS 로 변환한 결과 보기](#7-ts-를-js-로-변환한-결과-보기)
+8. [정리](#정리)
+- 부록: [A. Node.js PATH 등록](#부록-a-nodejs-path-등록) · [B. VS Code 설정만으로 Node 경로 지정](#부록-b-vs-code-설정만으로-node-경로-지정) · [C. 저장소의 VS Code 설정](#부록-c-저장소의-vs-code-설정)
+
+이 강의의 예제 파일: [hello.ts](hello.ts) · [greeter.ts](greeter.ts) · [enum-sample.ts](enum-sample.ts)
 
 ---
 
 ## 1. 준비물
+
+### 방법 A. 내 PC 에 설치
 
 | 도구 | 버전 | 비고 |
 |---|---|---|
@@ -30,12 +44,28 @@
 | VS Code | 최신 | TypeScript 언어 서비스(Language Service) 기본 내장 |
 
 ```bash
-npm install -D typescript tsx @types/node
+git clone https://github.com/cyberkdh/DH.Study.TypeScript.git
+cd DH.Study.TypeScript
+npm install
 ```
+
+`package.json` 에 들어 있는 개발 도구:
 
 - `typescript` : 컴파일러 `tsc`. 7.x 부터는 Go 로 다시 작성된 네이티브(Native) 버전이라 빌드가 매우 빠르다.
 - `tsx` : TypeScript 를 바로 실행해 주는 러너(Runner).
 - `@types/node` : `process`, `fs` 같은 Node.js API 의 타입 정의.
+
+### 방법 B. 설치 없이 브라우저에서 (GitHub Codespaces)
+
+GitHub 페이지에서는 코드를 **읽을** 수만 있고 **실행**할 수는 없다. 대신 Codespaces 를 쓰면 브라우저 안에서 VS Code 가 열리고 Node.js 24 가 준비된 상태로 바로 실행·디버깅할 수 있다.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cyberkdh/DH.Study.TypeScript?quickstart=1)
+
+1. 위 버튼 클릭 (GitHub 로그인 필요) → 1~2분 뒤 브라우저에 VS Code 가 열림
+2. `npm install` 은 자동으로 실행됨 (`.devcontainer/devcontainer.json` 설정)
+3. 터미널에서 `node lessons/00-setup/hello.ts`, 또는 파일을 열고 `F5`
+
+> 개인 계정은 매달 무료 사용량이 있다. 다 쓰고 나면 [github.com/codespaces](https://github.com/codespaces) 에서 Codespace 를 중지/삭제해 두자.
 
 ## 2. 프로젝트 구조
 
@@ -45,13 +75,15 @@ projectroot/
 │  ├─ launch.json      ← 디버그 구성
 │  ├─ tasks.json       ← tsc 빌드 작업
 │  └─ settings.json    ← 프로젝트 TypeScript 버전 사용
+├─ .devcontainer/      ← Codespaces 환경 설정
 ├─ lessons/
-│  └─ 00-setup/
-│     ├─ README.md        ← 이 강의
-│     └─ examples/
-│        ├─ hello.ts
-│        ├─ greeter.ts
-│        └─ enum-sample.ts
+│  ├─ 00-setup/
+│  │  ├─ README.md     ← 이 강의 (한국어)
+│  │  ├─ README.en.md  ← 영문판
+│  │  ├─ hello.ts      ← 예제는 강의 글 바로 옆에
+│  │  ├─ greeter.ts
+│  │  └─ enum-sample.ts
+│  └─ 01-basic-types/
 ├─ devcalc/            ← 강의마다 자라는 최종 앱 (01강부터)
 ├─ package.json
 └─ tsconfig.json
@@ -80,7 +112,16 @@ projectroot/
 | ② tsc 빌드 후 실행 | `npm run build` → `node dist/.../hello.js` | 필요 | ✅ | 실제 배포 방식. 타입 검사까지 수행 |
 | ③ tsx | `node --import tsx hello.ts` | 불필요 | ✅ | 내부적으로 esbuild 로 변환. 모든 문법 지원 |
 
-`enum-sample.ts` 를 ① 로 실행하면 다음 오류가 난다.
+[hello.ts](hello.ts) 를 ① 로 실행한 결과:
+
+```
+> node lessons/00-setup/hello.ts
+안녕하세요, 홍길동님 (30세)
+안녕하세요, TypeScript님 (14세)
+Node.js v24.15.0
+```
+
+[enum-sample.ts](enum-sample.ts) 를 ① 로 실행하면 다음 오류가 난다.
 
 ```
 SyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript enum is not supported in strip-only mode
@@ -99,13 +140,13 @@ SyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript enum is not supporte
 | ① 현재 TS 파일 (Node 직접 실행) | 열린 `.ts` 파일을 바로 실행. 가장 빠름 |
 | ② 현재 TS 파일 (tsc 빌드 후 실행) | `preLaunchTask` 로 빌드 → `dist` 의 JS 실행, 소스맵으로 TS 에 중단점 매핑 |
 | ③ 현재 TS 파일 (tsx) | 모든 TS 문법 지원 |
-| ④ 실행 중인 Node 에 연결 (Attach :9229) | 명령줄에서 `--inspect-brk` 로 띄운 프로세스에 연결 → [6-2](#6-2-명령줄에서-디버깅--inspect-brk--연결attach) |
+| ④ 실행 중인 Node 에 연결 (Attach :9229) | 명령줄에서 `--inspect-brk` 로 띄운 프로세스에 연결 → [6-2](#6-2-명령줄에서-디버깅-attach) |
 
 ### 따라 하기
 
 1. VS Code 에서 **`projectroot` 폴더를 연다** (`.vscode` 폴더가 루트에 있어야 인식됨).
-2. `lessons/00-setup/examples/greeter.ts` 의 `return strMessage;` 줄 왼쪽 여백을 클릭 → 빨간 점(중단점).
-3. `lessons/00-setup/examples/hello.ts` 를 열고 `Ctrl+Shift+D` → 구성 선택 → `F5`.
+2. `lessons/00-setup/greeter.ts` 의 `return strMessage;` 줄 왼쪽 여백을 클릭 → 빨간 점(중단점).
+3. `lessons/00-setup/hello.ts` 를 열고 `Ctrl+Shift+D` → 구성 선택 → `F5`.
 4. 멈춘 상태에서 확인할 것
    - **변수(Variables)** 패널: `oPerson`, `strMessage` 값
    - **호출 스택(Call Stack)**: `hello.ts` → `Greet`
@@ -126,22 +167,22 @@ SyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript enum is not supporte
 **`Variable ${file} can not be resolved. Please open an editor.`**
 
 - 원인: 구성의 `"program": "${file}"` 은 **현재 에디터에 열려 있는 파일**을 뜻한다. 열린 파일 없이 F5 를 누르면 값을 채울 수 없다.
-- 해결: 실행할 `.ts` 파일(예: `lessons/00-setup/examples/hello.ts`)을 열고 **그 탭에 포커스를 둔 상태**로 F5.
+- 해결: 실행할 `.ts` 파일(예: `lessons/00-setup/hello.ts`)을 열고 **그 탭에 포커스를 둔 상태**로 F5.
 - VS2022 의 "시작 프로젝트(Startup Project)" 개념이 아니라 "지금 보고 있는 파일" 을 실행하는 방식이라, 예제 파일이 많은 학습용 저장소에 잘 맞는다.
 
 **`Can't find Node.js binary "node"` / 터미널에서 `node` 인식 안 됨**
 
 - 원인: Node.js 설치 폴더가 PATH 에 없음 (zip 으로 받아 압축만 푼 경우 흔함).
-- 해결: 사용자 환경 변수 `Path` 에 Node.js 폴더 추가 → **VS Code 완전히 종료 후 재시작** (실행 중인 프로그램은 바뀐 PATH 를 모름).
+- 해결: 사용자 환경 변수 `Path` 에 Node.js 폴더 추가 → **VS Code 완전히 종료 후 재시작** (실행 중인 프로그램은 바뀐 PATH 를 모름). 방법은 [부록 A](#부록-a-nodejs-path-등록).
 - 주의: 창 하나만 닫았다 열면 안 된다. VS Code 는 메인 프로세스 하나가 모든 창을 관리하므로, **모든 창을 `File > Exit` 로 닫아** `Code.exe` 가 완전히 내려가야 새 PATH 를 읽는다.
 
 ```powershell
 node -v   # v24.x 가 나오면 OK
 ```
 
-- VS Code 를 끌 수 없는 상황이면 → [부록 B](#부록-b-vs-code-설정만으로-node-경로-지정-재시작-불필요) 처럼 VS Code 설정으로 해결.
+- VS Code 를 끌 수 없는 상황이면 → [부록 B](#부록-b-vs-code-설정만으로-node-경로-지정) 처럼 VS Code 설정으로 해결.
 
-## 6. 명령줄(Command Line)에서 실행 & 디버깅
+## 6. 명령줄에서 실행과 디버깅
 
 VS Code 없이 cmd / PowerShell 만으로도 모든 작업이 가능하다. 아래는 `projectroot` 폴더 기준.
 
@@ -149,22 +190,22 @@ VS Code 없이 cmd / PowerShell 만으로도 모든 작업이 가능하다. 아�
 
 | 목적 | 명령 | 비고 |
 |---|---|---|
-| ① Node 직접 실행 | `node lessons/00-setup/examples/hello.ts` | 빌드 없음, 타입 검사 없음 |
-| ② 빌드 후 실행 | `npm run build` → `node dist/lessons/00-setup/examples/hello.js` | `dist/` 에 `.js` + `.js.map` 생성 |
-| ③ tsx 실행 | `npx tsx lessons/00-setup/examples/enum-sample.ts` | 모든 TS 문법 지원 |
-| 파일 저장 시 자동 재실행 | `node --watch lessons/00-setup/examples/hello.ts` | Node 내장 감시 모드(Watch Mode) |
+| ① Node 직접 실행 | `node lessons/00-setup/hello.ts` | 빌드 없음, 타입 검사 없음 |
+| ② 빌드 후 실행 | `npm run build` → `node dist/lessons/00-setup/hello.js` | `dist/` 에 `.js` + `.js.map` 생성 |
+| ③ tsx 실행 | `npx tsx lessons/00-setup/enum-sample.ts` | 모든 TS 문법 지원 |
+| 파일 저장 시 자동 재실행 | `node --watch lessons/00-setup/hello.ts` | Node 내장 감시 모드(Watch Mode) |
 | 타입 검사 | `npm run typecheck` | `tsc --noEmit` — 파일 생성 없이 오류만 확인 |
 | 타입 검사 (감시) | `npm run typecheck:watch` | 저장할 때마다 다시 검사 |
 | 빌드 결과 삭제 | `npm run clean` | `dist/` 삭제 |
 
 > `npx` = `node_modules/.bin` 에 설치된 도구를 실행. 전역 설치(`npm i -g`) 없이 프로젝트에 고정된 버전을 쓸 수 있다.
 
-### 6-2. 명령줄에서 디버깅 — `--inspect-brk` + 연결(Attach)
+### 6-2. 명령줄에서 디버깅 (Attach)
 
 1. 디버그 모드로 실행 (첫 줄에서 멈춘 채 디버거를 기다림)
 
    ```cmd
-   node --inspect-brk lessons/00-setup/examples/hello.ts
+   node --inspect-brk lessons/00-setup/hello.ts
    ```
    ```
    Debugger listening on ws://127.0.0.1:9229/...
@@ -185,22 +226,13 @@ VS Code 없이 cmd / PowerShell 만으로도 모든 작업이 가능하다. 아�
 ### 6-3. 더 간단한 방법 — JavaScript 디버그 터미널
 
 VS Code 터미널 오른쪽 `+` 옆 `∨` → **JavaScript Debug Terminal**.
-이 터미널에서 `node lessons/00-setup/examples/hello.ts` 처럼 평소대로 실행하면 **자동으로 디버거가 붙는다**. launch.json 이 필요 없다.
+이 터미널에서 `node lessons/00-setup/hello.ts` 처럼 평소대로 실행하면 **자동으로 디버거가 붙는다**. launch.json 이 필요 없다.
 
-## 정리
-
-- 공부할 때는 **① Node 직접 실행** 으로 빠르게, `enum` 등이 필요하면 **③ tsx**.
-- 실제 결과물(배포)은 **② tsc 빌드**.
-- 타입 검사는 실행과 별개 → `npm run typecheck` 습관화.
-- 디버깅은 F5(launch) / `--inspect-brk` + Attach / JavaScript Debug Terminal 중 편한 것으로.
-
----
-
-## 7. TS → JS 변환 결과 직접 보기
+## 7. TS 를 JS 로 변환한 결과 보기
 
 TypeScript 는 HTML 이 아니라 **JavaScript** 로 변환된다. `npm run build` 후 `dist/` 를 열어 보면 확인할 수 있다.
 
-| TS (`lessons/00-setup/examples/*.ts`) | JS (`dist/lessons/00-setup/examples/*.js`) | 변화 |
+| TS (`lessons/00-setup/*.ts`) | JS (`dist/lessons/00-setup/*.js`) | 변화 |
 |---|---|---|
 | `export interface IPerson { strName: string; nAge: number; }` | *(없음)* | `interface` 는 타입 전용 → 통째로 삭제 |
 | `function Greet(oPerson: IPerson): string` | `function Greet(oPerson)` | 타입 표기(Type Annotation) 삭제 |
@@ -218,7 +250,19 @@ TypeScript 는 HTML 이 아니라 **JavaScript** 로 변환된다. `npm run buil
 
 > C# 관점: C# 은 컴파일 후에도 IL 에 타입 정보가 남아 리플렉션(Reflection) 가능. TypeScript 는 타입이 **완전히 사라진다** (타입 소거, Type Erasure).
 
-## 부록 A. Node.js PATH 등록 (zip 설치 버전)
+## 정리
+
+- 공부할 때는 **① Node 직접 실행** 으로 빠르게, `enum` 등이 필요하면 **③ tsx**.
+- 실제 결과물(배포)은 **② tsc 빌드**.
+- 타입 검사는 실행과 별개 → `npm run typecheck` 습관화.
+- 디버깅은 F5(launch) / `--inspect-brk` + Attach / JavaScript Debug Terminal 중 편한 것으로.
+- TS 는 JS 로 변환되고, 그 과정에서 타입은 사라진다.
+
+**다음 강의 → [01. 기본 타입과 bigint](../01-basic-types/README.md)**: 타입을 본격적으로 배우고 DevCalc 의 첫 부품(진법 변환)을 만든다.
+
+---
+
+## 부록 A. Node.js PATH 등록
 
 Node.js 를 설치 프로그램(msi) 대신 zip 으로 받아 `D:\sdks\nodejs\node-v24.15.0-win-x64` 처럼 풀어 둔 경우, PATH 를 직접 등록해야 한다.
 
@@ -249,9 +293,9 @@ if (($userPath -split ';') -notcontains $nodeDir) {
 
 > 영구 등록 후에는 **이미 실행 중인 프로그램(VS Code, cmd 창 등)을 다시 시작**해야 반영된다.
 
-## 부록 B. VS Code 설정만으로 Node 경로 지정 (재시작 불필요)
+## 부록 B. VS Code 설정만으로 Node 경로 지정
 
-다른 작업 때문에 VS Code 를 완전히 끌 수 없을 때, **사용자 설정**에 아래를 추가하면 즉시 적용된다.
+다른 작업 때문에 VS Code 를 완전히 끌 수 없을 때, **사용자 설정**에 아래를 추가하면 재시작 없이 즉시 적용된다.
 
 `Ctrl+Shift+P` → `Preferences: Open User Settings (JSON)`
 
@@ -273,15 +317,20 @@ if (($userPath -split ';') -notcontains $nodeDir) {
 - 저장소의 `.vscode/settings.json` 이 아니라 **사용자 설정**에 넣는 이유: PC 마다 Node 설치 경로가 다르므로 GitHub 에 올리면 안 되는 값이다.
 - 기존 터미널에는 적용되지 않으니 휴지통 아이콘으로 닫고 새로 열 것.
 
-## 부록 C. 저장소에 포함된 VS Code 설정 (`.vscode/`)
+## 부록 C. 저장소의 VS Code 설정
 
 | 파일 | 내용 |
 |---|---|
-| `launch.json` | 디버그 구성 ①~④ |
-| `tasks.json` | `tsc: build`, `tsc: watch` 작업 |
-| `settings.json` | `typescript.tsdk` → 에디터가 프로젝트의 TypeScript(7.x) 를 사용 |
-| `extensions.json` | 추천 확장(Extension): ESLint, Prettier, Pretty TypeScript Errors |
+| `.vscode/launch.json` | 디버그 구성 ①~④ |
+| `.vscode/tasks.json` | `tsc: build`, `tsc: watch` 작업 |
+| `.vscode/settings.json` | `typescript.tsdk` → 에디터가 프로젝트의 TypeScript(7.x) 를 사용 |
+| `.vscode/extensions.json` | 추천 확장(Extension): ESLint, Prettier, Pretty TypeScript Errors |
+| `.devcontainer/devcontainer.json` | Codespaces 환경: Node.js 24 설치, `npm ci` 자동 실행, 추천 확장 설치 |
 
 - 처음 열면 나오는 알림
   - "This workspace contains a TypeScript version…" → **Allow** (프로젝트 TypeScript 사용)
   - "Do you want to install the recommended extensions…" → **Install** (추천 확장 설치)
+
+---
+
+[목차](../../README.md) · [다음: 01. 기본 타입과 bigint →](../01-basic-types/README.md)
