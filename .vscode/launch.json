@@ -1,0 +1,50 @@
+{
+  // F5 로 실행. 디버깅할 .ts 파일을 에디터에서 열어 둔 상태에서 구성(Configuration)을 선택한다.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // 1) Node.js 타입 제거(Type Stripping)로 .ts 를 바로 실행 - 빌드 불필요, 가장 빠름
+      //    enum / namespace 등 런타임 코드를 만드는 문법은 지원하지 않음 → 3) 사용
+      "name": "① 현재 TS 파일 (Node 직접 실행)",
+      "type": "node",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      // 2) tsc 로 빌드한 JS 를 실행하고 소스맵(Source Map)으로 .ts 에 중단점(Breakpoint) 매핑
+      "name": "② 현재 TS 파일 (tsc 빌드 후 실행)",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "tsc: build",
+      "program": "${workspaceFolder}/dist/${relativeFileDirname}/${fileBasenameNoExtension}.js",
+      "cwd": "${workspaceFolder}",
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      // 3) tsx 로 실행 - enum, namespace, 파라미터 프로퍼티 등 모든 TS 문법 지원
+      "name": "③ 현재 TS 파일 (tsx)",
+      "type": "node",
+      "request": "launch",
+      "program": "${file}",
+      "runtimeArgs": ["--import", "tsx"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
+    },
+    {
+      // 4) 명령줄에서 `node --inspect-brk 파일.ts` 로 띄운 프로세스에 연결(Attach)
+      "name": "④ 실행 중인 Node 에 연결 (Attach :9229)",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "cwd": "${workspaceFolder}",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

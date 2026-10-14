@@ -1,0 +1,14 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+*.tsbuildinfo
+
+# logs
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vs/
