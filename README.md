@@ -51,6 +51,9 @@ npm install
 npm run typecheck                          # 타입 검사
 npm run build                              # dist/ 로 빌드
 node lessons/00-setup/examples/hello.ts    # 예제 실행
+npm run check 01                           # 01강 연습문제 채점
+npm test                                   # DevCalc 테스트
+npm run devcalc -- 255                      # DevCalc 실행
 ```
 
 디버깅: VS Code 에서 이 폴더를 열고 `.ts` 파일을 연 뒤 `F5`. 자세한 내용은 [00-setup](lessons/00-setup/README.md).
@@ -62,7 +65,8 @@ node lessons/00-setup/examples/hello.ts    # 예제 실행
 │  └─ NN-주제/
 │     ├─ README.md     강의 본문
 │     ├─ examples/     따라 치는 예제
-│     ├─ exercises/    빈칸 문제 (TODO) + 테스트
+│     ├─ exercises/    빈칸 문제 (TODO)
+│     ├─ tests/        채점용 테스트 (node:test)
 │     └─ solutions/    정답
 ├─ devcalc/            최종 앱 (강의마다 자람)
 └─ tools/              진도 확인 스크립트 등
@@ -73,7 +77,7 @@ node lessons/00-setup/examples/hello.ts    # 예제 실행
 | 강 | 폴더 | 주제 | DevCalc 스텝 | 상태 |
 |---|---|---|---|---|
 | 00 | [00-setup](lessons/00-setup/README.md) | 환경 구성, 실행, 디버깅, TS → JS | — | ✅ |
-| 01 | 01-basic-types | 기본 타입, `bigint` | ToHex/ToBin/ToDec (Lv1) | |
+| 01 | [01-basic-types](lessons/01-basic-types/README.md) | 기본 타입, `bigint` | ToHex/ToBin/ToDec (Lv1) | ✅ |
 | 02 | 02-functions-objects | 함수, 객체, `interface`/`type` | 자릿수 묶기, 출력 옵션 | |
 | 03 | 03-narrowing | 유니온, 타입 좁히기 | 입력 형식 해석 `0x`/`0b`/`1_000` (Lv2) | |
 | 04 | 04-classes-errors | 클래스, 에러 처리 | CWordSize, CCalcError, 두 수 계산 (Lv3) | |
@@ -99,6 +103,7 @@ node lessons/00-setup/examples/hello.ts    # 예제 실행
 | `n` `bi` `str` `b` | number, bigint, string, boolean | `nAge`, `biValue`, `strName`, `bOk` |
 | `arr` `map` `set` `re` `fn` | 배열, Map, Set, RegExp, 함수 | `arrPeople`, `fnCallback` |
 | `el` / `o` | DOM 요소 / 그 밖의 객체 | `elInput`, `oPerson` |
+| `v` | `any` / `unknown` (variant) | `vInput` |
 
 - 함수·메서드는 PascalCase (`Greet`), 상수는 UPPER_CASE (`MAX_BITS`)
 - DOM·Node 등 외부 API 는 원래 이름(camelCase) 그대로 사용
