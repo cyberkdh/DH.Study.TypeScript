@@ -38,7 +38,7 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 > On the GitHub website you can **read** the code but not **run** it. Run it on your PC or in Codespaces.
 > DevCalc gets a web UI in lesson 07 and is deployed to GitHub Pages in lesson 11, so you can then try it directly in the browser.
 
-> The lessons are written in Korean first, then translated. Comments inside the example code are in Korean.
+> The lessons are written in Korean first, then translated. Comments in the example code are written in both Korean and English.
 
 ## Purpose
 

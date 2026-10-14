@@ -2,7 +2,7 @@
 //	Projects		: DH.Study.TypeScript
 //	Author			: CYBERKDH
 //	Module			: 00-setup / hello
-//	History			: 2026-10-14 CYBERKDH 최초 작성
+//	History			: 2026-10-14 CYBERKDH 최초 작성 (Initial)
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +14,7 @@ const arrPeople: IPerson[] = [
 ];
 
 for (const oPerson of arrPeople) {
-	console.log(Greet(oPerson)); // ← F11 로 Greet 안으로 들어가 보기
+	console.log(Greet(oPerson)); // ← F11 로 Greet 안으로 들어가 보기 / Press F11 to step into Greet
 }
 
 console.log(`Node.js ${process.version}`);

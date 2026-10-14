@@ -31,7 +31,7 @@ After this lesson you can:
 
 Example files for this lesson: [primitives.ts](primitives.ts) · [bigint.ts](bigint.ts) · [special-types.ts](special-types.ts) · [convert.ts](convert.ts)
 
-> Comments inside the example code are in Korean; the explanations below cover each part.
+> Comments in the example code are written in both Korean and English. Program output (console text) stays in Korean.
 
 ---
 
