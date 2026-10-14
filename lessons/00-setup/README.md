@@ -52,8 +52,7 @@ projectroot/
 │        ├─ hello.ts
 │        ├─ greeter.ts
 │        └─ enum-sample.ts
-├─ devcalc/            ← (예정) 강의마다 자라는 최종 앱
-├─ tools/              ← (예정) 채점 스크립트 등
+├─ devcalc/            ← 강의마다 자라는 최종 앱 (01강부터)
 ├─ package.json
 └─ tsconfig.json
 ```

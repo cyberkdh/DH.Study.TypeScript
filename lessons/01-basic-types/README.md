@@ -10,7 +10,7 @@
 - [ ] 변수에 타입을 표기(Type Annotation)하고, 표기를 생략해도 되는 경우(Type Inference)를 안다
 - [ ] `number` 의 한계(2^53 - 1)를 설명하고, 큰 정수에는 `bigint` 를 쓴다
 - [ ] `any` 와 `unknown` 의 차이, `void` 와 `never` 의 쓰임을 안다
-- [ ] 연습문제 3개를 풀고 `npm run check 01` 로 직접 확인한다
+- [ ] 배운 타입으로 진법 변환 함수(ToHex/ToBin/ToDec/ToBigInt)를 직접 만든다
 - [ ] DevCalc 에 진법 변환 기능(ToHex/ToBin/ToDec)을 추가한다
 
 ---
@@ -104,35 +104,66 @@ node lessons/01-basic-types/examples/special-types.ts   # any, unknown, null, vo
 - 변수 위에 마우스를 올려 추론된 타입(Hover)을 확인한다.
 - `bigint.ts` 의 `// @ts-expect-error` 를 지워 보고, 실행해서 `TypeError` 를 확인한다.
 
-## 7. 연습문제 (exercises)
+## 7. 직접 만들기 — 진법 변환 함수
 
-| 파일 | 문제 |
-|---|---|
-| `exercises/ex01-to-hex.ts` | `ToHex(255n)` → `"0xFF"` |
-| `exercises/ex02-to-bin.ts` | `ToBin(10n)` → `"0b1010"`, `ToDec(255n)` → `"255"` |
-| `exercises/ex03-to-bigint.ts` | `ToBigInt(255)` → `255n`, 안전하지 않은 수는 `RangeError` |
+배운 타입으로 DevCalc 의 첫 부품을 만든다. 전체 코드는 `examples/convert.ts`.
 
-1. 파일을 열고 `TODO` 부분을 구현한다.
-2. 채점한다:
+### ToHex : 255n → "0xFF"
+
+```ts
+function ToHex(biValue: bigint): string {
+	const strSign = biValue < 0n ? "-" : "";            // 부호는 따로 떼어 맨 앞에
+	const biAbs = biValue < 0n ? -biValue : biValue;    // 절댓값
+	return `${strSign}0x${biAbs.toString(16).toUpperCase()}`;
+}
+```
+
+- 매개변수 `biValue: bigint`, 반환 `: string` — 함수에는 타입을 표기한다.
+- `0n` 처럼 **bigint 끼리** 비교한다. `biValue < 0` 도 동작은 하지만 bigint 코드에서는 `0n` 으로 맞추는 것이 읽기 좋다.
+- 음수를 그대로 `toString(16)` 하면 `"-ff"` 가 되어 접두어 위치가 어색하므로 부호를 분리했다.
+
+### ToBin, ToDec
+
+```ts
+function ToBin(biValue: bigint): string { ... `${strSign}0b${biAbs.toString(2)}` ... }
+function ToDec(biValue: bigint): string { return biValue.toString(10); }
+```
+
+`ToBin` 은 `ToHex` 와 진법·접두어만 다르다. 이 중복은 DevCalc 스텝에서 하나로 묶는다.
+
+### ToBigInt : number → bigint
+
+```ts
+function ToBigInt(nValue: number): bigint {
+	if (!Number.isSafeInteger(nValue)) {
+		throw new RangeError(`안전한 정수가 아닙니다: ${nValue}`);
+	}
+	return BigInt(nValue);
+}
+```
+
+- `1.5`, `NaN`, `Infinity`, `2 ** 53` 은 정확한 정수가 아니므로 거부한다.
+- 3장의 "number 의 함정"을 코드로 막는 방법이다.
+
+### 실행
 
 ```bash
-npm run check 01
+node lessons/01-basic-types/examples/convert.ts
 ```
 
 ```
-✔ ToHex: 양수
-✖ ToBin: 음수        ← 틀린 문제는 기대값(expected)과 실제값(actual)이 표시된다
-ℹ pass 8
-ℹ fail 1
+                 255 |                0xFF | 0b11111111
+                   0 |                 0x0 | 0b0
+                -255 |               -0xFF | -0b11111111
+18446744073709551615 |  0xFFFFFFFFFFFFFFFF | 0b1111...1111
+255n
+RangeError: 안전한 정수가 아닙니다: 1.5
 ```
 
-3. 모두 통과하면 `solutions/` 의 정답과 비교해 본다. (정답 자체를 채점하려면 `npm run check:solutions 01`)
-
-> 테스트는 `tests/*.test.ts` 에 있다. Node 내장 테스트 러너(`node:test`)를 쓰므로 따로 설치할 것이 없다.
-
+> `ToBigInt(1.5)` 줄에 중단점(Breakpoint)을 걸고 `F11` 로 함수 안에 들어가 `nValue` 값을 확인해 보자.
 ## 8. DevCalc 스텝 — Lv1 진법 변환기
 
-연습문제에서 만든 함수를 `devcalc/src/core/Format.ts` 로 옮겼다. 중복되는 부호 처리는 `FormatRadix` 하나로 묶었다.
+7장에서 만든 함수를 `devcalc/src/core/Format.ts` 로 옮겼다. 중복되는 부호 처리는 `FormatRadix` 하나로 묶었다.
 
 ```ts
 function FormatRadix(biValue: bigint, nRadix: number, strPrefix: string): string {

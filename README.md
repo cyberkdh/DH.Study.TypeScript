@@ -3,7 +3,7 @@
 TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산기(DevCalc)** 를 직접 완성하는 강의 저장소.
 
 - 강의 본문 = 각 강의 폴더의 `README.md` (GitHub 에서 바로 읽힘)
-- 예제(examples) → 연습문제(exercises) + 테스트 → 정답(solutions) 순서로 진행
+- 강의를 읽으며 예제(examples)를 직접 실행·디버깅하는 방식으로 진행
 - 강의마다 `devcalc/` 에 부품이 하나씩 추가되어 최종 앱이 완성됨
 
 ## 목적 (Purpose)
@@ -24,7 +24,7 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 | 최종 결과물 | **DevCalc** 완성: 개발자용 계산기 (입력 하나 → HEX/DEC/BIN 동시 표시, 브라우저에서 단일 HTML 로 동작, GitHub Pages 배포) |
 | 언어 | 기본 타입부터 제네릭(Generics)·고급 타입(Advanced Types)까지 읽고 쓸 수 있다 |
 | 도구 | VS Code 디버깅(Debugging), `tsc` 빌드, 테스트(node:test → Vitest), ESLint 를 스스로 설정하고 쓴다 |
-| 습관 | 강의마다 연습문제를 풀고 테스트로 직접 확인한다 |
+| 습관 | 강의마다 예제를 직접 실행하고 디버거(F5)로 값을 확인한다 |
 | 기록 | 강의마다 블로그에 옮길 수 있는 README 를 남긴다 |
 
 ### DevCalc 단계별 목표
@@ -51,7 +51,6 @@ npm install
 npm run typecheck                          # 타입 검사
 npm run build                              # dist/ 로 빌드
 node lessons/00-setup/examples/hello.ts    # 예제 실행
-npm run check 01                           # 01강 연습문제 채점
 npm test                                   # DevCalc 테스트
 npm run devcalc -- 255                      # DevCalc 실행
 ```
@@ -64,12 +63,8 @@ npm run devcalc -- 255                      # DevCalc 실행
 ├─ lessons/
 │  └─ NN-주제/
 │     ├─ README.md     강의 본문
-│     ├─ examples/     따라 치는 예제
-│     ├─ exercises/    빈칸 문제 (TODO)
-│     ├─ tests/        채점용 테스트 (node:test)
-│     └─ solutions/    정답
-├─ devcalc/            최종 앱 (강의마다 자람)
-└─ tools/              진도 확인 스크립트 등
+│     └─ examples/     따라 치는 예제
+└─ devcalc/            최종 앱 (강의마다 자람)
 ```
 
 ## 커리큘럼
