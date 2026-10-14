@@ -21,7 +21,6 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 | 08 | Advanced Types | Utility, mapped, conditional types | Type-safe function table | Coming soon |
 | 09 | Testing and Tooling | Vitest, ESLint | Tests, naming-rule linting | Coming soon |
 | 10 | (Challenge) Lexer and Parser | Recursion, discriminated unions | Lv5 expression evaluation | Coming soon |
-| 11 | Build and Deploy | Bundling, GitHub Pages | Single-HTML deployment | Coming soon |
 
 ## How to study
 
@@ -36,7 +35,7 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 5. Each lesson's finished code is tagged in git: `git checkout lesson-01`
 
 > On the GitHub website you can **read** the code but not **run** it. Run it on your PC or in Codespaces.
-> DevCalc gets a web UI in lesson 07 and is deployed to GitHub Pages in lesson 11, so you can then try it directly in the browser.
+> DevCalc gets a web UI in lesson 07, so you can then try it in the browser.
 
 > Every lesson has an English version (`README.md`, default) and a Korean version (`README.ko.md`). Comments in the example code are written in English first, followed by Korean.
 
@@ -55,7 +54,7 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 
 | Area | Goal |
 |---|---|
-| Final result | Finish **DevCalc**: a developer calculator (one input → HEX/DEC/BIN at once, runs as a single HTML file in the browser, deployed to GitHub Pages) |
+| Final result | Finish **DevCalc**: a developer calculator (one input → HEX/DEC/BIN at once, runs in the browser) |
 | Language | Read and write TypeScript, from basic types to generics and advanced types |
 | Tooling | Set up and use VS Code debugging, `tsc` builds, testing (node:test → Vitest) and ESLint |
 | Habit | Run every example yourself and inspect values in the debugger (F5) |
@@ -72,7 +71,6 @@ Building a parser from scratch is hard for a beginner, so we build **a small wor
 | Lv3 Two-operand math | `0xFF & 0x0F`, word size, error handling | 04–06 |
 | Lv4 Web UI | Input and results in the browser | 07–09 |
 | Lv5 (optional) Expressions | `(3 + 2) * 10` — lexer + parser | 10 |
-| Deploy | Single HTML + GitHub Pages | 11 |
 
 > Even stopping at Lv3 gives you a genuinely useful radix calculator.
 
@@ -85,6 +83,14 @@ npm run typecheck                          # type check
 npm run build                              # build to dist/
 npm run devcalc -- 255                     # run DevCalc
 npm test                                   # DevCalc tests
+npm run js -- lessons/00-setup/hello.ts    # Show the generated JS, then run it
+```
+
+On Windows (cmd / PowerShell), two bat files in `projectroot` do the same without typing `node` or `npm`:
+
+```bat
+runts.bat lessons\00-setup\hello.ts        # run a .ts directly (node type stripping)
+ts2js.bat lessons\00-setup\enum-sample.ts  # same as npm run js: build, show the JS, run it
 ```
 
 ## Repository layout
@@ -96,6 +102,9 @@ npm test                                   # DevCalc tests
 │     ├─ README.ko.md   lesson (Korean)
 │     └─ *.ts           examples used in the lesson
 ├─ devcalc/             the final app (grows every lesson)
+├─ tools/               helper scripts (show-js.ts: see TS → JS)
+├─ runts.bat            run a .ts directly (Windows)
+├─ ts2js.bat            show TS → JS, then run (Windows)
 └─ .devcontainer/       Codespaces environment
 ```
 

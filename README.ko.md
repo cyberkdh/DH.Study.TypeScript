@@ -21,7 +21,6 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 | 08 | 고급 타입 | 유틸리티·매핑·조건부 타입 | 함수 표 타입 안정성 | 준비 중 |
 | 09 | 테스트와 도구 | Vitest, ESLint | 테스트, 이름 규칙 자동 검사 | 준비 중 |
 | 10 | (도전) 렉서와 파서 | 재귀, 판별 유니온 | Lv5 수식 계산 | 준비 중 |
-| 11 | 빌드와 배포 | 번들(Bundle), GitHub Pages | 단일 HTML 배포 | 준비 중 |
 
 ## 공부하는 방법
 
@@ -36,7 +35,7 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 5. 강의별 완성 코드는 git 태그(Tag)로 볼 수 있다: `git checkout lesson-01`
 
 > GitHub 웹 페이지에서는 코드를 **읽을** 수는 있지만 **실행**할 수는 없다. 실행은 내 PC 또는 Codespaces 에서 한다.
-> DevCalc 는 07강부터 웹 화면이 생기고, 11강에서 GitHub Pages 에 배포해 브라우저에서 바로 써 볼 수 있게 된다.
+> DevCalc 는 07강부터 웹 화면이 생겨 브라우저에서 써 볼 수 있게 된다.
 
 > 모든 강의는 영어판(`README.md`, 기본)과 한국어판(`README.ko.md`)이 있다. 예제 코드의 주석은 영어 → 한국어 순으로 병기하고, 프로그램 출력은 영어다.
 
@@ -55,7 +54,7 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 
 | 구분 | 목표 |
 |---|---|
-| 최종 결과물 | **DevCalc** 완성: 개발자용 계산기 (입력 하나 → HEX/DEC/BIN 동시 표시, 브라우저에서 단일 HTML 로 동작, GitHub Pages 배포) |
+| 최종 결과물 | **DevCalc** 완성: 개발자용 계산기 (입력 하나 → HEX/DEC/BIN 동시 표시, 브라우저에서 동작) |
 | 언어 | 기본 타입부터 제네릭(Generics)·고급 타입(Advanced Types)까지 읽고 쓸 수 있다 |
 | 도구 | VS Code 디버깅(Debugging), `tsc` 빌드, 테스트(node:test → Vitest), ESLint 를 스스로 설정하고 쓴다 |
 | 습관 | 강의마다 예제를 직접 실행하고 디버거(F5)로 값을 확인한다 |
@@ -72,7 +71,6 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 | Lv3 두 수 계산 | `0xFF & 0x0F`, 워드 크기(Word Size), 에러 처리 | 04~06 |
 | Lv4 웹 화면 | 브라우저에서 입력·결과 표시 | 07~09 |
 | Lv5 (선택) 수식 계산 | `(3 + 2) * 10` — 렉서(Lexer) + 파서(Parser) | 10 |
-| 배포 | 단일 HTML + GitHub Pages | 11 |
 
 > Lv3 까지만 해도 "쓸 만한 개발자용 진법 변환 계산기"가 된다.
 
@@ -85,6 +83,14 @@ npm run typecheck                          # 타입 검사
 npm run build                              # dist/ 로 빌드
 npm run devcalc -- 255                     # DevCalc 실행
 npm test                                   # DevCalc 테스트
+npm run js -- lessons/00-setup/hello.ts    # 변환된 JS 를 보여 주고 실행
+```
+
+Windows (cmd / PowerShell) 에서는 `projectroot` 의 bat 파일 두 개로 `node` / `npm` 명령을 직접 치지 않고 같은 일을 할 수 있다:
+
+```bat
+runts.bat lessons\00-setup\hello.ts        # .ts 를 바로 실행 (node 타입 제거)
+ts2js.bat lessons\00-setup\enum-sample.ts  # npm run js 와 같음: 빌드 → JS 출력 → 실행
 ```
 
 ## 저장소 구조
@@ -96,6 +102,9 @@ npm test                                   # DevCalc 테스트
 │     ├─ README.ko.md   강의 (한국어)
 │     └─ *.ts           강의에 나오는 예제
 ├─ devcalc/             최종 앱 (강의마다 자람)
+├─ tools/               보조 스크립트 (show-js.ts: TS → JS 변환 보기)
+├─ runts.bat            .ts 바로 실행 (Windows)
+├─ ts2js.bat            TS → JS 변환 보고 실행 (Windows)
 └─ .devcontainer/       Codespaces 환경
 ```
 

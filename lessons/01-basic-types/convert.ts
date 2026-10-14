@@ -42,5 +42,6 @@ console.log(ToBigInt(255)); // 255n
 try {
 	ToBigInt(1.5); // ← Set a breakpoint and press F11 to step in / 중단점을 걸고 F11 로 들어가 보기
 } catch (e) {
-	console.log("RangeError:", (e as Error).message);
+	console.log("Expected error:", (e as Error).message);
+	console.log("Why : 1.5 is not an integer, so it can't become a bigint.");
 }

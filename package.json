@@ -16,7 +16,8 @@
     "typecheck:watch": "tsc --noEmit --watch",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "test": "node --test \"devcalc/tests/**/*.test.ts\"",
-    "devcalc": "node devcalc/src/main.ts"
+    "devcalc": "node devcalc/src/main.ts",
+    "js": "node tools/show-js.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",

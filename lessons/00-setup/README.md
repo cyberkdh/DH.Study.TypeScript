@@ -15,6 +15,7 @@ After this lesson you can:
 - [ ] Set a breakpoint with F5 in VS Code and inspect variables and the call stack
 - [ ] Debug from the command line with `--inspect-brk`
 - [ ] See for yourself what disappears when TS becomes JS (type erasure)
+- [ ] Explain the order in which a file runs without `main()`
 
 > For the purpose of the whole series and the final goal (DevCalc), see the [root README](../../README.md#purpose).
 
@@ -26,11 +27,14 @@ After this lesson you can:
 4. [Three ways to run a .ts file](#4-three-ways-to-run-a-ts-file)
 5. [Debugging in VS Code](#5-debugging-in-vs-code)
 6. [Running and debugging from the command line](#6-running-and-debugging-from-the-command-line)
-7. [What TS looks like after compiling to JS](#7-what-ts-looks-like-after-compiling-to-js)
-8. [Summary](#summary)
+7. [What TS looks like after compiling to JS](#7-what-ts-looks-like-after-compiling-to-js) — TS syntax = JS syntax + type syntax ([7-3](#7-3-ts-syntax--js-syntax--type-syntax))
+8. [How JS runs — there is no main](#8-how-js-runs--there-is-no-main)
+9. [Summary](#summary)
 - Appendix: [A. Adding Node.js to PATH](#appendix-a-adding-nodejs-to-path) · [B. Setting the Node path in VS Code only](#appendix-b-setting-the-node-path-in-vs-code-only) · [C. VS Code settings in this repo](#appendix-c-vs-code-settings-in-this-repo)
 
-Example files for this lesson: [hello.ts](hello.ts) · [greeter.ts](greeter.ts) · [enum-sample.ts](enum-sample.ts)
+Example files for this lesson: [hello.ts](hello.ts) · [greeter.ts](greeter.ts) · [enum-sample.ts](enum-sample.ts) · [run-order.ts](run-order.ts) · [run-order-lib.ts](run-order-lib.ts)
+
+> Every example runs with `node file.ts` **to the end without errors**. When an error is part of the lesson, the example catches it and prints **why** it happened (`Expected error:` / `Why :`).
 
 ---
 
@@ -82,7 +86,9 @@ projectroot/
 │  │  ├─ README.ko.md  ← Korean version
 │  │  ├─ hello.ts      ← examples sit right next to the lesson text
 │  │  ├─ greeter.ts
-│  │  └─ enum-sample.ts
+│  │  ├─ enum-sample.ts
+│  │  ├─ run-order.ts
+│  │  └─ run-order-lib.ts
 │  └─ 01-basic-types/
 ├─ devcalc/            ← the final app, growing every lesson (from lesson 01)
 ├─ package.json
@@ -100,6 +106,7 @@ projectroot/
 | `noUncheckedIndexedAccess` | `true` | `arr[0]` has type `T \| undefined` → safer habits |
 | `rewriteRelativeImportExtensions` | `true` | Rewrites `import "./a.ts"` to `./a.js` when building |
 | `verbatimModuleSyntax` | `true` | Forces `import type` for type-only imports |
+| `erasableSyntaxOnly` | `true` | Allows only syntax that runs by erasing types → no `enum` / `namespace` (red squiggle). Every `.ts` here runs with `node` |
 | `sourceMap` | `true` | Maps built JS back to the original TS → needed for debugging |
 
 > From a C# developer's view: `tsconfig.json` ≈ `.csproj`, `tsc` ≈ `csc`/`dotnet build`, `strict` ≈ enabling nullable reference types.
@@ -121,13 +128,35 @@ Hello, TypeScript (age 14)
 Node.js v24.15.0
 ```
 
-Running [enum-sample.ts](enum-sample.ts) with ① fails:
+[greeter.ts](greeter.ts) only defines `Greet()`. Run by itself, it tells you where to look:
+
+```
+> node lessons/00-setup/greeter.ts
+greeter.ts only defines Greet(); it is used by hello.ts.
+Run: node lessons/00-setup/hello.ts
+```
+
+`enum` is the one thing to watch out for. An `enum` is not just a type; it **generates a runtime object (JavaScript code)**. Method ①, which only *erases* things, can't run it:
 
 ```
 SyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript enum is not supported in strip-only mode
 ```
 
-An `enum` is not just a type; it **generates a runtime object (JavaScript code)**. Method ①, which only *erases* things, can't handle it.
+So this repo **doesn't use `enum` at all**. `erasableSyntaxOnly` in tsconfig.json flags an `enum` with a red squiggle as soon as you type it. [enum-sample.ts](enum-sample.ts) shows the replacement: a plain object + `as const` + a union type. It runs the same with ①, ② and ③:
+
+```ts
+const COLOR = { Red: "RED", Green: "GREEN" } as const;
+type EColor = (typeof COLOR)[keyof typeof COLOR]; // "RED" | "GREEN"
+```
+
+```
+> node lessons/00-setup/enum-sample.ts
+RED GREEN
+color = GREEN
+color = RED
+```
+
+> The same pattern becomes DevCalc's `EBase = "HEX" | "DEC" | "BIN"` later.
 
 > ⚠️ ① and ③ **do not type-check**. Find type errors through the red squiggles in the editor or with `npm run typecheck`.
 
@@ -141,6 +170,7 @@ An `enum` is not just a type; it **generates a runtime object (JavaScript code)*
 | ② Current TS file (tsc build, then run) | Builds via `preLaunchTask` → runs the JS in `dist`, breakpoints mapped to TS via source maps |
 | ③ Current TS file (tsx) | Supports all TS syntax |
 | ④ Attach to running Node (Attach :9229) | Attaches to a process started with `--inspect-brk` → [6-2](#6-2-debugging-from-the-command-line-attach) |
+| ⑤ Current TS file (show generated JS, then run) | Prints the JS that tsc made, then runs it → [7-1](#7-1-see-the-generated-js-then-run-it--npm-run-js) |
 
 ### Try it
 
@@ -192,7 +222,7 @@ Everything also works from cmd / PowerShell without VS Code. Paths below are rel
 |---|---|---|
 | ① Node directly | `node lessons/00-setup/hello.ts` | No build, no type check |
 | ② Build, then run | `npm run build` → `node dist/lessons/00-setup/hello.js` | Creates `.js` + `.js.map` in `dist/` |
-| ③ tsx | `npx tsx lessons/00-setup/enum-sample.ts` | Supports all TS syntax |
+| ③ tsx | `npx tsx lessons/00-setup/hello.ts` | Transforms with esbuild |
 | Re-run on save | `node --watch lessons/00-setup/hello.ts` | Node's built-in watch mode |
 | Type check | `npm run typecheck` | `tsc --noEmit` — reports errors without writing files |
 | Type check (watch) | `npm run typecheck:watch` | Re-checks on every save |
@@ -230,7 +260,70 @@ Run things as usual, e.g. `node lessons/00-setup/hello.ts`, and **the debugger a
 
 ## 7. What TS looks like after compiling to JS
 
-TypeScript compiles to **JavaScript**, not HTML. Run `npm run build` and open `dist/` to see it.
+TypeScript compiles to **JavaScript**, not HTML. `node file.ts` converts in memory only and leaves no file, so use the command below to **see** the JS.
+
+### 7-1. See the generated JS, then run it — `npm run js`
+
+`npm run js -- <file.ts>` ([tools/show-js.ts](../../tools/README.md)) does three things in a row: **[1]** build with tsc → **[2]** print the generated `.js` → **[3]** run that `.js` with node.
+
+**From the terminal**
+
+| Where you are | Command |
+|---|---|
+| `projectroot` | `npm run js -- lessons/00-setup/enum-sample.ts` |
+| This lesson folder (`lessons/00-setup`) | `npm run js -- enum-sample.ts` |
+| Without npm | `node tools/show-js.ts lessons/00-setup/enum-sample.ts` |
+| Windows bat (`projectroot`) | `ts2js.bat lessons\00-setup\enum-sample.ts` |
+| Windows bat (this lesson folder) | `..\..\ts2js.bat enum-sample.ts` |
+
+> `--` tells npm that what follows is passed to the script. Don't leave it out.
+
+**With F5 (VS Code)**
+
+1. Open [enum-sample.ts](enum-sample.ts) in the editor
+2. `Ctrl+Shift+D` → choose **⑤ Current TS file (show generated JS, then run)**
+3. `F5` → the result appears in the terminal
+
+**Output**
+
+```
+> npm run js -- lessons/00-setup/enum-sample.ts
+[1] tsc : lessons/00-setup/enum-sample.ts  →  dist/lessons/00-setup/enum-sample.js
+
+[2] Generated JavaScript (dist/lessons/00-setup/enum-sample.js)
+----------------------------------------------------------------------
+const COLOR = {
+    Red: "RED",
+    Green: "GREEN",
+};
+function Describe(eColor) {
+    return `color = ${eColor}`;
+}
+console.log(COLOR.Red, COLOR.Green); // RED GREEN
+console.log(Describe(COLOR.Green)); // color = GREEN
+console.log(Describe("RED")); // color = RED  (a plain string literal works too / 문자열 리터럴도 가능)
+export {};
+// Describe("BLUE"); // ← Uncomment: red squiggle, "BLUE" is not an EColor / 주석을 풀면 빨간 줄
+----------------------------------------------------------------------
+
+[3] node dist/lessons/00-setup/enum-sample.js
+RED GREEN
+color = GREEN
+color = RED
+```
+
+**Compare side by side in the editor**
+
+1. Run it once (above)
+2. `Ctrl+P` → type `enum-sample.js` → open the one under `dist/`
+3. `Ctrl+\` to split the editor → `.ts` on one side, `.js` on the other
+
+Compare with [enum-sample.ts](enum-sample.ts): `as const`, the whole `type EColor = ...` line and the parameter type `: EColor` are gone. Everything else is the same code. Try `npm run js -- lessons/00-setup/hello.ts` too: `"./greeter.ts"` becomes `"./greeter.js"`.
+
+> The `.js` is written only to `dist/`, never next to the lesson files. If you delete a `.ts`, its old `.js` stays in `dist/` → `npm run clean`.
+
+### 7-2. What changes
+
 
 | TS (`lessons/00-setup/*.ts`) | JS (`dist/lessons/00-setup/*.js`) | Change |
 |---|---|---|
@@ -238,25 +331,117 @@ TypeScript compiles to **JavaScript**, not HTML. Run `npm run build` and open `d
 | `function Greet(oPerson: IPerson): string` | `function Greet(oPerson)` | Type annotations removed |
 | `const arrPeople: IPerson[] = [...]` | `const arrPeople = [...]` | Type annotation removed |
 | `import { Greet, type IPerson } from "./greeter.ts"` | `import { Greet } from "./greeter.js"` | Type import removed, `.ts` → `.js` |
-| `enum Color { Red = "RED", ... }` | `var Color; (function (Color) { Color["Red"] = "RED"; ... })(Color \|\| (Color = {}));` | **New code is generated** |
+| `const COLOR = { ... } as const;` | `const COLOR = { ... };` | Only `as const` removed |
 | Header comment | kept | Comments are preserved |
 | — | `//# sourceMappingURL=hello.js.map` | Source map link for debugging |
 
 Key points:
 
 - Most TS syntax becomes JS **just by erasing it** → which is why `node hello.ts` (type stripping) works.
-- Only syntax that must **generate new JS code**, like `enum`, is the exception → the reason method ① failed.
+- Only syntax that must **generate new JS code**, like `enum`, is the exception → method ① can't run it, so this repo doesn't use it (`erasableSyntaxOnly`).
 - Types do not exist at runtime. Type checking happens only at compile/edit time.
 
 > C# view: after compiling C#, type information remains in IL and you can use reflection. In TypeScript, types **disappear completely** (type erasure).
 
+### 7-3. TS syntax = JS syntax + type syntax
+
+TypeScript syntax is **all of JavaScript's syntax plus type syntax**. So more than half of what you learn as "TS syntax" is really modern JS (ES2015+) syntax.
+
+```
+┌──────────────── TypeScript ────────────────┐
+│  ┌──────── JavaScript (ES2024) ────────┐   │
+│  │ const / let, function, import,      │   │
+│  │ 1n, destructuring, class, async ... │   │
+│  └─────────────────────────────────────┘   │
+│  + type syntax :  : T, interface, type ... │
+└────────────────────────────────────────────┘
+```
+
+| Syntax | Kind | At runtime |
+|---|---|---|
+| `const` / `let`, `function`, `import` / `export`, `class` | **JS** | kept |
+| `1n` (bigint), `0xff`, `1_000`, destructuring `const { a } = o` | **JS** | kept |
+| no `main()`, top-level code runs, `import.meta.main` | **JS** (Node) | kept |
+| `: string`, `: number[]` type annotations | **TS** | gone |
+| `interface`, `type`, unions `"A" \| "B"`, `as const`, `import type` | **TS** | gone |
+| `any` / `unknown` / `never`, literal types, `@ts-expect-error` | **TS** | gone |
+
+Every lesson in this series tags each piece of syntax with **[JS]** / **[TS]**. Example code comments are tagged too, as in `// 1) [JS] ...`.
+
+- **[JS]** = syntax that JavaScript has without TS. It runs as is in browsers and Node.
+- **[TS]** = type syntax that TypeScript adds. It is used only for checking; erase it and you get JS (type erasure, 7-2).
+- **[JS + TS]** = a mix of both (e.g. the function body is JS, the parameter types are TS).
+
+## 8. How JS runs — there is no main
+
+**[JS]**
+
+C / C# / Java start at `main()`. JS / TS have **no entry point function**. node runs the **top-level code** of the file you give it (`node file.ts`, the entry module) from top to bottom.
+
+| Language | Where it starts |
+|---|---|
+| C / C++ | `int main()` |
+| C# / Java | `static void Main()` / `public static void main()` |
+| Python | top-level code of the file (by convention `if __name__ == "__main__":`) |
+| **JS / TS** | **top-level code of the file** |
+
+### 8-1. Run order — [run-order.ts](run-order.ts)
+
+```
+> node lessons/00-setup/run-order.ts
+[run-order-lib.ts] top-level code, import.meta.main = false
+[run-order.ts] top-level code, import.meta.main = true
+[run-order.ts] PrintSum() called: 1 + 2 = 3
+Expected error: SyntaxError: Invalid or unexpected token
+Why : 1.5n is a syntax error, so "line 1 runs?" is never printed. Parsing comes first.
+Fix : bigint literals must be integers, e.g. 15n.
+[run-order.ts] last line
+```
+
+1. **`import` first**: all imports are linked before any code runs → the top-level code of `run-order-lib.ts` prints first.
+2. **Then top to bottom**: functions are only defined; they run **when called** (`PrintSum()`).
+3. **The whole file is parsed before it runs**: with a syntax error, **not even line 1 runs**. The example parses a code string with `new Function()` so it can catch and show that error. (This is why an `enum` in the same file can't be caught with `try`/`catch`.)
+
+### 8-2. "Was this file run directly?" — `import.meta.main`
+
+```ts
+if (import.meta.main) {
+	// only when run directly with node (false when imported)
+}
+```
+
+- Same role as Python's `if __name__ == "__main__":` (Node 24).
+- [greeter.ts](greeter.ts) and [run-order-lib.ts](run-order-lib.ts) use it to print a note when run by themselves. Try `node lessons/00-setup/run-order-lib.ts`.
+- You can write `function Main() { ... }` and call `Main();` on the last line like C#, but that is just a style, not a language rule.
+
+### 8-3. So is it an interpreter?
+
+**From the user's side, yes.** It runs the source directly and there is no build output like an exe. That is why it is called a script language, like Python.
+
+**Inside the engine, it is not a pure interpreter.** node's V8 engine works like this:
+
+```
+source → parse → bytecode → run by the Ignition interpreter
+                        └ code that runs often → JIT compile (Maglev / TurboFan) → machine code
+```
+
+| Language | How it runs |
+|---|---|
+| C / C++ | compiled to machine code in advance (AOT, ahead-of-time) → exe |
+| C# / Java | compiled to bytecode (IL / bytecode) → JIT at run time |
+| Python | bytecode → interpreter (CPython) |
+| **JS** | **runs the source directly → bytecode interpreter + JIT** |
+
+> Where TS fits: `tsc` is not a compiler that makes machine code. It is a **TS → JS transpiler + type checker**. `node hello.ts` strips the types and runs the result the way shown above.
 ## Summary
 
-- While learning, use **① Node directly** for speed, and **③ tsx** when you need `enum` and the like.
+- While learning, use **① Node directly**. Every example in this repo runs that way.
 - For real output (deployment), use **② a tsc build**.
 - Type checking is separate from running → make `npm run typecheck` a habit.
 - Debug with F5 (launch), `--inspect-brk` + Attach, or the JavaScript Debug Terminal — whichever you like.
-- TS compiles to JS, and the types disappear along the way.
+- TS syntax = JS syntax + type syntax. Lessons tag them as **[JS]** / **[TS]**.
+- TS compiles to JS, and the types disappear along the way. See it with `npm run js -- <file.ts>`.
+- There is no `main()`. Imports first → then top-level code from top to bottom. Use `import.meta.main` to check if a file was run directly.
 
 **Next → [01. Basic Types and bigint](../01-basic-types/README.md)**: learn types properly and build DevCalc's first part (radix conversion).
 
@@ -321,7 +506,7 @@ When you can't fully quit VS Code because of other work, add the following to yo
 
 | File | Contents |
 |---|---|
-| `.vscode/launch.json` | Debug configurations ①–④ |
+| `.vscode/launch.json` | Debug configurations ①–⑤ |
 | `.vscode/tasks.json` | `tsc: build`, `tsc: watch` tasks |
 | `.vscode/settings.json` | `typescript.tsdk` → the editor uses the project's TypeScript (7.x) |
 | `.vscode/extensions.json` | Recommended extensions: ESLint, Prettier, Pretty TypeScript Errors |

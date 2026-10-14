@@ -11,6 +11,9 @@
     // import 경로에 .ts 확장자 사용 → node 직접 실행과 tsc 빌드 모두 동작
     "rewriteRelativeImportExtensions": true,
     "verbatimModuleSyntax": true,
+    // Only syntax that node can run by erasing types (no enum / namespace / parameter properties)
+    // 타입만 지우면 node 로 실행되는 문법만 허용 (enum / namespace / 파라미터 프로퍼티 금지)
+    "erasableSyntaxOnly": true,
 
     // Strict mode (엄격 모드)
     "strict": true,
