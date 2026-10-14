@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    // Language / module (언어 / 모듈)
+    // Language / module
     "target": "es2024",
     "lib": ["es2024"],
     "module": "nodenext",
@@ -8,20 +8,20 @@
     "types": ["node"],
 
     // Use .ts extensions in imports → works with both plain node and the tsc build
-    // import 경로에 .ts 확장자 사용 → node 직접 실행과 tsc 빌드 모두 동작
+    // .ts extensions in import paths → works with both direct node runs and tsc builds
     "rewriteRelativeImportExtensions": true,
     "verbatimModuleSyntax": true,
     // Only syntax that node can run by erasing types (no enum / namespace / parameter properties)
-    // 타입만 지우면 node 로 실행되는 문법만 허용 (enum / namespace / 파라미터 프로퍼티 금지)
+    // Allow only syntax that runs in node once types are erased (no enum / namespace / parameter properties)
     "erasableSyntaxOnly": true,
 
-    // Strict mode (엄격 모드)
+    // Strict mode
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
 
-    // Output / debugging (출력 / 디버깅)
+    // Output / debugging
     "rootDir": ".",
     "outDir": "dist",
     "sourceMap": true,

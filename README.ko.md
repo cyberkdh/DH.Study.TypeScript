@@ -12,7 +12,7 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 |---|---|---|---|---|
 | 00 | [개발 환경 구성](lessons/00-setup/README.ko.md) | 실행 3가지 방법, VS Code 디버깅, TS → JS | — | ✅ |
 | 01 | [기본 타입과 bigint](lessons/01-basic-types/README.ko.md) | 타입 표기·추론, `number` 의 한계, `bigint`, `any`/`unknown` | Lv1 진법 변환 (ToHex/ToBin/ToDec) | ✅ |
-| 02 | 함수와 객체 | 함수 타입, `interface`/`type` | 자릿수 묶기, 출력 옵션 | 준비 중 |
+| 02 | [함수와 객체](lessons/02-functions-objects/README.ko.md) | 함수 타입, `interface`/`type` | 자릿수 묶기, 출력 옵션 | ✅ |
 | 03 | 유니온과 타입 좁히기 | 유니온(Union), 타입 좁히기(Narrowing) | Lv2 입력 형식 해석 `0x`/`0b`/`1_000` | 준비 중 |
 | 04 | 클래스와 에러 처리 | 클래스(Class), 예외(Exception) | Lv3 워드 크기, 두 수 계산 | 준비 중 |
 | 05 | 제네릭 | 제네릭(Generics) | `TResult<T, E>`, 히스토리 | 준비 중 |
@@ -37,7 +37,7 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 > GitHub 웹 페이지에서는 코드를 **읽을** 수는 있지만 **실행**할 수는 없다. 실행은 내 PC 또는 Codespaces 에서 한다.
 > DevCalc 는 07강부터 웹 화면이 생겨 브라우저에서 써 볼 수 있게 된다.
 
-> 모든 강의는 영어판(`README.md`, 기본)과 한국어판(`README.ko.md`)이 있다. 예제 코드의 주석은 영어 → 한국어 순으로 병기하고, 프로그램 출력은 영어다.
+> 모든 강의는 영어판(`README.md`, 기본)과 한국어판(`README.ko.md`)이 있다. 예제 코드도 두 벌이다: `x.ts` (영어 주석) 와 `x.ko.ts` (한국어 주석). 코드는 같고 주석만 다르며, `npm test` 가 둘의 코드가 같은지 검사한다. 프로그램 출력은 영어다.
 
 ## 목적 (Purpose)
 
@@ -78,19 +78,19 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 
 ```bash
 npm install                                # 처음 한 번
-node lessons/00-setup/hello.ts             # 예제 실행 (다른 강의도 같은 방식)
+node lessons/00-setup/hello.ko.ts          # 예제 실행 (다른 강의도 같은 방식)
 npm run typecheck                          # 타입 검사
 npm run build                              # dist/ 로 빌드
 npm run devcalc -- 255                     # DevCalc 실행
 npm test                                   # DevCalc 테스트
-npm run js -- lessons/00-setup/hello.ts    # 변환된 JS 를 보여 주고 실행
+npm run js -- lessons/00-setup/hello.ko.ts # 변환된 JS 를 보여 주고 실행
 ```
 
 Windows (cmd / PowerShell) 에서는 `projectroot` 의 bat 파일 두 개로 `node` / `npm` 명령을 직접 치지 않고 같은 일을 할 수 있다:
 
 ```bat
-runts.bat lessons\00-setup\hello.ts        # .ts 를 바로 실행 (node 타입 제거)
-ts2js.bat lessons\00-setup\enum-sample.ts  # npm run js 와 같음: 빌드 → JS 출력 → 실행
+runts.bat lessons\00-setup\hello.ko.ts        # .ts 를 바로 실행 (node 타입 제거)
+ts2js.bat lessons\00-setup\enum-sample.ko.ts  # npm run js 와 같음: 빌드 → JS 출력 → 실행
 ```
 
 ## 저장소 구조
@@ -100,9 +100,10 @@ ts2js.bat lessons\00-setup\enum-sample.ts  # npm run js 와 같음: 빌드 → J
 │  └─ NN-주제/
 │     ├─ README.md      강의 (English, 기본)
 │     ├─ README.ko.md   강의 (한국어)
-│     └─ *.ts           강의에 나오는 예제
+│     ├─ x.ts           예제, 영어 주석
+│     └─ x.ko.ts        같은 예제, 한국어 주석
 ├─ devcalc/             최종 앱 (강의마다 자람)
-├─ tools/               보조 스크립트 (show-js.ts: TS → JS 변환 보기)
+├─ tools/               보조 스크립트 (show-js.ts: TS → JS 변환 보기, check-pairs.ts: x.ts 와 x.ko.ts 코드 비교)
 ├─ runts.bat            .ts 바로 실행 (Windows)
 ├─ ts2js.bat            TS → JS 변환 보고 실행 (Windows)
 └─ .devcontainer/       Codespaces 환경

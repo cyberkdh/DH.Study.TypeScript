@@ -63,3 +63,28 @@ color = RED
 Only the types are gone (`as const`, `type EColor = ...`, `: EColor`); the rest is the same code.
 
 > Old `.js` files stay in `dist/` even after you delete a `.ts` → `npm run clean`.
+
+## check-pairs.ts — keep x.ts and x.ko.ts the same
+
+Every lesson example is a pair: `x.ts` (English comments) and `x.ko.ts` (Korean comments). The code must be the same. `check-pairs.ts` removes the comments, ignores whitespace, reads `.ko.ts` as `.ts`, and compares the two files line by line.
+
+```bash
+npm run pairs          # check only
+npm test               # check-pairs runs first, then the DevCalc tests (also in CI)
+```
+
+```
+> npm run pairs
+check-pairs : 15 pairs, 0 failed
+```
+
+If you change the code in one file only:
+
+```
+FAIL lessons-basic-typesigint.ts : code differs from the .ko.ts file
+  .ts    : console.log("7n / 2n =", 7n / 2n);
+  .ko.ts : console.log("7n / 2n =", 7n / 3n);
+check-pairs : 15 pairs, 1 failed
+```
+
+> When you edit an example, make the same code change in both files. Only the comments may differ.

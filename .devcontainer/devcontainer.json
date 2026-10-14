@@ -1,6 +1,6 @@
 {
 	// GitHub Codespaces / Dev Containers: run the lesson examples in the browser, no install
-	// 설치 없이 브라우저에서 강의 예제 실행
+	// Run the lesson examples in the browser with nothing to install
 	"name": "DH.Study.TypeScript",
 	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 	"features": {

@@ -1,6 +1,6 @@
 [English](README.md) · **한국어**
 
-[← 이전: 00. 개발 환경 구성](../00-setup/README.ko.md) · [목차](../../README.ko.md) · 다음: 02. 함수와 객체 (준비 중)
+[← 이전: 00. 개발 환경 구성](../00-setup/README.ko.md) · [목차](../../README.ko.md) · [다음: 02. 함수와 객체 →](../02-functions-objects/README.ko.md)
 
 # 01. 기본 타입과 bigint — 진법 변환기 만들기 (DevCalc Lv1)
 
@@ -30,7 +30,9 @@
 8. [DevCalc 스텝 — Lv1 진법 변환기](#8-devcalc-스텝--lv1-진법-변환기)
 9. [정리](#정리)
 
-이 강의의 예제 파일: [variables.ts](variables.ts) · [primitives.ts](primitives.ts) · [bigint.ts](bigint.ts) · [special-types.ts](special-types.ts) · [convert.ts](convert.ts)
+이 강의의 예제 파일: [variables.ko.ts](variables.ko.ts) · [primitives.ko.ts](primitives.ko.ts) · [bigint.ko.ts](bigint.ko.ts) · [special-types.ko.ts](special-types.ko.ts) · [convert.ko.ts](convert.ko.ts)
+
+> 예제는 한국어 주석판(`x.ko.ts`)을 링크한다. 같은 코드의 영어 주석판은 `x.ts` 다.
 
 > 문법 표시: **[JS]** = JavaScript 문법 (TS 없이도 있음) · **[TS]** = TypeScript 가 더한 타입 문법 (지우면 JS) · 자세한 구분은 [00강 7-3](../00-setup/README.ko.md#7-3-ts-문법--js-문법--타입-문법)
 
@@ -167,10 +169,10 @@ if (typeof vUnknown === "number") vUnknown.toString(16);   // OK
 
 각 파일을 열고 `F5` 로 실행하거나, 명령줄에서 실행한다. 실행할 수 없는 환경이라면 아래 실행 결과를 보며 코드를 읽어도 된다.
 
-### [variables.ts](variables.ts) — const / let / var, 표기·추론, 구조 분해
+### [variables.ko.ts](variables.ko.ts) — const / let / var, 표기·추론, 구조 분해
 
 ```
-> node lessons/01-basic-types/variables.ts
+> node lessons/01-basic-types/variables.ko.ts
 1) const nMax = 10 / let nCount = 1
 2) Expected error: Assignment to constant variable.
    Why : a const can't be given a new value.
@@ -187,10 +189,10 @@ if (typeof vUnknown === "number") vUnknown.toString(16);   // OK
 
 해 볼 것: `strBase`, `strMode`, `biOne`, `biTotal` 에 마우스를 올려 리터럴 타입과 넓은 타입 비교. `// nMax = 20;` 주석을 풀어 빨간 줄 확인.
 
-### [primitives.ts](primitives.ts) — 타입 표기·추론, number, 배열·튜플
+### [primitives.ko.ts](primitives.ko.ts) — 타입 표기·추론, number, 배열·튜플
 
 ```
-> node lessons/01-basic-types/primitives.ts
+> node lessons/01-basic-types/primitives.ko.ts
 0.1 + 0.2 = 0.30000000000000004
 7 / 2 = 3.5
 Math.trunc(7 / 2) = 3
@@ -202,10 +204,10 @@ DevCalc 0.1.0 64 true 1
 
 해 볼 것: `nCount = "1";` 주석을 풀어 빨간 줄 확인, 변수 위에 마우스를 올려 추론된 타입(Hover) 확인.
 
-### [bigint.ts](bigint.ts) — bigint, number 와 섞으면?
+### [bigint.ko.ts](bigint.ko.ts) — bigint, number 와 섞으면?
 
 ```
-> node lessons/01-basic-types/bigint.ts
+> node lessons/01-basic-types/bigint.ko.ts
 MAX_SAFE_INTEGER = 9007199254740991
 2^53 + 1 = 9007199254740992
 64-bit max = 18446744073709551615n
@@ -219,10 +221,10 @@ Fix : 1n + BigInt(1) = 2n / Number(1n) + 1 = 2
 
 `TypeError` 는 **일부러** 낸 오류다. 예제가 `try`/`catch` 로 잡아서 이유와 해결 방법을 출력한다. `// @ts-expect-error` 를 지우면 에디터가 미리 빨간 줄로 알려 준다.
 
-### [special-types.ts](special-types.ts) — any, unknown, null, void, never
+### [special-types.ko.ts](special-types.ko.ts) — any, unknown, null, void, never
 
 ```
-> node lessons/01-basic-types/special-types.ts
+> node lessons/01-basic-types/special-types.ko.ts
 undefined
 hex: ff
 now it has a value
@@ -234,7 +236,7 @@ caught: a never function always throws
 
 **[JS + TS]** — 함수 본문은 JS, `: bigint` / `: string` 표기는 TS
 
-배운 타입으로 DevCalc 의 첫 부품을 만든다. 전체 코드는 [convert.ts](convert.ts).
+배운 타입으로 DevCalc 의 첫 부품을 만든다. 전체 코드는 [convert.ko.ts](convert.ko.ts).
 
 ### ToHex : 255n → "0xFF"
 
@@ -276,7 +278,7 @@ function ToBigInt(nValue: number): bigint {
 ### 실행
 
 ```
-> node lessons/01-basic-types/convert.ts
+> node lessons/01-basic-types/convert.ko.ts
                  255 |                0xFF | 0b11111111
                    0 |                 0x0 | 0b0
                 -255 |               -0xFF | -0b11111111
@@ -320,8 +322,8 @@ BIN : 0b11111111
 - `bigint` 와 `number` 는 섞을 수 없다. TS 는 이 실수를 실행 전에 잡아 준다.
 - 외부 값은 `unknown` 으로 받는다. `any` 는 피한다.
 
-**다음 강의 → 02. 함수와 객체 (준비 중)**: 함수 타입, 선택적 매개변수(Optional Parameter), `interface` 와 `type`. DevCalc 에는 자릿수 묶기(`0xFFFF_FFFF`)와 출력 옵션을 추가한다.
+**다음 강의 → [02. 함수와 객체](../02-functions-objects/README.ko.md)**: 함수 타입, 선택적 매개변수(Optional Parameter), `interface` 와 `type`. DevCalc 에는 자릿수 묶기(`0xFFFF_FFFF`)와 출력 옵션을 추가한다.
 
 ---
 
-[← 이전: 00. 개발 환경 구성](../00-setup/README.ko.md) · [목차](../../README.ko.md) · 다음: 02. 함수와 객체 (준비 중)
+[← 이전: 00. 개발 환경 구성](../00-setup/README.ko.md) · [목차](../../README.ko.md) · [다음: 02. 함수와 객체 →](../02-functions-objects/README.ko.md)

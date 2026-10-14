@@ -1,24 +1,35 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //	Projects		: DH.Study.TypeScript
 //	Author			: CYBERKDH
-//	Module			: devcalc / main (Command-line entry point / 명령줄 진입점)
-//	History			: 2026-10-14 CYBERKDH Initial (최초 작성) - Lesson 01 DevCalc step / 01강 DevCalc 스텝, Lv1
+//	Module			: devcalc / main (Command-line entry point)
+//	History			: 2026-10-14 CYBERKDH Initial - Lesson 01 DevCalc step, Lv1
+//					  2026-10-14 CYBERKDH Lesson 02: output options, function table
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Usage / 사용법: node devcalc/src/main.ts 255
-import { ToBin, ToDec, ToHex } from "./core/Format.ts";
+// Usage : node devcalc/src/main.ts 255 [--no-group] [--lower] [--no-prefix]
+import { ToBin, ToDec, ToHex, type IFormatOptions, type TFormatter } from "./core/Format.ts";
 
-// No argument → show usage and run an example / 인자가 없으면 사용법을 보여 주고 예시로 실행
-let strInput = process.argv[2];
+// Split arguments into the number and the --options
+const arrArg = process.argv.slice(2);
+const arrFlag = arrArg.filter((strArg) => strArg.startsWith("--"));
+let strInput = arrArg.find((strArg) => !strArg.startsWith("--"));
+
+const arrKnownFlag = ["--no-group", "--lower", "--no-prefix"];
+for (const strFlag of arrFlag) {
+	if (!arrKnownFlag.includes(strFlag)) {
+		console.log(`Unknown option: "${strFlag}" (ignored)`);
+		console.log(`Why : only ${arrKnownFlag.join(", ")} are supported.`);
+	}
+}
+
 if (strInput === undefined) {
-	console.log("Usage: node devcalc/src/main.ts <integer>   e.g. node devcalc/src/main.ts 255");
+	console.log("Usage: node devcalc/src/main.ts <integer> [--no-group] [--lower] [--no-prefix]   e.g. node devcalc/src/main.ts 255");
 	console.log("(no input given, so running the example 255)");
 	strInput = "255";
 }
 
 // Lv1: Input parsing is left to BigInt() for now (replaced by our own parser in lesson 03)
-//      입력 해석은 BigInt() 에 맡긴다 (03강에서 직접 만든 해석기로 바꿀 예정)
 let biValue: bigint;
 try {
 	biValue = BigInt(strInput);
@@ -28,6 +39,19 @@ try {
 	process.exit(1);
 }
 
-console.log(`HEX : ${ToHex(biValue)}`);
-console.log(`DEC : ${ToDec(biValue)}`);
-console.log(`BIN : ${ToBin(biValue)}`);
+// Lesson 02: the command line groups digits by default; the flags turn things off
+const oOptions: IFormatOptions = {
+	bGroup: !arrFlag.includes("--no-group"),
+	bUpperCase: !arrFlag.includes("--lower"),
+	bPrefix: !arrFlag.includes("--no-prefix"),
+};
+
+// Function table : [label, formatter]
+const arrRow: [string, TFormatter][] = [
+	["HEX", ToHex],
+	["DEC", ToDec],
+	["BIN", ToBin],
+];
+for (const [strLabel, fnFormat] of arrRow) {
+	console.log(`${strLabel} : ${fnFormat(biValue, oOptions)}`);
+}

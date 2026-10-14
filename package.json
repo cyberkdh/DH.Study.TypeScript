@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "test": "node --test \"devcalc/tests/**/*.test.ts\"",
+    "test": "node tools/check-pairs.ts && node --test \"devcalc/tests/**/*.test.ts\"",
+    "pairs": "node tools/check-pairs.ts",
     "devcalc": "node devcalc/src/main.ts",
     "js": "node tools/show-js.ts"
   },

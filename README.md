@@ -12,7 +12,7 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 |---|---|---|---|---|
 | 00 | [Development Setup](lessons/00-setup/README.md) | 3 ways to run `.ts`, VS Code debugging, TS → JS | — | ✅ |
 | 01 | [Basic Types and bigint](lessons/01-basic-types/README.md) | Annotation & inference, limits of `number`, `bigint`, `any`/`unknown` | Lv1 radix conversion (ToHex/ToBin/ToDec) | ✅ |
-| 02 | Functions and Objects | Function types, `interface`/`type` | Digit grouping, output options | Coming soon |
+| 02 | [Functions and Objects](lessons/02-functions-objects/README.md) | Function types, `interface`/`type` | Digit grouping, output options | ✅ |
 | 03 | Unions and Narrowing | Union types, narrowing | Lv2 input parsing `0x`/`0b`/`1_000` | Coming soon |
 | 04 | Classes and Errors | Classes, exceptions | Lv3 word size, two-operand math | Coming soon |
 | 05 | Generics | Generics | `TResult<T, E>`, history | Coming soon |
@@ -37,7 +37,7 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 > On the GitHub website you can **read** the code but not **run** it. Run it on your PC or in Codespaces.
 > DevCalc gets a web UI in lesson 07, so you can then try it in the browser.
 
-> Every lesson has an English version (`README.md`, default) and a Korean version (`README.ko.md`). Comments in the example code are written in English first, followed by Korean.
+> Every lesson has an English version (`README.md`, default) and a Korean version (`README.ko.md`). The examples come in pairs too: `x.ts` (English comments) and `x.ko.ts` (Korean comments). The code is the same, only the comments differ, and `npm test` checks that the code of each pair matches. Program output is in English.
 
 ## Purpose
 
@@ -100,9 +100,10 @@ ts2js.bat lessons\00-setup\enum-sample.ts  # same as npm run js: build, show the
 │  └─ NN-topic/
 │     ├─ README.md      lesson (English, default)
 │     ├─ README.ko.md   lesson (Korean)
-│     └─ *.ts           examples used in the lesson
+│     ├─ x.ts           examples, English comments
+│     └─ x.ko.ts        the same examples, Korean comments
 ├─ devcalc/             the final app (grows every lesson)
-├─ tools/               helper scripts (show-js.ts: see TS → JS)
+├─ tools/               helper scripts (show-js.ts: see TS → JS, check-pairs.ts: x.ts = x.ko.ts)
 ├─ runts.bat            run a .ts directly (Windows)
 ├─ ts2js.bat            show TS → JS, then run (Windows)
 └─ .devcontainer/       Codespaces environment

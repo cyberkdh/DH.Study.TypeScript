@@ -1,13 +1,13 @@
 {
   // Run with F5. Open the .ts file to debug in the editor, then pick a configuration.
-  // F5 로 실행. 디버깅할 .ts 파일을 에디터에서 열어 둔 상태에서 구성(Configuration)을 선택한다.
+  // Run with F5. Open the .ts file to debug in the editor, then pick a configuration.
   "version": "0.2.0",
   "configurations": [
     {
       // 1) Run .ts directly with Node.js type stripping - no build, fastest
-      //    Node.js 타입 제거(Type Stripping)로 .ts 를 바로 실행 - 빌드 불필요, 가장 빠름
+      //    Runs the .ts directly with Node.js type stripping - no build, fastest
       //    Syntax that generates runtime code (enum / namespace) is not supported (blocked by erasableSyntaxOnly)
-      //    enum / namespace 등 런타임 코드를 만드는 문법은 지원하지 않음 (erasableSyntaxOnly 로 막아 둠)
+      //    Syntax that generates runtime code (enum / namespace) is not supported (blocked by erasableSyntaxOnly)
       "name": "① Current TS file (Node directly)",
       "type": "node",
       "request": "launch",
@@ -18,7 +18,7 @@
     },
     {
       // 2) Run the JS built by tsc; source maps map breakpoints back to .ts
-      //    tsc 로 빌드한 JS 를 실행하고 소스맵(Source Map)으로 .ts 에 중단점(Breakpoint) 매핑
+      //    Runs the JS built by tsc; source maps map breakpoints back to the .ts
       "name": "② Current TS file (tsc build, then run)",
       "type": "node",
       "request": "launch",
@@ -32,7 +32,7 @@
     },
     {
       // 3) Run with tsx - supports all TS syntax (enum, namespace, parameter properties, ...)
-      //    tsx 로 실행 - enum, namespace, 파라미터 프로퍼티 등 모든 TS 문법 지원
+      //    Runs with tsx - supports all TS syntax, including enum, namespace and parameter properties
       "name": "③ Current TS file (tsx)",
       "type": "node",
       "request": "launch",
@@ -44,7 +44,7 @@
     },
     {
       // 4) Attach to a process started with `node --inspect-brk file.ts`
-      //    명령줄에서 `node --inspect-brk 파일.ts` 로 띄운 프로세스에 연결(Attach)
+      //    Attaches to a process started with `node --inspect-brk file.ts`
       "name": "④ Attach to running Node (Attach :9229)",
       "type": "node",
       "request": "attach",
@@ -54,7 +54,7 @@
     },
     {
       // 5) Build with tsc, print the generated JS, then run it (same as `npm run js -- <file>`)
-      //    tsc 로 빌드 → 만들어진 JS 출력 → 실행 (`npm run js -- 파일` 과 같음)
+      //    Builds with tsc → prints the generated JS → runs it (same as `npm run js -- file`)
       "name": "⑤ Current TS file (show generated JS, then run)",
       "type": "node",
       "request": "launch",

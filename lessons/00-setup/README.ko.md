@@ -32,7 +32,7 @@
 9. [정리](#정리)
 - 부록: [A. Node.js PATH 등록](#부록-a-nodejs-path-등록) · [B. VS Code 설정만으로 Node 경로 지정](#부록-b-vs-code-설정만으로-node-경로-지정) · [C. 저장소의 VS Code 설정](#부록-c-저장소의-vs-code-설정)
 
-이 강의의 예제 파일: [hello.ts](hello.ts) · [greeter.ts](greeter.ts) · [enum-sample.ts](enum-sample.ts) · [run-order.ts](run-order.ts) · [run-order-lib.ts](run-order-lib.ts)
+이 강의의 예제 파일: [hello.ko.ts](hello.ko.ts) · [greeter.ko.ts](greeter.ko.ts) · [enum-sample.ko.ts](enum-sample.ko.ts) · [run-order.ko.ts](run-order.ko.ts) · [run-order-lib.ko.ts](run-order-lib.ko.ts)
 
 > 모든 예제는 `node 파일.ts` 로 **오류 없이 끝까지** 실행된다. 오류를 보여 주는 것이 목적인 예제는 오류를 잡아서 **왜** 났는지 출력한다 (`Expected error:` / `Why :`).
 
@@ -67,7 +67,7 @@ GitHub 페이지에서는 코드를 **읽을** 수만 있고 **실행**할 수�
 
 1. 위 버튼 클릭 (GitHub 로그인 필요) → 1~2분 뒤 브라우저에 VS Code 가 열림
 2. `npm install` 은 자동으로 실행됨 (`.devcontainer/devcontainer.json` 설정)
-3. 터미널에서 `node lessons/00-setup/hello.ts`, 또는 파일을 열고 `F5`
+3. 터미널에서 `node lessons/00-setup/hello.ko.ts`, 또는 파일을 열고 `F5`
 
 > 개인 계정은 매달 무료 사용량이 있다. 다 쓰고 나면 [github.com/codespaces](https://github.com/codespaces) 에서 Codespace 를 중지/삭제해 두자.
 
@@ -84,11 +84,12 @@ projectroot/
 │  ├─ 00-setup/
 │  │  ├─ README.md     ← 이 강의 (English, 기본)
 │  │  ├─ README.ko.md  ← 한국어판 (지금 보고 있는 문서)
-│  │  ├─ hello.ts      ← 예제는 강의 글 바로 옆에
-│  │  ├─ greeter.ts
-│  │  ├─ enum-sample.ts
-│  │  ├─ run-order.ts
-│  │  └─ run-order-lib.ts
+│  │  ├─ hello.ts      ← 예제는 강의 글 바로 옆에 (영어 주석)
+│  │  ├─ hello.ko.ts   ← 같은 코드, 한국어 주석
+│  │  ├─ greeter.ts / greeter.ko.ts
+│  │  ├─ enum-sample.ts / enum-sample.ko.ts
+│  │  ├─ run-order.ts / run-order.ko.ts
+│  │  └─ run-order-lib.ts / run-order-lib.ko.ts
 │  └─ 01-basic-types/
 ├─ devcalc/            ← 강의마다 자라는 최종 앱 (01강부터)
 ├─ package.json
@@ -115,25 +116,25 @@ projectroot/
 
 | 방법 | 명령 | 빌드 | enum / namespace | 특징 |
 |---|---|---|---|---|
-| ① Node 직접 실행 | `node hello.ts` | 불필요 | ❌ | Node 22.18+/24 의 타입 제거(Type Stripping). 타입 부분만 공백으로 지움 |
-| ② tsc 빌드 후 실행 | `npm run build` → `node dist/.../hello.js` | 필요 | ✅ | 실제 배포 방식. 타입 검사까지 수행 |
-| ③ tsx | `node --import tsx hello.ts` | 불필요 | ✅ | 내부적으로 esbuild 로 변환. 모든 문법 지원 |
+| ① Node 직접 실행 | `node hello.ko.ts` | 불필요 | ❌ | Node 22.18+/24 의 타입 제거(Type Stripping). 타입 부분만 공백으로 지움 |
+| ② tsc 빌드 후 실행 | `npm run build` → `node dist/.../hello.ko.js` | 필요 | ✅ | 실제 배포 방식. 타입 검사까지 수행 |
+| ③ tsx | `node --import tsx hello.ko.ts` | 불필요 | ✅ | 내부적으로 esbuild 로 변환. 모든 문법 지원 |
 
-[hello.ts](hello.ts) 를 ① 로 실행한 결과:
+[hello.ko.ts](hello.ko.ts) 를 ① 로 실행한 결과:
 
 ```
-> node lessons/00-setup/hello.ts
+> node lessons/00-setup/hello.ko.ts
 Hello, Hong Gildong (age 30)
 Hello, TypeScript (age 14)
 Node.js v24.15.0
 ```
 
-[greeter.ts](greeter.ts) 는 `Greet()` 를 정의만 한다. 단독으로 실행하면 어디를 실행해야 하는지 알려 준다.
+[greeter.ko.ts](greeter.ko.ts) 는 `Greet()` 를 정의만 한다. 단독으로 실행하면 어디를 실행해야 하는지 알려 준다.
 
 ```
-> node lessons/00-setup/greeter.ts
-greeter.ts only defines Greet(); it is used by hello.ts.
-Run: node lessons/00-setup/hello.ts
+> node lessons/00-setup/greeter.ko.ts
+greeter.ko.ts only defines Greet(); it is used by hello.ko.ts.
+Run: node lessons/00-setup/hello.ko.ts
 ```
 
 주의할 것은 `enum` 하나다. `enum` 은 타입만 있는 게 아니라 **런타임 객체(JavaScript 코드)를 생성**한다. "지우기만" 하는 ① 방식으로는 실행할 수 없다.
@@ -142,7 +143,7 @@ Run: node lessons/00-setup/hello.ts
 SyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript enum is not supported in strip-only mode
 ```
 
-그래서 이 저장소는 **`enum` 을 쓰지 않는다**. tsconfig.json 의 `erasableSyntaxOnly` 가 `enum` 을 쓰는 순간 빨간 줄로 알려 준다. [enum-sample.ts](enum-sample.ts) 는 대신 쓰는 방법을 보여 준다: 일반 객체 + `as const` + 유니온 타입(Union Type). ①, ②, ③ 어느 방법으로도 똑같이 실행된다.
+그래서 이 저장소는 **`enum` 을 쓰지 않는다**. tsconfig.json 의 `erasableSyntaxOnly` 가 `enum` 을 쓰는 순간 빨간 줄로 알려 준다. [enum-sample.ko.ts](enum-sample.ko.ts) 는 대신 쓰는 방법을 보여 준다: 일반 객체 + `as const` + 유니온 타입(Union Type). ①, ②, ③ 어느 방법으로도 똑같이 실행된다.
 
 ```ts
 const COLOR = { Red: "RED", Green: "GREEN" } as const;
@@ -150,7 +151,7 @@ type EColor = (typeof COLOR)[keyof typeof COLOR]; // "RED" | "GREEN"
 ```
 
 ```
-> node lessons/00-setup/enum-sample.ts
+> node lessons/00-setup/enum-sample.ko.ts
 RED GREEN
 color = GREEN
 color = RED
@@ -175,11 +176,11 @@ color = RED
 ### 따라 하기
 
 1. VS Code 에서 **`projectroot` 폴더를 연다** (`.vscode` 폴더가 루트에 있어야 인식됨).
-2. `lessons/00-setup/greeter.ts` 의 `return strMessage;` 줄 왼쪽 여백을 클릭 → 빨간 점(중단점).
-3. `lessons/00-setup/hello.ts` 를 열고 `Ctrl+Shift+D` → 구성 선택 → `F5`.
+2. `lessons/00-setup/greeter.ko.ts` 의 `return strMessage;` 줄 왼쪽 여백을 클릭 → 빨간 점(중단점).
+3. `lessons/00-setup/hello.ko.ts` 를 열고 `Ctrl+Shift+D` → 구성 선택 → `F5`.
 4. 멈춘 상태에서 확인할 것
    - **변수(Variables)** 패널: `oPerson`, `strMessage` 값
-   - **호출 스택(Call Stack)**: `hello.ts` → `Greet`
+   - **호출 스택(Call Stack)**: `hello.ko.ts` → `Greet`
    - **디버그 콘솔(Debug Console)**: `oPerson.strName.length` 같은 식 입력
 
 | 단축키 | 동작 |
@@ -197,7 +198,7 @@ color = RED
 **`Variable ${file} can not be resolved. Please open an editor.`**
 
 - 원인: 구성의 `"program": "${file}"` 은 **현재 에디터에 열려 있는 파일**을 뜻한다. 열린 파일 없이 F5 를 누르면 값을 채울 수 없다.
-- 해결: 실행할 `.ts` 파일(예: `lessons/00-setup/hello.ts`)을 열고 **그 탭에 포커스를 둔 상태**로 F5.
+- 해결: 실행할 `.ts` 파일(예: `lessons/00-setup/hello.ko.ts`)을 열고 **그 탭에 포커스를 둔 상태**로 F5.
 - VS2022 의 "시작 프로젝트(Startup Project)" 개념이 아니라 "지금 보고 있는 파일" 을 실행하는 방식이라, 예제 파일이 많은 학습용 저장소에 잘 맞는다.
 
 **`Can't find Node.js binary "node"` / 터미널에서 `node` 인식 안 됨**
@@ -220,10 +221,10 @@ VS Code 없이 cmd / PowerShell 만으로도 모든 작업이 가능하다. 아�
 
 | 목적 | 명령 | 비고 |
 |---|---|---|
-| ① Node 직접 실행 | `node lessons/00-setup/hello.ts` | 빌드 없음, 타입 검사 없음 |
-| ② 빌드 후 실행 | `npm run build` → `node dist/lessons/00-setup/hello.js` | `dist/` 에 `.js` + `.js.map` 생성 |
-| ③ tsx 실행 | `npx tsx lessons/00-setup/hello.ts` | esbuild 로 변환 |
-| 파일 저장 시 자동 재실행 | `node --watch lessons/00-setup/hello.ts` | Node 내장 감시 모드(Watch Mode) |
+| ① Node 직접 실행 | `node lessons/00-setup/hello.ko.ts` | 빌드 없음, 타입 검사 없음 |
+| ② 빌드 후 실행 | `npm run build` → `node dist/lessons/00-setup/hello.ko.js` | `dist/` 에 `.js` + `.js.map` 생성 |
+| ③ tsx 실행 | `npx tsx lessons/00-setup/hello.ko.ts` | esbuild 로 변환 |
+| 파일 저장 시 자동 재실행 | `node --watch lessons/00-setup/hello.ko.ts` | Node 내장 감시 모드(Watch Mode) |
 | 타입 검사 | `npm run typecheck` | `tsc --noEmit` — 파일 생성 없이 오류만 확인 |
 | 타입 검사 (감시) | `npm run typecheck:watch` | 저장할 때마다 다시 검사 |
 | 빌드 결과 삭제 | `npm run clean` | `dist/` 삭제 |
@@ -235,7 +236,7 @@ VS Code 없이 cmd / PowerShell 만으로도 모든 작업이 가능하다. 아�
 1. 디버그 모드로 실행 (첫 줄에서 멈춘 채 디버거를 기다림)
 
    ```cmd
-   node --inspect-brk lessons/00-setup/hello.ts
+   node --inspect-brk lessons/00-setup/hello.ko.ts
    ```
    ```
    Debugger listening on ws://127.0.0.1:9229/...
@@ -256,7 +257,7 @@ VS Code 없이 cmd / PowerShell 만으로도 모든 작업이 가능하다. 아�
 ### 6-3. 더 간단한 방법 — JavaScript 디버그 터미널
 
 VS Code 터미널 오른쪽 `+` 옆 `∨` → **JavaScript Debug Terminal**.
-이 터미널에서 `node lessons/00-setup/hello.ts` 처럼 평소대로 실행하면 **자동으로 디버거가 붙는다**. launch.json 이 필요 없다.
+이 터미널에서 `node lessons/00-setup/hello.ko.ts` 처럼 평소대로 실행하면 **자동으로 디버거가 붙는다**. launch.json 이 필요 없다.
 
 ## 7. TS 를 JS 로 변환한 결과 보기
 
@@ -270,27 +271,27 @@ TypeScript 는 HTML 이 아니라 **JavaScript** 로 변환된다. `node 파일.
 
 | 현재 위치 | 명령 |
 |---|---|
-| `projectroot` | `npm run js -- lessons/00-setup/enum-sample.ts` |
-| 이 강의 폴더 (`lessons/00-setup`) | `npm run js -- enum-sample.ts` |
-| npm 없이 | `node tools/show-js.ts lessons/00-setup/enum-sample.ts` |
-| Windows bat (`projectroot`) | `ts2js.bat lessons\00-setup\enum-sample.ts` |
-| Windows bat (이 강의 폴더) | `..\..\ts2js.bat enum-sample.ts` |
+| `projectroot` | `npm run js -- lessons/00-setup/enum-sample.ko.ts` |
+| 이 강의 폴더 (`lessons/00-setup`) | `npm run js -- enum-sample.ko.ts` |
+| npm 없이 | `node tools/show-js.ts lessons/00-setup/enum-sample.ko.ts` |
+| Windows bat (`projectroot`) | `ts2js.bat lessons\00-setup\enum-sample.ko.ts` |
+| Windows bat (이 강의 폴더) | `..\..\ts2js.bat enum-sample.ko.ts` |
 
 > `--` 는 npm 에게 "뒤는 스크립트에 넘길 값" 이라고 알려 주는 구분자다. 빼면 안 된다.
 
 **F5 로 (VS Code)**
 
-1. [enum-sample.ts](enum-sample.ts) 를 에디터에서 연다
+1. [enum-sample.ko.ts](enum-sample.ko.ts) 를 에디터에서 연다
 2. `Ctrl+Shift+D` → 디버그 구성 **⑤ Current TS file (show generated JS, then run)** 선택
 3. `F5` → 터미널에 결과가 나온다
 
 **실행 결과**
 
 ```
-> npm run js -- lessons/00-setup/enum-sample.ts
-[1] tsc : lessons/00-setup/enum-sample.ts  →  dist/lessons/00-setup/enum-sample.js
+> npm run js -- lessons/00-setup/enum-sample.ko.ts
+[1] tsc : lessons/00-setup/enum-sample.ko.ts  →  dist/lessons/00-setup/enum-sample.ko.js
 
-[2] Generated JavaScript (dist/lessons/00-setup/enum-sample.js)
+[2] Generated JavaScript (dist/lessons/00-setup/enum-sample.ko.js)
 ----------------------------------------------------------------------
 const COLOR = {
     Red: "RED",
@@ -301,12 +302,12 @@ function Describe(eColor) {
 }
 console.log(COLOR.Red, COLOR.Green); // RED GREEN
 console.log(Describe(COLOR.Green)); // color = GREEN
-console.log(Describe("RED")); // color = RED  (a plain string literal works too / 문자열 리터럴도 가능)
+console.log(Describe("RED")); // color = RED  (문자열 리터럴도 가능)
 export {};
-// Describe("BLUE"); // ← Uncomment: red squiggle, "BLUE" is not an EColor / 주석을 풀면 빨간 줄
+// Describe("BLUE"); // ← 주석을 풀면 빨간 줄
 ----------------------------------------------------------------------
 
-[3] node dist/lessons/00-setup/enum-sample.js
+[3] node dist/lessons/00-setup/enum-sample.ko.js
 RED GREEN
 color = GREEN
 color = RED
@@ -315,10 +316,10 @@ color = RED
 **에디터에서 나란히 비교하기**
 
 1. 위 방법으로 한 번 실행
-2. `Ctrl+P` → `enum-sample.js` 입력 → `dist/` 쪽 파일 열기
+2. `Ctrl+P` → `enum-sample.ko.js` 입력 → `dist/` 쪽 파일 열기
 3. `Ctrl+\` 로 화면 분할 → 한쪽은 `.ts`, 한쪽은 `.js`
 
-[enum-sample.ts](enum-sample.ts) 와 비교해 보면 `as const`, `type EColor = ...` 줄 전체, 매개변수 타입 `: EColor` 만 사라지고 나머지는 같은 코드다. `npm run js -- lessons/00-setup/hello.ts` 도 해 보자: `"./greeter.ts"` 가 `"./greeter.js"` 로 바뀐다.
+[enum-sample.ko.ts](enum-sample.ko.ts) 와 비교해 보면 `as const`, `type EColor = ...` 줄 전체, 매개변수 타입 `: EColor` 만 사라지고 나머지는 같은 코드다. `npm run js -- lessons/00-setup/hello.ko.ts` 도 해 보자: `"./greeter.ko.ts"` 가 `"./greeter.ko.js"` 로 바뀐다.
 
 > `.js` 는 `dist/` 에만 만들어지고 강의 폴더에는 생기지 않는다. `.ts` 를 지워도 예전 `.js` 는 `dist/` 에 남는다 → `npm run clean`.
 
@@ -330,14 +331,14 @@ color = RED
 | `export interface IPerson { strName: string; nAge: number; }` | *(없음)* | `interface` 는 타입 전용 → 통째로 삭제 |
 | `function Greet(oPerson: IPerson): string` | `function Greet(oPerson)` | 타입 표기(Type Annotation) 삭제 |
 | `const arrPeople: IPerson[] = [...]` | `const arrPeople = [...]` | 타입 표기 삭제 |
-| `import { Greet, type IPerson } from "./greeter.ts"` | `import { Greet } from "./greeter.js"` | 타입 import 삭제, 확장자 `.ts` → `.js` |
+| `import { Greet, type IPerson } from "./greeter.ko.ts"` | `import { Greet } from "./greeter.ko.js"` | 타입 import 삭제, 확장자 `.ts` → `.js` |
 | `const COLOR = { ... } as const;` | `const COLOR = { ... };` | `as const` 만 삭제 |
 | 헤더 주석 | 그대로 유지 | 주석은 보존 |
-| — | `//# sourceMappingURL=hello.js.map` | 디버깅용 소스맵 연결 |
+| — | `//# sourceMappingURL=hello.ko.js.map` | 디버깅용 소스맵 연결 |
 
 핵심:
 
-- 대부분의 TS 문법은 **지우기만 하면 JS** 가 된다 → 그래서 `node hello.ts` 처럼 타입 제거(Type Stripping) 실행이 가능.
+- 대부분의 TS 문법은 **지우기만 하면 JS** 가 된다 → 그래서 `node hello.ko.ts` 처럼 타입 제거(Type Stripping) 실행이 가능.
 - `enum` 처럼 **JS 코드를 새로 만들어야 하는 문법**만 예외 → ① 로 실행할 수 없으므로 이 저장소에서는 쓰지 않는다 (`erasableSyntaxOnly`).
 - 타입은 실행 시점(Runtime)에는 존재하지 않는다. 타입 검사는 오직 컴파일/에디터 단계의 일.
 
@@ -385,20 +386,20 @@ C / C# / Java 는 `main()` 에서 시작한다. JS / TS 에는 **진입점 함�
 | Python | 파일 최상위 코드 (관례로 `if __name__ == "__main__":`) |
 | **JS / TS** | **파일 최상위 코드** |
 
-### 8-1. 실행 순서 — [run-order.ts](run-order.ts)
+### 8-1. 실행 순서 — [run-order.ko.ts](run-order.ko.ts)
 
 ```
-> node lessons/00-setup/run-order.ts
-[run-order-lib.ts] top-level code, import.meta.main = false
-[run-order.ts] top-level code, import.meta.main = true
-[run-order.ts] PrintSum() called: 1 + 2 = 3
+> node lessons/00-setup/run-order.ko.ts
+[run-order-lib.ko.ts] top-level code, import.meta.main = false
+[run-order.ko.ts] top-level code, import.meta.main = true
+[run-order.ko.ts] PrintSum() called: 1 + 2 = 3
 Expected error: SyntaxError: Invalid or unexpected token
 Why : 1.5n is a syntax error, so "line 1 runs?" is never printed. Parsing comes first.
 Fix : bigint literals must be integers, e.g. 15n.
-[run-order.ts] last line
+[run-order.ko.ts] last line
 ```
 
-1. **`import` 가 먼저**: 코드 실행 전에 `import` 를 모두 연결(Link)한다 → `run-order-lib.ts` 의 최상위 코드가 먼저 출력된다.
+1. **`import` 가 먼저**: 코드 실행 전에 `import` 를 모두 연결(Link)한다 → `run-order-lib.ko.ts` 의 최상위 코드가 먼저 출력된다.
 2. **그다음 위에서 아래로**: 함수는 정의만 해 두고, **호출할 때** 실행된다 (`PrintSum()`).
 3. **실행 전에 파일 전체를 파싱**: 문법 오류(Syntax Error)가 있으면 **첫 줄도 실행되지 않는다**. 예제는 `new Function()` 으로 코드 문자열을 파싱시켜 이 오류를 잡아 보여 준다. (같은 파일에 `enum` 을 쓰면 `try`/`catch` 로도 못 잡는 이유가 이것이다.)
 
@@ -411,7 +412,7 @@ if (import.meta.main) {
 ```
 
 - Python 의 `if __name__ == "__main__":` 와 같은 역할 (Node 24).
-- [greeter.ts](greeter.ts) 와 [run-order-lib.ts](run-order-lib.ts) 가 이 방식으로 "단독 실행하면 안내문 출력" 을 한다. `node lessons/00-setup/run-order-lib.ts` 로 확인해 보자.
+- [greeter.ko.ts](greeter.ko.ts) 와 [run-order-lib.ko.ts](run-order-lib.ko.ts) 가 이 방식으로 "단독 실행하면 안내문 출력" 을 한다. `node lessons/00-setup/run-order-lib.ko.ts` 로 확인해 보자.
 - C# 처럼 `function Main() { ... }` 을 만들고 마지막 줄에서 `Main();` 을 호출해도 되지만, 언어 규칙이 아니라 스타일(Style)일 뿐이다.
 
 ### 8-3. 그럼 인터프리터(Interpreter)인가?
@@ -432,7 +433,7 @@ if (import.meta.main) {
 | Python | 바이트코드 → 인터프리터 (CPython) |
 | **JS** | **소스 그대로 실행 → 바이트코드 인터프리터 + JIT** |
 
-> TS 의 위치: `tsc` 는 기계어를 만드는 컴파일러가 아니라 **TS → JS 트랜스파일러(Transpiler) + 타입 검사기(Type Checker)** 다. `node hello.ts` 는 타입만 지우고(Type Stripping) 위 방식으로 실행한다.
+> TS 의 위치: `tsc` 는 기계어를 만드는 컴파일러가 아니라 **TS → JS 트랜스파일러(Transpiler) + 타입 검사기(Type Checker)** 다. `node hello.ko.ts` 는 타입만 지우고(Type Stripping) 위 방식으로 실행한다.
 ## 정리
 
 - 공부할 때는 **① Node 직접 실행**. 이 저장소의 모든 예제는 이 방법으로 실행된다.

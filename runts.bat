@@ -2,16 +2,16 @@
 REM //////////////////////////////////////////////////////////////////////////////////////////////////
 REM //	Projects		: DH.Study.TypeScript
 REM //	Author			: CYBERKDH
-REM //	Module			: runts.bat (Run a .ts file directly with node / .ts 파일을 node 로 바로 실행)
-REM //	History			: 2026-10-14 CYBERKDH Initial (최초 작성)
+REM //	Module			: runts.bat (Run a .ts file directly with node)
+REM //	History			: 2026-10-14 CYBERKDH Initial
 REM //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 REM //////////////////////////////////////////////////////////////////////////////////////////////////
 setlocal
 
-REM Usage / 사용법 : runts.bat lessons\00-setup\hello.ts
-REM Type stripping: node runs the .ts as is, no build / 타입 제거: 빌드 없이 .ts 를 그대로 실행
+REM Usage : runts.bat lessons\00-setup\hello.ts
+REM Type stripping: node runs the .ts as is, no build
 
-REM Check that node is on PATH / node 가 PATH 에 있는지 확인
+REM Check that node is on PATH
 where node >nul 2>nul
 if errorlevel 1 (
 	echo Error: node was not found.
@@ -19,7 +19,7 @@ if errorlevel 1 (
 	exit /b 1
 )
 
-REM No file: run hello.ts as an example / 파일을 주지 않으면 hello.ts 를 예시로 실행
+REM No file: run hello.ts as an example
 set "TS_FILE=%~1"
 if "%TS_FILE%"=="" (
 	echo Usage: runts.bat ^<file.ts^>   e.g. runts.bat lessons\00-setup\hello.ts

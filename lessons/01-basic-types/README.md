@@ -1,6 +1,6 @@
 **English** · [한국어](README.ko.md)
 
-[← Previous: 00. Development Setup](../00-setup/README.md) · [Contents](../../README.md) · Next: 02. Functions and Objects (coming soon)
+[← Previous: 00. Development Setup](../00-setup/README.md) · [Contents](../../README.md) · [Next: 02. Functions and Objects →](../02-functions-objects/README.md)
 
 # 01. Basic Types and bigint — Building a Radix Converter (DevCalc Lv1)
 
@@ -32,7 +32,7 @@ After this lesson you can:
 
 Example files for this lesson: [variables.ts](variables.ts) · [primitives.ts](primitives.ts) · [bigint.ts](bigint.ts) · [special-types.ts](special-types.ts) · [convert.ts](convert.ts)
 
-> Comments in the example code are written in English first, followed by Korean.
+> Each example has a Korean-comment twin (`x.ko.ts`) with the same code. The Korean lesson ([README.ko.md](README.ko.md)) uses those.
 
 > Syntax tags: **[JS]** = JavaScript syntax (exists without TS) · **[TS]** = type syntax that TypeScript adds (erase it and you get JS) · details in [lesson 00, 7-3](../00-setup/README.md#7-3-ts-syntax--js-syntax--type-syntax)
 
@@ -322,8 +322,8 @@ BIN : 0b11111111
 - `bigint` and `number` can't be mixed, and TS catches that mistake before the code runs.
 - Take outside values as `unknown`. Avoid `any`.
 
-**Next → 02. Functions and Objects (coming soon)**: function types, optional parameters, `interface` vs `type`. DevCalc gains digit grouping (`0xFFFF_FFFF`) and output options.
+**Next → [02. Functions and Objects](../02-functions-objects/README.md)**: function types, optional parameters, `interface` vs `type`. DevCalc gains digit grouping (`0xFFFF_FFFF`) and output options.
 
 ---
 
-[← Previous: 00. Development Setup](../00-setup/README.md) · [Contents](../../README.md) · Next: 02. Functions and Objects (coming soon)
+[← Previous: 00. Development Setup](../00-setup/README.md) · [Contents](../../README.md) · [Next: 02. Functions and Objects →](../02-functions-objects/README.md)

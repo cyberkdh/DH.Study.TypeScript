@@ -84,11 +84,12 @@ projectroot/
 │  ├─ 00-setup/
 │  │  ├─ README.md     ← this lesson (English, default)
 │  │  ├─ README.ko.md  ← Korean version
-│  │  ├─ hello.ts      ← examples sit right next to the lesson text
-│  │  ├─ greeter.ts
-│  │  ├─ enum-sample.ts
-│  │  ├─ run-order.ts
-│  │  └─ run-order-lib.ts
+│  │  ├─ hello.ts      ← examples sit right next to the lesson text (English comments)
+│  │  ├─ hello.ko.ts   ← same code, Korean comments
+│  │  ├─ greeter.ts / greeter.ko.ts
+│  │  ├─ enum-sample.ts / enum-sample.ko.ts
+│  │  ├─ run-order.ts / run-order.ko.ts
+│  │  └─ run-order-lib.ts / run-order-lib.ko.ts
 │  └─ 01-basic-types/
 ├─ devcalc/            ← the final app, growing every lesson (from lesson 01)
 ├─ package.json
@@ -301,9 +302,9 @@ function Describe(eColor) {
 }
 console.log(COLOR.Red, COLOR.Green); // RED GREEN
 console.log(Describe(COLOR.Green)); // color = GREEN
-console.log(Describe("RED")); // color = RED  (a plain string literal works too / 문자열 리터럴도 가능)
+console.log(Describe("RED")); // color = RED  (a plain string literal works too)
 export {};
-// Describe("BLUE"); // ← Uncomment: red squiggle, "BLUE" is not an EColor / 주석을 풀면 빨간 줄
+// Describe("BLUE"); // ← Uncomment: red squiggle, "BLUE" is not an EColor
 ----------------------------------------------------------------------
 
 [3] node dist/lessons/00-setup/enum-sample.js

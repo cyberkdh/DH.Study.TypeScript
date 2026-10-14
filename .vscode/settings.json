@@ -1,6 +1,6 @@
 {
   // Use the project (node_modules) TypeScript instead of the global one
-  // 전역 TypeScript 대신 프로젝트(node_modules)의 TypeScript 사용
+  // Use the project's TypeScript (node_modules) instead of the global one
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.eol": "\n",
