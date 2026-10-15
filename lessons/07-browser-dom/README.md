@@ -419,6 +419,7 @@ New files:
 | [tools/serve.ts](../../tools/serve.ts) | the dev server from section 1 |
 
 Open <http://127.0.0.1:5173/devcalc/web/> with `npm run web` running.
+The finished page (with the lesson 10 engine) is also online: <https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/> — see [build-web.ts](../../tools/README.md#build-webts--the-devcalc-web-page-as-static-files).
 
 ### The same core
 

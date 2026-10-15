@@ -1,0 +1,10 @@
+{
+  // DevCalc web page as static files (tools/build-web.ts → GitHub Pages)
+  // Only App.ts and the files it imports are compiled; .ts import paths are rewritten to .js
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/web",
+    "sourceMap": false
+  },
+  "include": ["devcalc/web/App.ts"]
+}

@@ -36,6 +36,7 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 
 > GitHub 웹 페이지에서는 코드를 **읽을** 수는 있지만 **실행**할 수는 없다. 실행은 내 PC 또는 Codespaces 에서 한다.
 > 07강부터 DevCalc 는 웹 페이지도 있다: `npm run web` 을 실행하고 <http://127.0.0.1:5173/devcalc/web/> 를 연다.
+> 설치 없이 바로 써 보려면: <https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/> (GitHub Pages, `main` 에 push 할 때마다 다시 빌드됨).
 
 > 모든 강의는 영어판(`README.md`, 기본)과 한국어판(`README.ko.md`)이 있다. 예제 코드도 두 벌이다: `x.ts` (영어 주석) 와 `x.ko.ts` (한국어 주석). 코드는 같고 주석만 다르며, `npm test` 가 둘의 코드가 같은지 검사한다. 프로그램 출력은 영어다.
 

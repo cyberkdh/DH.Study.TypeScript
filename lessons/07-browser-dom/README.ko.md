@@ -419,6 +419,7 @@ oView.elInput.addEventListener("input", () => Render(oView));
 | [tools/serve.ts](../../tools/serve.ts) | 1절의 개발 서버 |
 
 `npm run web` 을 실행한 상태에서 <http://127.0.0.1:5173/devcalc/web/> 를 연다.
+완성된 페이지 (10강 엔진 포함) 는 온라인에서도 열 수 있다: <https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/> — [build-web.ts](../../tools/README.ko.md#build-webts--devcalc-웹-페이지를-정적-파일로) 참고.
 
 ### 같은 코어
 

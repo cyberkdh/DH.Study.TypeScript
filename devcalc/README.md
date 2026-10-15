@@ -20,7 +20,8 @@ node devcalc/src/main.ts "0xFF; ans << 8"          # several expressions with ";
 node devcalc/src/main.ts "0xFF + 1" --copy         # copy the HEX result to the clipboard
 node devcalc/src/main.ts --repl                    # interactive: history, copy, help, exit
 
-npm run web     # web page (Lv4): http://127.0.0.1:5173/devcalc/web/
+npm run web     # web page: http://127.0.0.1:5173/devcalc/web/
+npm run build:web   # static web page → dist/web/ (GitHub Pages: https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/)
 
 npm test        # check-pairs, check-names, then the DevCalc tests on Vitest
 npm run test:watch  # Vitest watch mode

@@ -21,6 +21,7 @@
     "pairs": "node tools/check-pairs.ts",
     "devcalc": "node devcalc/src/main.ts",
     "js": "node tools/show-js.ts",
+    "build:web": "node tools/build-web.ts",
     "web": "node --disable-warning=ExperimentalWarning tools/serve.ts"
   },
   "devDependencies": {

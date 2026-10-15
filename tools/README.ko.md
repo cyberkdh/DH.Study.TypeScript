@@ -128,3 +128,22 @@ Stop : Ctrl+C
 - 다른 포트: `PORT=8080 npm run web` (bash) 또는 `$env:PORT=8080; npm run web` (PowerShell).
 - 타입 검사는 하지 **않는다**: VS Code 나 `npm run typecheck` 를 쓴다.
 - `Cache-Control: no-store` : 새로 고치면 언제나 최신 코드를 받는다.
+
+## build-web.ts — DevCalc 웹 페이지를 정적 파일로
+
+`serve.ts` 는 Node 가 실행 중이어야 한다. 정적 호스팅 (GitHub Pages) 에 올리려면 `build-web.ts` 로 미리 컴파일한다:
+
+```
+> npm run build:web
+[1] tsc -p tsconfig.web.json  →  dist/web/
+[2] index.html, style.css  →  dist/web/devcalc/web/
+[3] dist/web/index.html  →  devcalc/web/
+Done : dist/web/ (open devcalc/web/index.html through any static web server)
+```
+
+- `tsconfig.web.json` 은 `devcalc/web/App.ts` 와 그 파일이 import 하는 코어만 컴파일한다. 강의, 테스트, 도구는 배포되지 않는다.
+- `rewriteRelativeImportExtensions` 가 `import "./x.ts"` 를 `"./x.js"` 로 바꾸고, 빌드는 `index.html` 이 `App.js` 를 읽도록 고친다.
+- 타입 에러가 있으면 빌드가 멈춘다. `dist/` 는 커밋하지 않는다 (`.gitignore`).
+- `.github/workflows/pages.yml` 이 `main` 에 push 할 때마다 `npm test` 와 이 빌드를 실행하고 `dist/web` 을 <https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/> 에 배포한다.
+  저장소에서 한 번만 설정: **Settings → Pages → Source: GitHub Actions**.
+- 모듈 스크립트는 `file://` 에서 실행되지 않는다: 더블 클릭이 아니라 웹 서버로 `dist/web/` 을 연다.

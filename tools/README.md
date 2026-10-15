@@ -128,3 +128,22 @@ Stop : Ctrl+C
 - Another port: `PORT=8080 npm run web` (bash) or `$env:PORT=8080; npm run web` (PowerShell).
 - It does **not** type-check: use VS Code or `npm run typecheck`.
 - `Cache-Control: no-store` : a reload always gets your latest code.
+
+## build-web.ts — the DevCalc web page as static files
+
+`serve.ts` needs Node running. To put the page on any static host (GitHub Pages), `build-web.ts` compiles it ahead of time:
+
+```
+> npm run build:web
+[1] tsc -p tsconfig.web.json  →  dist/web/
+[2] index.html, style.css  →  dist/web/devcalc/web/
+[3] dist/web/index.html  →  devcalc/web/
+Done : dist/web/ (open devcalc/web/index.html through any static web server)
+```
+
+- `tsconfig.web.json` compiles only `devcalc/web/App.ts` and what it imports (the core). Lessons, tests and tools are not published.
+- `rewriteRelativeImportExtensions` turns `import "./x.ts"` into `"./x.js"`, and the build points `index.html` at `App.js`.
+- A type error stops the build. `dist/` is not committed (`.gitignore`).
+- `.github/workflows/pages.yml` runs `npm test` and this build on every push to `main`, then publishes `dist/web` to <https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/>.
+  One-time setup in the repository: **Settings → Pages → Source: GitHub Actions**.
+- Module scripts do not run from `file://`: open `dist/web/` through a web server, not by double-clicking.

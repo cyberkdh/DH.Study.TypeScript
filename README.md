@@ -36,6 +36,7 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 
 > On the GitHub website you can **read** the code but not **run** it. Run it on your PC or in Codespaces.
 > From lesson 07, DevCalc also has a web page: run `npm run web` and open <http://127.0.0.1:5173/devcalc/web/>.
+> Or try it without installing anything: <https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/> (GitHub Pages, rebuilt on every push to `main`).
 
 > Every lesson has an English version (`README.md`, default) and a Korean version (`README.ko.md`). The examples come in pairs too: `x.ts` (English comments) and `x.ko.ts` (Korean comments). The code is the same, only the comments differ, and `npm test` checks that the code of each pair matches. Program output is in English.
 

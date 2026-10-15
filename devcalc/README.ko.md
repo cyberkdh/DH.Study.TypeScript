@@ -20,7 +20,8 @@ node devcalc/src/main.ts "0xFF; ans << 8"          # ";" 로 여러 수식, ans 
 node devcalc/src/main.ts "0xFF + 1" --copy         # HEX 결과를 클립보드에 복사
 node devcalc/src/main.ts --repl                    # 대화형: history, copy, help, exit
 
-npm run web     # 웹 페이지 (Lv4): http://127.0.0.1:5173/devcalc/web/
+npm run web     # 웹 페이지: http://127.0.0.1:5173/devcalc/web/
+npm run build:web   # 정적 웹 페이지 → dist/web/ (GitHub Pages: https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/)
 
 npm test        # check-pairs, check-names 다음에 Vitest 로 DevCalc 테스트
 npm run test:watch  # Vitest 감시 모드
