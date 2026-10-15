@@ -4,10 +4,12 @@
 //	Module			: devcalc / tests / Format
 //	History			: 2026-10-14 CYBERKDH Initial - Lesson 01 DevCalc step
 //					  2026-10-14 CYBERKDH Lesson 02: grouping and option tests
+//					  2026-10-15 CYBERKDH Lesson 04: zero padding test
+//					  2026-10-15 CYBERKDH Lesson 09: runs on Vitest (test from "vitest", node:assert kept)
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { test } from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 import { GroupDigits, ToBin, ToDec, ToHex } from "../src/core/Format.ts";
 
@@ -38,4 +40,11 @@ test("Format options", () => {
 	assert.equal(ToHex(255n, { bUpperCase: false }), "0xff");
 	assert.equal(ToHex(255n, { bPrefix: false }), "FF");
 	assert.equal(ToHex(-0x1_0000n, { bGroup: true }), "-0x1_0000");
+});
+
+test("Format padding (nBits)", () => {
+	assert.equal(ToHex(255n, { nBits: 16 }), "0x00FF");
+	assert.equal(ToBin(5n, { nBits: 8, bGroup: true }), "0b0000_0101");
+	assert.equal(ToDec(5n, { nBits: 8 }), "5");
+	assert.equal(ToHex(0x1_0000n, { nBits: 8 }), "0x10000");
 });

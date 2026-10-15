@@ -1,0 +1,108 @@
+/*
+	Projects	: DH.Study.TypeScript
+	Author		: CYBERKDH
+	Module		: devcalc / web / style.css (Styles for the DevCalc page)
+	History		: 2026-10-15 CYBERKDH Initial - Lesson 07 DevCalc step, Lv4
+	Copyrights	: Copyright (C)CYBERKDH. All Rights Reserved.
+*/
+:root {
+	--bg: #ffffff;
+	--fg: #1f2328;
+	--muted: #59636e;
+	--line: #d1d9e0;
+	--panel: #f6f8fa;
+	--bad: #cf222e;
+	--accent: #0969da;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #0d1117;
+		--fg: #e6edf3;
+		--muted: #9198a1;
+		--line: #3d444d;
+		--panel: #151b23;
+		--bad: #ff7b72;
+		--accent: #4493f8;
+	}
+}
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--fg);
+	font: 15px/1.5 system-ui, sans-serif;
+}
+main {
+	max-width: 760px;
+	margin: 0 auto;
+	padding: 16px;
+}
+h1 {
+	font-size: 22px;
+}
+h2 {
+	font-size: 17px;
+	margin-top: 24px;
+}
+.muted {
+	color: var(--muted);
+	font-weight: normal;
+}
+form {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+input,
+select,
+button,
+td,
+#history {
+	font-family: ui-monospace, Consolas, monospace;
+	font-size: 14px;
+}
+input {
+	flex: 1 1 260px;
+	min-width: 0;
+	padding: 6px 8px;
+}
+select,
+button {
+	padding: 6px 10px;
+}
+.error {
+	border: 1px solid var(--bad);
+	color: var(--bad);
+	border-radius: 6px;
+	padding: 8px 12px;
+	margin: 12px 0;
+}
+table {
+	border-collapse: collapse;
+	margin-top: 12px;
+	width: 100%;
+}
+td {
+	border-bottom: 1px solid var(--line);
+	padding: 6px 8px;
+	overflow-wrap: anywhere;
+}
+td:first-child {
+	width: 3.5em;
+	color: var(--muted);
+}
+td:last-child {
+	width: 4.5em;
+	text-align: right;
+}
+#history li {
+	cursor: pointer;
+	padding: 2px 4px;
+	border-radius: 4px;
+}
+#history li:hover {
+	background: var(--panel);
+	color: var(--accent);
+}
+.invalid {
+	outline: 2px solid var(--bad);
+}

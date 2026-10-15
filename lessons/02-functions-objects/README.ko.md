@@ -1,6 +1,6 @@
 [English](README.md) · **한국어**
 
-[← 이전: 01. 기본 타입과 bigint](../01-basic-types/README.ko.md) · [목차](../../README.ko.md) · 다음: 03. 유니온과 타입 좁히기 (준비 중)
+[← 이전: 01. 기본 타입과 bigint](../01-basic-types/README.ko.md) · [목차](../../README.ko.md) · [다음: 03. 유니온과 타입 좁히기 →](../03-unions-narrowing/README.ko.md)
 
 # 02. 함수와 객체 — 자릿수 묶기와 출력 옵션 (DevCalc Lv1)
 
@@ -122,7 +122,7 @@ function ToRadix(nValue: number, nRadix = 16): string { ... }   // nRadix: numbe
 
 C# 의 선택적 매개변수 `int radix = 16` 과 같다. 타입은 기본값에서 추론된다.
 
-### 2-3. 나머지 파라미터 `...` 와 펼치기
+### 2-3. 나머지 파라미터 `...` 와 전개 구문
 
 **[JS]** — `: number[]` 부분은 **[TS]**
 
@@ -132,7 +132,7 @@ Sum(1, 2, 3);              // 6
 Sum(...[8, 16, 32, 64]);   // 배열을 인자로 펼침 → 120
 ```
 
-나머지 파라미터(Rest Parameter)는 C# 의 `params int[]`. 배열을 인자로 펼치는 `...` 는 **펼치기(Spread)** 문법이다.
+나머지 파라미터(Rest Parameter)는 C# 의 `params int[]`. 배열을 인자로 펼치는 `...` 는 **전개 구문(Spread Syntax)** 이다.
 
 ### 2-4. 옵션 객체
 
@@ -145,7 +145,7 @@ FormatHex(255);                          // "0xFF"
 FormatHex(255, { bUpperCase: false });   // "0xff"
 ```
 
-- 선택 설정이 여러 개면 **객체 하나**로 받는다. 호출하는 쪽에서 각 값의 의미가 보인다. C# 의 이름 있는 인자 `FormatHex(255, upperCase: false)` 와 같은 효과.
+- 선택 설정이 여러 개면 **객체 하나**로 받는다. 호출하는 쪽에서 각 값의 의미가 보인다. C# 의 명명된 인수(Named Arguments) `FormatHex(255, upperCase: false)` 와 같은 효과.
 - `{ bPrefix = true, ... }` 는 01강의 구조 분해(Destructuring)에 프로퍼티별 기본값을 더한 것.
 - 끝의 `= {}` 덕분에 객체 자체를 생략할 수 있다.
 - 인라인 타입 `{ bPrefix?: boolean; ... }` 은 길다. 3절에서 이름을 붙인다.
@@ -490,8 +490,8 @@ npm 으로 실행할 때는 `--` 뒤에 인자를 둔다: `npm run devcalc -- 25
 - TS 는 **구조 기준**: 모양이 같으면 호환된다. 그래도 객체 리터럴의 모르는 키는 잡아 준다.
 - 함수는 값이다: 넘기고(콜백), 돌려받고(클로저), 표에 담는다.
 
-**다음 → 03. 유니온과 타입 좁히기 (준비 중)**: `string | undefined`, `typeof` / `in` 검사, `enum` 대신 리터럴 유니온. DevCalc 에 `0xFF`, `0b1010`, `1_000` 을 해석하는 자체 입력 해석기를 만든다.
+**다음 → [03. 유니온과 타입 좁히기](../03-unions-narrowing/README.ko.md)**: `string | undefined`, `typeof` / `in` 검사, `enum` 대신 리터럴 유니온. DevCalc 에 `0xFF`, `0b1010`, `1_000` 을 해석하는 자체 입력 해석기를 만든다.
 
 ---
 
-[← 이전: 01. 기본 타입과 bigint](../01-basic-types/README.ko.md) · [목차](../../README.ko.md) · 다음: 03. 유니온과 타입 좁히기 (준비 중)
+[← 이전: 01. 기본 타입과 bigint](../01-basic-types/README.ko.md) · [목차](../../README.ko.md) · [다음: 03. 유니온과 타입 좁히기 →](../03-unions-narrowing/README.ko.md)

@@ -30,12 +30,12 @@ function Sum(...arrNum: number[]): number {
 }
 console.log("3) Sum() =", Sum(), "/ Sum(1, 2, 3) =", Sum(1, 2, 3));
 
-// 4) [JS] 펼치기 (Spread) : 배열을 인자 여러 개로 펼친다
+// 4) [JS] 전개 구문 (Spread) : 배열을 인자 여러 개로 펼친다
 const arrBits = [8, 16, 32, 64];
 console.log("4) Sum(...arrBits) =", Sum(...arrBits), "/ Math.max(...arrBits) =", Math.max(...arrBits));
 
 // 5) [JS + TS] 옵션 객체 : 선택 설정 여러 개를 객체 하나로 받고, 구조 분해 + 기본값으로 꺼낸다
-//    (C# 의 이름 있는 인자 역할)
+//    (C# 의 명명된 인수 (named arguments) 역할)
 function FormatHex(nValue: number, { bPrefix = true, bUpperCase = true }: { bPrefix?: boolean; bUpperCase?: boolean } = {}): string {
 	const strDigits = nValue.toString(16);
 	return (bPrefix ? "0x" : "") + (bUpperCase ? strDigits.toUpperCase() : strDigits);

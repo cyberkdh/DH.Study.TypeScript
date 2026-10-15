@@ -1,6 +1,6 @@
 **English** · [한국어](README.ko.md)
 
-[← Previous: 01. Basic Types and bigint](../01-basic-types/README.md) · [Contents](../../README.md) · Next: 03. Unions and Narrowing (coming soon)
+[← Previous: 01. Basic Types and bigint](../01-basic-types/README.md) · [Contents](../../README.md) · [Next: 03. Unions and Narrowing →](../03-unions-narrowing/README.md)
 
 # 02. Functions and Objects — Digit Grouping and Output Options (DevCalc Lv1)
 
@@ -490,8 +490,8 @@ Tests ([devcalc/tests/Format.test.ts](../../devcalc/tests/Format.test.ts)) gaine
 - TS is **structural**: same shape = compatible. An object literal with an unknown key is still flagged.
 - Functions are values: pass them (callbacks), return them (closures), keep them in tables.
 
-**Next → 03. Unions and Narrowing (coming soon)**: `string | undefined`, `typeof` / `in` checks, literal unions instead of `enum`. DevCalc gets its own input parser for `0xFF`, `0b1010` and `1_000`.
+**Next → [03. Unions and Narrowing](../03-unions-narrowing/README.md)**: `string | undefined`, `typeof` / `in` checks, literal unions instead of `enum`. DevCalc gets its own input parser for `0xFF`, `0b1010` and `1_000`.
 
 ---
 
-[← Previous: 01. Basic Types and bigint](../01-basic-types/README.md) · [Contents](../../README.md) · Next: 03. Unions and Narrowing (coming soon)
+[← Previous: 01. Basic Types and bigint](../01-basic-types/README.md) · [Contents](../../README.md) · [Next: 03. Unions and Narrowing →](../03-unions-narrowing/README.md)

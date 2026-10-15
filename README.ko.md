@@ -13,14 +13,14 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 | 00 | [개발 환경 구성](lessons/00-setup/README.ko.md) | 실행 3가지 방법, VS Code 디버깅, TS → JS | — | ✅ |
 | 01 | [기본 타입과 bigint](lessons/01-basic-types/README.ko.md) | 타입 표기·추론, `number` 의 한계, `bigint`, `any`/`unknown` | Lv1 진법 변환 (ToHex/ToBin/ToDec) | ✅ |
 | 02 | [함수와 객체](lessons/02-functions-objects/README.ko.md) | 함수 타입, `interface`/`type` | 자릿수 묶기, 출력 옵션 | ✅ |
-| 03 | 유니온과 타입 좁히기 | 유니온(Union), 타입 좁히기(Narrowing) | Lv2 입력 형식 해석 `0x`/`0b`/`1_000` | 준비 중 |
-| 04 | 클래스와 에러 처리 | 클래스(Class), 예외(Exception) | Lv3 워드 크기, 두 수 계산 | 준비 중 |
-| 05 | 제네릭 | 제네릭(Generics) | `TResult<T, E>`, 히스토리 | 준비 중 |
-| 06 | 모듈과 비동기 | 모듈(Module), `async`/`await` | core 분리, 클립보드 | 준비 중 |
-| 07 | 브라우저와 DOM | DOM, 이벤트(Event) | Lv4 웹 화면 | 준비 중 |
-| 08 | 고급 타입 | 유틸리티·매핑·조건부 타입 | 함수 표 타입 안정성 | 준비 중 |
-| 09 | 테스트와 도구 | Vitest, ESLint | 테스트, 이름 규칙 자동 검사 | 준비 중 |
-| 10 | (도전) 렉서와 파서 | 재귀, 판별 유니온 | Lv5 수식 계산 | 준비 중 |
+| 03 | [유니온과 타입 좁히기](lessons/03-unions-narrowing/README.ko.md) | 유니온(Union), 타입 좁히기(Narrowing), 판별 유니온 | Lv2 입력 형식 해석 `0x`/`0b`/`1_000` | ✅ |
+| 04 | [클래스와 에러 처리](lessons/04-classes-errors/README.ko.md) | 클래스(Class), 예외(Exception) | Lv3 워드 크기, 두 수 계산 | ✅ |
+| 05 | [제네릭](lessons/05-generics/README.ko.md) | 제네릭(Generics) | `TResult<T, E>`, 히스토리 | ✅ |
+| 06 | [모듈과 비동기](lessons/06-modules-async/README.ko.md) | 모듈(Module), `async`/`await` | core 분리, 클립보드, REPL | ✅ |
+| 07 | [브라우저와 DOM](lessons/07-browser-dom/README.ko.md) | DOM, 이벤트(Event), 폼(Form) | Lv4 웹 페이지 | ✅ |
+| 08 | [고급 타입](lessons/08-advanced-types/README.ko.md) | 유틸리티·매핑·조건부·템플릿 리터럴 타입 | 타입이 지정된 연산자 표 | ✅ |
+| 09 | [테스트와 도구](lessons/09-testing-tooling/README.ko.md) | node:test, 모의 객체, Vitest, ESLint 없이 린트 | Vitest, 이름 규칙 검사 | ✅ |
+| 10 | [(도전) 렉서와 파서](lessons/10-lexer-parser/README.ko.md) | 재귀, 재귀 타입, 렉서(Lexer), 파서(Parser) | Lv5 수식 계산 | ✅ |
 
 ## 공부하는 방법
 
@@ -35,7 +35,7 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 5. 강의별 완성 코드는 git 태그(Tag)로 볼 수 있다: `git checkout lesson-01`
 
 > GitHub 웹 페이지에서는 코드를 **읽을** 수는 있지만 **실행**할 수는 없다. 실행은 내 PC 또는 Codespaces 에서 한다.
-> DevCalc 는 07강부터 웹 화면이 생겨 브라우저에서 써 볼 수 있게 된다.
+> 07강부터 DevCalc 는 웹 페이지도 있다: `npm run web` 을 실행하고 <http://127.0.0.1:5173/devcalc/web/> 를 연다.
 
 > 모든 강의는 영어판(`README.md`, 기본)과 한국어판(`README.ko.md`)이 있다. 예제 코드도 두 벌이다: `x.ts` (영어 주석) 와 `x.ko.ts` (한국어 주석). 코드는 같고 주석만 다르며, `npm test` 가 둘의 코드가 같은지 검사한다. 프로그램 출력은 영어다.
 
@@ -82,7 +82,7 @@ node lessons/00-setup/hello.ko.ts          # 예제 실행 (다른 강의도 같
 npm run typecheck                          # 타입 검사
 npm run build                              # dist/ 로 빌드
 npm run devcalc -- 255                     # DevCalc 실행
-npm test                                   # DevCalc 테스트
+npm test                                   # check-pairs, check-names, DevCalc 테스트 (Vitest)
 npm run js -- lessons/00-setup/hello.ko.ts # 변환된 JS 를 보여 주고 실행
 ```
 
@@ -102,7 +102,7 @@ ts2js.bat lessons\00-setup\enum-sample.ko.ts  # npm run js 와 같음: 빌드 �
 │     ├─ README.ko.md   강의 (한국어)
 │     ├─ x.ts           예제, 영어 주석
 │     └─ x.ko.ts        같은 예제, 한국어 주석
-├─ devcalc/             최종 앱 (강의마다 자람)
+├─ devcalc/             최종 앱 (강의가 진행되며 기능이 늘어남)
 ├─ tools/               보조 스크립트 (show-js.ts: TS → JS 변환 보기, check-pairs.ts: x.ts 와 x.ko.ts 코드 비교)
 ├─ runts.bat            .ts 바로 실행 (Windows)
 ├─ ts2js.bat            TS → JS 변환 보고 실행 (Windows)

@@ -1,5 +1,4 @@
 {
-  // Use the project (node_modules) TypeScript instead of the global one
   // Use the project's TypeScript (node_modules) instead of the global one
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,

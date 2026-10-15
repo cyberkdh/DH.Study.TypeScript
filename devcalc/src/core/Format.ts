@@ -4,6 +4,7 @@
 //	Module			: devcalc / core / Format (Radix formatting)
 //	History			: 2026-10-14 CYBERKDH Initial - Lesson 01 DevCalc step
 //					  2026-10-14 CYBERKDH Lesson 02: digit grouping, output options
+//					  2026-10-15 CYBERKDH Lesson 04: zero padding to the word size (nBits)
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -12,6 +13,7 @@ export interface IFormatOptions {
 	readonly bGroup?: boolean; // group digits (default false)
 	readonly bUpperCase?: boolean; // A-F in upper case (default true)
 	readonly bPrefix?: boolean; // 0x / 0b prefix (default true)
+	readonly nBits?: number; // pad HEX / BIN with zeros to this word size (default: no padding)
 }
 
 // A formatting function : ToHex / ToDec / ToBin all have this type
@@ -23,11 +25,12 @@ interface IRadixSpec {
 	readonly strPrefix: string;
 	readonly nGroupSize: number;
 	readonly strSeparator: string;
+	readonly nBitsPerDigit: number; // 0 = never padded
 }
 
-const HEX_SPEC: IRadixSpec = { nRadix: 16, strPrefix: "0x", nGroupSize: 4, strSeparator: "_" };
-const DEC_SPEC: IRadixSpec = { nRadix: 10, strPrefix: "", nGroupSize: 3, strSeparator: "," };
-const BIN_SPEC: IRadixSpec = { nRadix: 2, strPrefix: "0b", nGroupSize: 4, strSeparator: "_" };
+const HEX_SPEC: IRadixSpec = { nRadix: 16, strPrefix: "0x", nGroupSize: 4, strSeparator: "_", nBitsPerDigit: 4 };
+const DEC_SPEC: IRadixSpec = { nRadix: 10, strPrefix: "", nGroupSize: 3, strSeparator: ",", nBitsPerDigit: 0 };
+const BIN_SPEC: IRadixSpec = { nRadix: 2, strPrefix: "0b", nGroupSize: 4, strSeparator: "_", nBitsPerDigit: 1 };
 
 // Group digits from the right : ("FFFFFFFF", 4, "_") → "FFFF_FFFF"
 export function GroupDigits(strDigits: string, nSize: number, strSeparator: string): string {
@@ -42,10 +45,13 @@ export function GroupDigits(strDigits: string, nSize: number, strSeparator: stri
 }
 
 // Split sign and absolute value, then build "sign + prefix + digits"
-function FormatRadix(biValue: bigint, oSpec: IRadixSpec, { bGroup = false, bUpperCase = true, bPrefix = true }: IFormatOptions): string {
+function FormatRadix(biValue: bigint, oSpec: IRadixSpec, { bGroup = false, bUpperCase = true, bPrefix = true, nBits = 0 }: IFormatOptions): string {
 	const strSign = biValue < 0n ? "-" : "";
 	const biAbs = biValue < 0n ? -biValue : biValue;
 	let strDigits = biAbs.toString(oSpec.nRadix);
+	if (nBits > 0 && oSpec.nBitsPerDigit > 0) {
+		strDigits = strDigits.padStart(Math.ceil(nBits / oSpec.nBitsPerDigit), "0");
+	}
 	if (bUpperCase) {
 		strDigits = strDigits.toUpperCase();
 	}

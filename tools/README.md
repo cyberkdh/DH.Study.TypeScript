@@ -70,7 +70,7 @@ Every lesson example is a pair: `x.ts` (English comments) and `x.ko.ts` (Korean 
 
 ```bash
 npm run pairs          # check only
-npm test               # check-pairs runs first, then the DevCalc tests (also in CI)
+npm test               # check-pairs, then check-names, then the DevCalc tests on Vitest (also in CI)
 ```
 
 ```
@@ -81,10 +81,50 @@ check-pairs : 15 pairs, 0 failed
 If you change the code in one file only:
 
 ```
-FAIL lessons-basic-typesigint.ts : code differs from the .ko.ts file
+FAIL lessons\01-basic-types\bigint.ts : code differs from the .ko.ts file
   .ts    : console.log("7n / 2n =", 7n / 2n);
   .ko.ts : console.log("7n / 2n =", 7n / 3n);
 check-pairs : 15 pairs, 1 failed
 ```
 
 > When you edit an example, make the same code change in both files. Only the comments may differ.
+
+## check-names.ts — check the naming rules
+
+The repository names things by their type ([naming table](../README.md#naming-convention)). `check-names.ts` reads every `.ts` file, blanks out comments, strings and regexes, and checks each declaration: class `C`, interface `I`, string-literal union `E`, other type alias `E` or `T`, functions and methods PascalCase, variables with a type prefix (`strName`, `nIdx`, `m_`/`g_` allowed) or UPPER_CASE. Built in [lesson 09](../lessons/09-testing-tooling/README.md#6-build-it--a-naming-rule-checker).
+
+```bash
+npm run names                      # devcalc and tools (also part of npm test)
+node tools/check-names.ts lessons  # any folder or .ts file
+```
+
+```
+> npm run names
+check-names : 24 files, 0 problems
+```
+
+A problem shows the file, the line and the rule, and the exit code is 1:
+
+```
+FAIL devcalc\web\App.ts:51 o : variable has a type prefix (strName, nIdx) or is UPPER_CASE
+check-names : 23 files, 1 problems
+```
+
+> It is a regex checker, not a parser: destructured names and parameters are not checked.
+
+## serve.ts — a local dev server for the browser lessons
+
+Browsers can't run TypeScript. `serve.ts` serves this folder and, when a `.ts` file is asked for, erases the types with Node's own `stripTypeScriptTypes()` (the same thing `node file.ts` does) and sends JavaScript. No packages needed. Used from [lesson 07](../lessons/07-browser-dom/README.md).
+
+```
+> npm run web
+Dev server running. Open in the browser:
+  http://127.0.0.1:5173/lessons/07-browser-dom/      lesson 07 examples (add ?ko for Korean comments)
+  http://127.0.0.1:5173/devcalc/web/                 DevCalc web
+Stop : Ctrl+C
+```
+
+- Listens on `127.0.0.1` only. Refuses `..`, hidden folders (`.git`) and `node_modules` (403).
+- Another port: `PORT=8080 npm run web` (bash) or `$env:PORT=8080; npm run web` (PowerShell).
+- It does **not** type-check: use VS Code or `npm run typecheck`.
+- `Cache-Control: no-store` : a reload always gets your latest code.

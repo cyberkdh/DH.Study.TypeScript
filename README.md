@@ -13,14 +13,14 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 | 00 | [Development Setup](lessons/00-setup/README.md) | 3 ways to run `.ts`, VS Code debugging, TS → JS | — | ✅ |
 | 01 | [Basic Types and bigint](lessons/01-basic-types/README.md) | Annotation & inference, limits of `number`, `bigint`, `any`/`unknown` | Lv1 radix conversion (ToHex/ToBin/ToDec) | ✅ |
 | 02 | [Functions and Objects](lessons/02-functions-objects/README.md) | Function types, `interface`/`type` | Digit grouping, output options | ✅ |
-| 03 | Unions and Narrowing | Union types, narrowing | Lv2 input parsing `0x`/`0b`/`1_000` | Coming soon |
-| 04 | Classes and Errors | Classes, exceptions | Lv3 word size, two-operand math | Coming soon |
-| 05 | Generics | Generics | `TResult<T, E>`, history | Coming soon |
-| 06 | Modules and Async | Modules, `async`/`await` | Split core, clipboard | Coming soon |
-| 07 | Browser and DOM | DOM, events | Lv4 web UI | Coming soon |
-| 08 | Advanced Types | Utility, mapped, conditional types | Type-safe function table | Coming soon |
-| 09 | Testing and Tooling | Vitest, ESLint | Tests, naming-rule linting | Coming soon |
-| 10 | (Challenge) Lexer and Parser | Recursion, discriminated unions | Lv5 expression evaluation | Coming soon |
+| 03 | [Unions and Narrowing](lessons/03-unions-narrowing/README.md) | Union types, narrowing, discriminated unions | Lv2 input parsing `0x`/`0b`/`1_000` | ✅ |
+| 04 | [Classes and Errors](lessons/04-classes-errors/README.md) | Classes, exceptions | Lv3 word size, two-operand math | ✅ |
+| 05 | [Generics](lessons/05-generics/README.md) | Generics | `TResult<T, E>`, history | ✅ |
+| 06 | [Modules and Async](lessons/06-modules-async/README.md) | Modules, `async`/`await` | Split core, clipboard, REPL | ✅ |
+| 07 | [Browser and DOM](lessons/07-browser-dom/README.md) | DOM, events, forms | Lv4 web page | ✅ |
+| 08 | [Advanced Types](lessons/08-advanced-types/README.md) | Utility, mapped, conditional, template literal types | Typed operator table | ✅ |
+| 09 | [Testing and Tooling](lessons/09-testing-tooling/README.md) | node:test, mocks, Vitest, lint without ESLint | Vitest, naming-rule check | ✅ |
+| 10 | [(Challenge) Lexer and Parser](lessons/10-lexer-parser/README.md) | Recursion, recursive types, lexer, parser | Lv5 expression evaluation | ✅ |
 
 ## How to study
 
@@ -35,7 +35,7 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 5. Each lesson's finished code is tagged in git: `git checkout lesson-01`
 
 > On the GitHub website you can **read** the code but not **run** it. Run it on your PC or in Codespaces.
-> DevCalc gets a web UI in lesson 07, so you can then try it in the browser.
+> From lesson 07, DevCalc also has a web page: run `npm run web` and open <http://127.0.0.1:5173/devcalc/web/>.
 
 > Every lesson has an English version (`README.md`, default) and a Korean version (`README.ko.md`). The examples come in pairs too: `x.ts` (English comments) and `x.ko.ts` (Korean comments). The code is the same, only the comments differ, and `npm test` checks that the code of each pair matches. Program output is in English.
 
@@ -82,7 +82,7 @@ node lessons/00-setup/hello.ts             # run an example (same for every less
 npm run typecheck                          # type check
 npm run build                              # build to dist/
 npm run devcalc -- 255                     # run DevCalc
-npm test                                   # DevCalc tests
+npm test                                   # check-pairs, check-names, DevCalc tests (Vitest)
 npm run js -- lessons/00-setup/hello.ts    # Show the generated JS, then run it
 ```
 

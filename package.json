@@ -15,14 +15,18 @@
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "test": "node tools/check-pairs.ts && node --test \"devcalc/tests/**/*.test.ts\"",
+    "test": "node tools/check-pairs.ts && node tools/check-names.ts && vitest run",
+    "test:watch": "vitest",
+    "names": "node tools/check-names.ts",
     "pairs": "node tools/check-pairs.ts",
     "devcalc": "node devcalc/src/main.ts",
-    "js": "node tools/show-js.ts"
+    "js": "node tools/show-js.ts",
+    "web": "node --disable-warning=ExperimentalWarning tools/serve.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
   }
 }

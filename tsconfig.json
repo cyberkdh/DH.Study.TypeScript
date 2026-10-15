@@ -2,16 +2,14 @@
   "compilerOptions": {
     // Language / module
     "target": "es2024",
-    "lib": ["es2024"],
+    "lib": ["es2024", "DOM", "DOM.Iterable"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "types": ["node"],
 
-    // Use .ts extensions in imports → works with both plain node and the tsc build
     // .ts extensions in import paths → works with both direct node runs and tsc builds
     "rewriteRelativeImportExtensions": true,
     "verbatimModuleSyntax": true,
-    // Only syntax that node can run by erasing types (no enum / namespace / parameter properties)
     // Allow only syntax that runs in node once types are erased (no enum / namespace / parameter properties)
     "erasableSyntaxOnly": true,
 
@@ -20,6 +18,10 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
+
+    // Lint-like checks (lesson 09) : unused variables, imports and parameters are errors
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
 
     // Output / debugging
     "rootDir": ".",

@@ -70,7 +70,7 @@ color = RED
 
 ```bash
 npm run pairs          # 검사만
-npm test               # check-pairs 를 먼저 돌리고 DevCalc 테스트 (CI 에서도 실행)
+npm test               # check-pairs, check-names 다음에 Vitest 로 DevCalc 테스트 (CI 에서도 실행)
 ```
 
 ```
@@ -81,10 +81,50 @@ check-pairs : 15 pairs, 0 failed
 한쪽 파일의 코드만 고치면:
 
 ```
-FAIL lessons-basic-typesigint.ts : code differs from the .ko.ts file
+FAIL lessons\01-basic-types\bigint.ts : code differs from the .ko.ts file
   .ts    : console.log("7n / 2n =", 7n / 2n);
   .ko.ts : console.log("7n / 2n =", 7n / 3n);
 check-pairs : 15 pairs, 1 failed
 ```
 
 > 예제를 고칠 때는 두 파일의 코드를 똑같이 고친다. 주석만 달라도 된다.
+
+## check-names.ts — 이름 규칙 검사
+
+이 저장소는 타입에 따라 이름을 짓는다 ([이름 규칙 표](../README.ko.md#이름-규칙-naming-convention)). `check-names.ts` 는 모든 `.ts` 파일을 읽어 주석, 문자열, 정규식을 비운 뒤 선언마다 검사한다: class 는 `C`, interface 는 `I`, 문자열 리터럴 유니온은 `E`, 그 밖의 타입 별칭은 `E` 나 `T`, 함수와 메서드는 PascalCase, 변수는 타입 접두어 (`strName`, `nIdx`, `m_`/`g_` 허용) 또는 UPPER_CASE. [09강](../lessons/09-testing-tooling/README.ko.md#6-직접-만들기--이름-규칙-검사기) 에서 만들었다.
+
+```bash
+npm run names                      # devcalc 와 tools (npm test 에도 포함)
+node tools/check-names.ts lessons  # 아무 폴더나 .ts 파일
+```
+
+```
+> npm run names
+check-names : 24 files, 0 problems
+```
+
+문제가 있으면 파일, 줄, 규칙을 보여 주고 종료 코드는 1 이다:
+
+```
+FAIL devcalc\web\App.ts:51 o : variable has a type prefix (strName, nIdx) or is UPPER_CASE
+check-names : 23 files, 1 problems
+```
+
+> 파서가 아니라 정규식 검사기다: 구조 분해한 이름과 매개변수는 검사하지 않는다.
+
+## serve.ts — 브라우저 강의용 로컬 개발 서버
+
+브라우저는 TypeScript 를 실행할 수 없다. `serve.ts` 는 이 폴더를 제공하면서, `.ts` 파일을 요청받으면 Node 자체의 `stripTypeScriptTypes()` (`node 파일.ts` 와 같은 일) 로 타입을 지우고 JavaScript 를 보낸다. 패키지가 필요 없다. [07강](../lessons/07-browser-dom/README.ko.md)부터 쓴다.
+
+```
+> npm run web
+Dev server running. Open in the browser:
+  http://127.0.0.1:5173/lessons/07-browser-dom/      lesson 07 examples (add ?ko for Korean comments)
+  http://127.0.0.1:5173/devcalc/web/                 DevCalc web
+Stop : Ctrl+C
+```
+
+- `127.0.0.1` 에서만 접속을 받는다. `..`, 숨김 폴더(`.git`), `node_modules` 는 거부한다 (403).
+- 다른 포트: `PORT=8080 npm run web` (bash) 또는 `$env:PORT=8080; npm run web` (PowerShell).
+- 타입 검사는 하지 **않는다**: VS Code 나 `npm run typecheck` 를 쓴다.
+- `Cache-Control: no-store` : 새로 고치면 언제나 최신 코드를 받는다.

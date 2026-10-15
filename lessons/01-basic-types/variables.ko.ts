@@ -66,7 +66,7 @@ try {
 	console.log("   Fix : declare first, then use.");
 }
 
-// 8) [JS] var : 옛 JS 방식. { } 블록을 무시하므로 쓰지 않는다.
+// 8) [JS] var : 예전 JS 방식. { } 블록을 무시하므로 쓰지 않는다.
 for (var nIdx = 0; nIdx < 3; nIdx++) {
 	// 반복 본문
 }

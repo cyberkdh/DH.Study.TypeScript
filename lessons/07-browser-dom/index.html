@@ -1,0 +1,173 @@
+<!doctype html>
+<!--
+	Projects	: DH.Study.TypeScript
+	Author		: CYBERKDH
+	Module		: 07-browser-dom / index.html (Page for the lesson 07 examples)
+	History		: 2026-10-15 CYBERKDH Initial
+	Copyrights	: Copyright (C)CYBERKDH. All Rights Reserved.
+
+	Open with the dev server : npm run web → http://127.0.0.1:5173/lessons/07-browser-dom/
+	Add ?ko to load the Korean-comment files (x.ko.ts). The code and the output are the same.
+-->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Lesson 07 · Browser and DOM</title>
+		<link rel="icon" href="data:," />
+		<style>
+			:root {
+				--bg: #ffffff;
+				--fg: #1f2328;
+				--muted: #59636e;
+				--line: #d1d9e0;
+				--panel: #f6f8fa;
+				--bad: #cf222e;
+				--good: #1a7f37;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #0d1117;
+					--fg: #e6edf3;
+					--muted: #9198a1;
+					--line: #3d444d;
+					--panel: #151b23;
+					--bad: #ff7b72;
+					--good: #3fb950;
+				}
+			}
+			body {
+				margin: 0 auto;
+				max-width: 860px;
+				padding: 16px;
+				background: var(--bg);
+				color: var(--fg);
+				font: 15px/1.5 system-ui, sans-serif;
+			}
+			section {
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				padding: 12px 16px;
+				margin: 16px 0;
+			}
+			h2 {
+				margin: 0 0 8px;
+				font-size: 18px;
+			}
+			code,
+			pre,
+			input,
+			select,
+			button,
+			td {
+				font-family: ui-monospace, Consolas, monospace;
+			}
+			input,
+			select,
+			button {
+				font-size: 14px;
+				padding: 4px 8px;
+			}
+			pre.log {
+				background: var(--panel);
+				border-radius: 6px;
+				padding: 8px 12px;
+				margin: 8px 0 0;
+				white-space: pre-wrap;
+				overflow-wrap: anywhere;
+			}
+			.muted {
+				color: var(--muted);
+			}
+			.highlight {
+				background: #fff8c5;
+				color: #1f2328;
+			}
+			.invalid {
+				outline: 2px solid var(--bad);
+			}
+			.error {
+				color: var(--bad);
+			}
+			.ok {
+				color: var(--good);
+			}
+			table {
+				border-collapse: collapse;
+			}
+			td {
+				border: 1px solid var(--line);
+				padding: 2px 8px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Lesson 07 · Browser and DOM</h1>
+		<p class="muted">Each section below is run by one .ts file. The grey box shows what the code did (also in DevTools → Console).</p>
+
+		<section id="elements">
+			<h2>1. Elements — <code>elements.ts</code></h2>
+			<p id="title">DevCalc</p>
+			<input id="expr" value="0xFF" aria-label="expression" />
+			<ul id="regs">
+				<li data-reg="AX" data-value="0x1234">AX</li>
+				<li data-reg="BX" data-value="0xFF">BX</li>
+			</ul>
+			<table id="result"><tbody></tbody></table>
+			<pre class="log" id="elements-log"></pre>
+		</section>
+
+		<section id="events">
+			<h2>2. Events — <code>events.ts</code></h2>
+			<button id="count-btn" type="button">Click me</button> clicked <span id="count">0</span> times
+			<p><input id="key-input" placeholder="type and press Enter" aria-label="key input" /></p>
+			<p id="ops">
+				<button type="button" data-op="+">+</button>
+				<button type="button" data-op="&amp;">&amp;</button>
+				<button type="button" data-op="&lt;&lt;">&lt;&lt;</button>
+			</p>
+			<p><a id="docs-link" href="#docs">a link that does not navigate</a></p>
+			<pre class="log" id="events-log"></pre>
+		</section>
+
+		<section id="forms">
+			<h2>3. Forms and storage — <code>forms.ts</code></h2>
+			<form id="calc-form">
+				<input name="a" value="0xFF" size="10" aria-label="first number" />
+				<select name="op" aria-label="operator">
+					<option>+</option>
+					<option>&amp;</option>
+					<option>&lt;&lt;</option>
+				</select>
+				<input name="b" value="1" size="10" aria-label="second number" />
+				<label>bits <input id="bits" name="bits" type="number" value="8" min="8" max="64" step="8" /></label>
+				<button type="submit">=</button>
+				<output id="calc-out" for="calc-form"></output>
+			</form>
+			<pre class="log" id="forms-log"></pre>
+		</section>
+
+		<section id="radix">
+			<h2>4. Build it — radix converter — <code>radix.ts</code></h2>
+			<input id="radix-input" value="255" aria-label="number" />
+			<table>
+				<tbody>
+					<tr><td>HEX</td><td id="radix-hex"></td></tr>
+					<tr><td>DEC</td><td id="radix-dec"></td></tr>
+					<tr><td>BIN</td><td id="radix-bin"></td></tr>
+				</tbody>
+			</table>
+			<p id="radix-error" class="error"></p>
+			<pre class="log" id="radix-log"></pre>
+		</section>
+
+		<script type="module">
+			// Plain JavaScript : load each example. ?ko → the Korean-comment twins (same code)
+			const strSuffix = new URLSearchParams(location.search).has("ko") ? ".ko.ts" : ".ts";
+			for (const strName of ["elements", "events", "forms", "radix"]) {
+				await import(`./${strName}${strSuffix}`);
+			}
+			document.body.dataset.done = "true"; // the examples finished (used by the headless check)
+		</script>
+	</body>
+</html>

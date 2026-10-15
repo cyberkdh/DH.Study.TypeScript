@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+	Projects	: DH.Study.TypeScript
+	Author		: CYBERKDH
+	Module		: devcalc / web / index.html (DevCalc in the browser, Lv4)
+	History		: 2026-10-15 CYBERKDH Initial - Lesson 07 DevCalc step, Lv4
+	Copyrights	: Copyright (C)CYBERKDH. All Rights Reserved.
+
+	Open with the dev server : npm run web → http://127.0.0.1:5173/devcalc/web/
+-->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>DevCalc</title>
+		<link rel="icon" href="data:," />
+		<link rel="stylesheet" href="./style.css" />
+	</head>
+	<body>
+		<main>
+			<h1>DevCalc <span class="muted">Lv4 · web</span></h1>
+
+			<form id="calc-form" autocomplete="off">
+				<input id="expr" name="expr" placeholder='0xFF &amp; 0x0F   ·   0xFF + 1; ans * 2' aria-label="expression" />
+				<select id="bits" name="bits" aria-label="word size">
+					<option value="">no limit</option>
+					<option value="8">8-bit</option>
+					<option value="16">16-bit</option>
+					<option value="32" selected>32-bit</option>
+					<option value="64">64-bit</option>
+				</select>
+				<button type="submit">=</button>
+			</form>
+
+			<div id="error" class="error" hidden>
+				<strong id="error-title"></strong>
+				<div>Why : <span id="error-why"></span></div>
+				<div>Fix : <span id="error-fix"></span></div>
+			</div>
+
+			<table id="out">
+				<tbody></tbody>
+			</table>
+			<p id="note" class="muted"></p>
+
+			<h2>History <button id="clear" type="button">clear</button></h2>
+			<ol id="history"></ol>
+			<p class="muted">Click a line to put it back in the box. The history stays after a reload (localStorage).</p>
+			<p id="status" class="muted" role="status"></p>
+		</main>
+		<script type="module" src="./App.ts"></script>
+	</body>
+</html>
