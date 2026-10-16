@@ -5,6 +5,7 @@
 //	History			: 2026-10-15 CYBERKDH Initial - Lesson 10 DevCalc step, Lv5
 //					  2026-10-15 CYBERKDH Lesson 11: "unary" node (- ~), right-associative **, "-2 ** 2" is an error (as in JavaScript)
 //					  2026-10-15 CYBERKDH Lesson 13: statement (name = expression), "call" / "variable" / "assign" nodes, CParseError.strFix
+//					  2026-10-16 CYBERKDH Lesson 16: a "number" node keeps its text (0xFF stays 0xFF in the steps view)
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +24,7 @@ import { CheckArgCount, FunctionHelp, FunctionUsage, IsFunction, type TFunction 
 
 // The syntax tree : a discriminated union on eKind. A node holds more nodes, so the type refers to itself
 export type TNode =
-	| { readonly eKind: "number"; readonly biValue: bigint }
+	| { readonly eKind: "number"; readonly biValue: bigint; readonly strText: string } // lesson 16 : strText as typed (0xFF, 'A', 4K)
 	| { readonly eKind: "ans"; readonly strText: string }
 	| { readonly eKind: "variable"; readonly strName: string } // lesson 13 : lower case, the key in the variable map
 	| { readonly eKind: "call"; readonly eFunction: TFunction; readonly arrArg: readonly TNode[] }
@@ -133,7 +134,7 @@ class CParser {
 		this.#nPos++;
 		switch (oToken.eKind) {
 			case "number":
-				return { eKind: "number", biValue: oToken.biValue };
+				return { eKind: "number", biValue: oToken.biValue, strText: oToken.strText };
 			case "name":
 				return this.#Name(oToken);
 			case "open": {

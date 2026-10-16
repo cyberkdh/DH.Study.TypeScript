@@ -1,10 +1,10 @@
 **English** · [한국어](README.ko.md)
 
-[← Previous: 14. DOM in Depth](../14-events-accessibility/README.md) · [Contents](../../README.md)
+[← Previous: 14. DOM in Depth](../14-events-accessibility/README.md) · [Contents](../../README.md) · [Next: 16. Trees and Recursion →](../16-trees-steps/README.md)
 
 # 15. Bundling and Build — One HTML File with esbuild
 
-> Series: DH.Study.TypeScript · Lesson 15 (Part 2, last lesson)
+> Series: DH.Study.TypeScript · Lesson 15 (last lesson of Part 2)
 > Environment: Node.js v24 · TypeScript 7 · Vitest 5 · esbuild 0.28 · VS Code · a browser
 
 ## Goals
@@ -424,11 +424,12 @@ Things to try:
 
 ## Where next
 
-This is the last lesson. DevCalc went from `ToHex(255)` (lesson 01) to a calculator with expressions, 128-bit words, functions, variables, a bit grid and a one-file build — with the same core in the terminal and in the browser.
+This is the last lesson of Part 2. DevCalc went from `ToHex(255)` (lesson 01) to a calculator with expressions, 128-bit words, functions, variables, a bit grid and a one-file build — with the same core in the terminal and in the browser.
 
+- [Lesson 16](../16-trees-steps/README.md) starts Part 3: the tree inside the parser, and DevCalc showing its calculation one step at a time.
 - [DevCalc README](../../devcalc/README.md): everything it can do, and the history by lesson.
 - Ideas to continue on your own: a `--json` output for the CLI, a dark/light switch on the page, saving variables in `localStorage`, a "copy as C literal" button. Each one fits in a lesson's pattern: a pure function in the core, a test, then the page.
 
 ---
 
-[← Previous: 14. DOM in Depth](../14-events-accessibility/README.md) · [Contents](../../README.md)
+[← Previous: 14. DOM in Depth](../14-events-accessibility/README.md) · [Contents](../../README.md) · [Next: 16. Trees and Recursion →](../16-trees-steps/README.md)

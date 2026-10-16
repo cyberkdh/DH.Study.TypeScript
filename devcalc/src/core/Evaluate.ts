@@ -6,6 +6,7 @@
 //					  2026-10-15 CYBERKDH Lesson 10: whole expressions : Parse() → syntax tree → Walk() (recursion)
 //					  2026-10-15 CYBERKDH Lesson 11: "unary" node (- ~) through CCalculator.CalculateUnary
 //					  2026-10-15 CYBERKDH Lesson 13: function calls, variables (a ReadonlyMap in, strAssign out), IWalkContext
+//					  2026-10-16 CYBERKDH Lesson 16: EvaluateTree (a tree the caller already has), TStepListener hears every part as it is calculated
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,12 +33,17 @@ export interface IEvalError {
 
 export type TEvalResult = TResult<IEvaluation, IEvalError>;
 
+// Lesson 16: called once for every part Walk calculates, in the order it calculates them (left first, leaves up).
+// oResult is that part alone : its own wrap, not one from further down
+export type TStepListener = (oNode: TNode, oResult: ICalcResult) => void;
+
 // Lesson 13: what every step of Walk needs. One object instead of five parameters
 interface IWalkContext {
 	readonly oCalc: CCalculator;
 	readonly oWord: CWordSize | undefined;
 	readonly biAns: bigint;
 	readonly mapVar: ReadonlyMap<string, bigint>;
+	readonly fnStep: TStepListener | undefined; // lesson 16 : undefined = nobody is listening
 }
 
 // Lesson 13: Extract keeps the union members that match : the "ans" and "variable" nodes
@@ -80,31 +86,38 @@ function KeepOverflow(oStep: ICalcResult, arrPart: readonly ICalcResult[]): ICal
 
 // Lesson 10: calculate the tree from the leaves up. Every value is wrapped to the word size on the way
 // (like a programmer calculator). CCalculator and CallFunction throw CCalcError for 1 / 0, bad shifts, ...
+// Lesson 16: every case tells oContext.fnStep about its own result, so a listener sees the same order as the calculation
 function Walk(oNode: TNode, oContext: IWalkContext): ICalcResult {
 	switch (oNode.eKind) {
 		case "number":
-			return Wrap(oNode.biValue, oContext.oWord);
+			return Heard(oNode, Wrap(oNode.biValue, oContext.oWord), oContext);
 		case "ans":
-			return Wrap(oContext.biAns, oContext.oWord);
+			return Heard(oNode, Wrap(oContext.biAns, oContext.oWord), oContext);
 		case "variable":
-			return Wrap(oContext.mapVar.get(oNode.strName) ?? 0n, oContext.oWord); // FindMissing checked it is there
+			return Heard(oNode, Wrap(oContext.mapVar.get(oNode.strName) ?? 0n, oContext.oWord), oContext); // FindMissing checked it is there
 		case "call": {
 			const arrArg = oNode.arrArg.map((oArg) => Walk(oArg, oContext));
 			const biResult = CallFunction(oNode.eFunction, arrArg.map((oArg) => oArg.biValue), oContext.oWord);
-			return KeepOverflow(Wrap(biResult, oContext.oWord), arrArg);
+			return KeepOverflow(Heard(oNode, Wrap(biResult, oContext.oWord), oContext), arrArg);
 		}
 		case "assign":
 			return Walk(oNode.oValue, oContext);
 		case "unary": {
 			const oOperand = Walk(oNode.oOperand, oContext);
-			return KeepOverflow(oContext.oCalc.CalculateUnary(oNode.strOp, oOperand.biValue), [oOperand]);
+			return KeepOverflow(Heard(oNode, oContext.oCalc.CalculateUnary(oNode.strOp, oOperand.biValue), oContext), [oOperand]);
 		}
 		case "binary": {
 			const oLeft = Walk(oNode.oLeft, oContext);
 			const oRight = Walk(oNode.oRight, oContext);
-			return KeepOverflow(oContext.oCalc.Calculate(oLeft.biValue, oNode.strOp, oRight.biValue), [oLeft, oRight]);
+			return KeepOverflow(Heard(oNode, oContext.oCalc.Calculate(oLeft.biValue, oNode.strOp, oRight.biValue), oContext), [oLeft, oRight]);
 		}
 	}
+}
+
+// Lesson 16: tell the listener (if any), then hand the result on unchanged
+function Heard(oNode: TNode, oResult: ICalcResult, oContext: IWalkContext): ICalcResult {
+	oContext.fnStep?.(oNode, oResult);
+	return oResult;
 }
 
 function MissingError(oMissing: TNameNode): IEvalError {
@@ -128,17 +141,23 @@ export function Evaluate(strExpr: string, oWord?: CWordSize, biAns?: bigint, map
 	if (!oTree.bOk) {
 		return oTree;
 	}
-	const oMissing = FindMissing(oTree.vValue, biAns !== undefined, mapVar);
+	return EvaluateTree(strTrim, oTree.vValue, oWord, biAns, mapVar);
+}
+
+// Lesson 16: the part of Evaluate after Parse, for a caller that keeps the tree (core/Steps.ts).
+// fnStep hears every part as it is calculated; the tree itself is never changed
+export function EvaluateTree(strExpr: string, oTree: TNode, oWord?: CWordSize, biAns?: bigint, mapVar: ReadonlyMap<string, bigint> = new Map(), fnStep?: TStepListener): TEvalResult {
+	const oMissing = FindMissing(oTree, biAns !== undefined, mapVar);
 	if (oMissing !== undefined) {
 		return Err(MissingError(oMissing));
 	}
 	try {
-		const oResult = Walk(oTree.vValue, { oCalc: new CCalculator(oWord), oWord, biAns: biAns ?? 0n, mapVar });
-		const strAssign = oTree.vValue.eKind === "assign" ? oTree.vValue.strName : undefined;
-		return Ok({ strExpr: strTrim, ...oResult, ...(strAssign === undefined ? {} : { strAssign }) });
+		const oResult = Walk(oTree, { oCalc: new CCalculator(oWord), oWord, biAns: biAns ?? 0n, mapVar, fnStep });
+		const strAssign = oTree.eKind === "assign" ? oTree.strName : undefined;
+		return Ok({ strExpr, ...oResult, ...(strAssign === undefined ? {} : { strAssign }) });
 	} catch (e) {
 		if (e instanceof CCalcError) {
-			return Err({ strTitle: `Cannot calculate: "${strTrim}"`, strWhy: e.message, strFix: e.strFix });
+			return Err({ strTitle: `Cannot calculate: "${strExpr}"`, strWhy: e.message, strFix: e.strFix });
 		}
 		throw e; // not ours : a bug, let it crash with its stack trace
 	}

@@ -1,10 +1,10 @@
 [English](README.md) · **한국어**
 
-[← 이전: 14. DOM 심화](../14-events-accessibility/README.ko.md) · [목차](../../README.ko.md)
+[← 이전: 14. DOM 심화](../14-events-accessibility/README.ko.md) · [목차](../../README.ko.md) · [다음: 16. 트리와 재귀 →](../16-trees-steps/README.ko.md)
 
 # 15. 번들러와 빌드 — esbuild 로 HTML 파일 하나 만들기
 
-> 시리즈: DH.Study.TypeScript · 15강 (2부, 마지막 강의)
+> 시리즈: DH.Study.TypeScript · 15강 (2부의 마지막 강의)
 > 환경: Node.js v24 · TypeScript 7 · Vitest 5 · esbuild 0.28 · VS Code · 브라우저
 
 ## 목표
@@ -424,11 +424,12 @@ check-names : 36 files, 0 problems
 
 ## 다음으로 갈 곳
 
-이것이 마지막 강의다. DevCalc 는 `ToHex(255)` (01강) 에서 시작해 식, 128 비트 워드, 함수, 변수, 비트 그리드, 파일 하나짜리 빌드까지 갖춘 계산기가 되었다 — 터미널과 브라우저에서 같은 코어로.
+이것이 2부의 마지막 강의다. DevCalc 는 `ToHex(255)` (01강) 에서 시작해 식, 128 비트 워드, 함수, 변수, 비트 그리드, 파일 하나짜리 빌드까지 갖춘 계산기가 되었다 — 터미널과 브라우저에서 같은 코어로.
 
+- [16강](../16-trees-steps/README.ko.md) 에서 3부가 시작된다: 파서 안의 트리, 그리고 계산 과정을 한 단계씩 보여주는 DevCalc.
 - [DevCalc README](../../devcalc/README.ko.md): 할 수 있는 일 전부와 강의별 이력.
 - 혼자 이어 갈 아이디어: 명령줄의 `--json` 출력, 페이지의 다크/라이트 전환, 변수를 `localStorage` 에 저장, "C 리터럴로 복사" 버튼. 모두 강의의 패턴에 맞는다: 코어에 순수 함수, 테스트, 그다음 페이지.
 
 ---
 
-[← 이전: 14. DOM 심화](../14-events-accessibility/README.ko.md) · [목차](../../README.ko.md)
+[← 이전: 14. DOM 심화](../14-events-accessibility/README.ko.md) · [목차](../../README.ko.md) · [다음: 16. 트리와 재귀 →](../16-trees-steps/README.ko.md)

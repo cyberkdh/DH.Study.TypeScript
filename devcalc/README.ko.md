@@ -4,7 +4,7 @@
 
 이 강의 시리즈의 최종 결과물인 개발자용 계산기. 강의가 진행될 때마다 부품이 하나씩 추가된다.
 
-## 현재 단계: Lv10 파일 하나 (01~15강)
+## 현재 단계: Lv11 계산 과정 (01~16강)
 
 ```bash
 node devcalc/src/main.ts 255
@@ -22,9 +22,10 @@ node devcalc/src/main.ts "0xFF; ans << 8"          # ";" 로 여러 수식, ans 
 node devcalc/src/main.ts "rol(0x81, 1)" --bits=8   # 함수: abs min max bit popcount clz ctz log2 bswap rol ror align
 node devcalc/src/main.ts "mask = 0xFF00; 0x1234 & mask"   # 변수 (프로그램이 끝날 때까지 보관)
 node devcalc/src/main.ts "0xFF + 1" --copy         # HEX 결과를 클립보드에 복사
+node devcalc/src/main.ts "10 + 30 * (100 + 2) / 10 + 20" --steps   # 계산 과정을 한 부분씩
 node devcalc/src/main.ts --repl                    # 대화형: history, vars, copy, help, help <함수>, exit
 
-npm run web     # 웹 페이지: http://127.0.0.1:5173/devcalc/web/ (비트 그리드, 미리보기, Esc, ArrowUp/ArrowDown 기록, 도움말)
+npm run web     # 웹 페이지: http://127.0.0.1:5173/devcalc/web/ (비트 그리드, 계산 과정, 미리보기, Esc, ArrowUp/ArrowDown 기록, 도움말)
 npm run build:web   # 정적 웹 페이지 → dist/web/ (GitHub Pages: https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/)
 npm run build:single  # build:web 다음에 : 같은 페이지를 파일 하나로 → dist/web/DevCalc.html (더블클릭, 서버 없음)
 
@@ -51,5 +52,6 @@ npm run test:watch  # Vitest 감시 모드
 | [13](../lessons/13-functions-scope/README.ko.md) | `core/Functions.ts` (`FUNCTION_TABLE`: 함수 12 개, `bNeedsWord` 유니온, `CallFunction`, 오버로드된 `FunctionHelp`), `name`/`assign`/`comma` 토큰, `call`/`variable`/`assign` 노드, `Evaluate` 는 `ReadonlyMap` 을 읽고 `strAssign` 을 반환, REPL `vars` 와 `help <함수>`, `tests/Functions.test.ts` |
 | [14](../lessons/14-events-accessibility/README.ko.md) | `web/BitGrid.ts` (`CBitGrid`: 비트마다 버튼 하나, 위임된 click 과 keydown, 로빙 탭인덱스, `aria-pressed`), 실시간 미리보기, 입력란의 Esc 와 ArrowUp/ArrowDown, 버튼이 된 기록 항목, 도움말 패널 (`<details>`), `role="status"` 알림 |
 | [15](../lessons/15-bundling-release/README.ko.md) | `tools/build-single.ts` (`tsc --noEmit`, esbuild 번들, CSS 와 JS 넣기, 검사) → `dist/web/DevCalc.html`, `package.json` 과 `pages.yml` 에 `build:single`, 페이지의 빌드 줄 (`declare const DEVCALC_BUILD`), 빌드가 바꾸는 태그를 `Web.test.ts` 가 확인 |
+| [16](../lessons/16-trees-steps/README.ko.md) | `core/Steps.ts` (`Explain`: 단계마다 식 전체, 가장 적은 `( )`, 다음에 계산할 부분, 버린 나머지와 감싸기 메모), `TStepListener` 를 받는 `EvaluateTree`, 숫자 노드의 `strText`, `--steps`, 웹 Steps 패널 (`<mark>`), `tests/Steps.test.ts` |
 
 강의별 상태는 git 태그(Tag)로 볼 수 있다: `git checkout lesson-01`

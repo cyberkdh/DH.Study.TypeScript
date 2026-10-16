@@ -27,6 +27,8 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 | 13 | [함수 표와 스코프](lessons/13-functions-scope/README.ko.md) | 오버로드(Overload), 타입 있는 함수 표, `Map` 과 객체, 블록 스코프(Block scope), TDZ, 클로저(Closure) | Lv8 내장 함수 (`popcount` `rol` `bswap` …), 변수 (`mask = 0xFF00`) | ✅ |
 | 14 | [DOM 심화](lessons/14-events-accessibility/README.ko.md) | 캡처(Capture)와 버블(Bubble), `closest()` 로 위임(Delegation), `key` 와 `code`, IME, 로빙 탭인덱스(Roving tabindex), `aria-*` | Lv9 클릭하는 비트 그리드, 실시간 미리보기, 기록 키, 도움말 패널 | ✅ |
 | 15 | [번들러와 빌드](lessons/15-bundling-release/README.ko.md) | 모듈 물결(Wave)과 `file://`, esbuild (명령줄과 API), 트리 셰이킹(Tree shaking), 압축(Minify), `satisfies BuildOptions`, `define` + `declare const`, 넣기의 함정 (`$&`, `</script>`) | Lv10 HTML 파일 하나 (`npm run build:single`), 더블클릭으로 열림 | ✅ |
+| **3부** | | | | |
+| 16 | [트리와 재귀](lessons/16-trees-steps/README.ko.md) | 트리 그리기와 순회 (전위/중위/후위), 후위 순서를 스택으로 계산, 바뀌지 않는 다시 쓰기와 구조 공유(Structural sharing), `readonly` 와 `Object.freeze`, `never` 검사, 리스너(Listener) 콜백, 객체를 키로 쓰는 `Map` | Lv11 계산 과정 (`--steps`, 웹 Steps 패널) | ✅ |
 
 ## 공부하는 방법
 
@@ -83,6 +85,7 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 | Lv8 함수와 변수 | `popcount(x)`, `rol(x, n)`, `mask = 0xFF00; 0x1234 & mask` | 13 |
 | Lv9 비트 그리드와 키보드 | 비트를 클릭해 뒤집기, 입력하는 동안 미리보기, ArrowUp 으로 기록, 마우스 없이 사용 | 14 |
 | Lv10 파일 하나 | `dist/web/DevCalc.html` : 페이지 전체가 파일 하나, 서버 없이 USB 메모리에서도 동작 | 15 |
+| Lv11 계산 과정 | `10 + 30 * (100 + 2) / 10 + 20` → `10 + 30 * 102 / 10 + 20` → … → `336`, 다음 부분 강조 | 16 |
 
 > Lv3 까지만 해도 "쓸 만한 개발자용 진법 변환 계산기"가 된다.
 

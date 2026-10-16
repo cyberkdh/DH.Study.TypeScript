@@ -10,12 +10,13 @@
 //					  2026-10-15 CYBERKDH Lesson 13: functions and variables (kept while the page is open), Lv8
 //					  2026-10-15 CYBERKDH Lesson 14: bit grid, preview while typing, Esc / ArrowUp / ArrowDown, help panel, history buttons, Lv9
 //					  2026-10-15 CYBERKDH Lesson 15: build label (DEVCALC_BUILD, set by tools/build-single.ts), Lv10
+//					  2026-10-16 CYBERKDH Lesson 16: steps panel (Explain), the part calculated next in a <mark>, Lv11
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 // The same core as the command line (lesson 06 made it free of node: imports).
 // Only the web/ files know about the DOM : the core still returns values, the page shows them.
-import { ToHex, CWordSize, IsWordBits, Evaluate, CHistory, OutputRows, SplitExpressions, FunctionHelp, OperatorHelp, type IFormatOptions, type IEvaluation, type IEvalError } from "../src/core/index.ts";
+import { ToHex, CWordSize, IsWordBits, Evaluate, Explain, CHistory, OutputRows, SplitExpressions, FunctionHelp, OperatorHelp, type IFormatOptions, type IEvaluation, type IEvalError, type IExplanation } from "../src/core/index.ts";
 import { CBitGrid } from "./BitGrid.ts";
 
 declare const DEVCALC_BUILD: string; // set only by tools/build-single.ts (see the end of this file)
@@ -50,6 +51,8 @@ const elGridNote = ById("grid-note", HTMLParagraphElement);
 const elHelpText = ById("help-text", HTMLPreElement);
 const elAnnounce = ById("announce", HTMLParagraphElement);
 const elBuild = ById("build", HTMLParagraphElement);
+const elSteps = ById("steps", HTMLOListElement);
+const elStepsNote = ById("steps-note", HTMLParagraphElement);
 
 // localStorage holds strings, and JSON has no bigint : keep the numbers as decimal text
 interface ISavedEval {
@@ -136,6 +139,33 @@ function ShowError(oError: IEvalError | undefined): void {
 	elErrorFix.textContent = oError?.strFix ?? "";
 }
 
+// Lesson 16: one line per step : the expression with the part calculated next in a <mark>, then the work.
+// Text nodes only (append, textContent), never innerHTML : an expression is user input
+function ShowSteps(oExplain: IExplanation | undefined): void {
+	const arrItem = (oExplain?.arrStep ?? []).map(({ strExpr, nStart, nEnd, strWork, strNote }) => {
+		const elMark = document.createElement("mark");
+		elMark.textContent = strExpr.slice(nStart, nEnd);
+		const elCode = document.createElement("code");
+		elCode.append(strExpr.slice(0, nStart), elMark, strExpr.slice(nEnd));
+		const elWork = document.createElement("span");
+		elWork.className = "muted";
+		elWork.textContent = strNote === "" ? strWork : `${strWork}  (${strNote})`;
+		const elItem = document.createElement("li");
+		elItem.append(elCode, elWork);
+		return elItem;
+	});
+	if (oExplain !== undefined) {
+		const elCode = document.createElement("code");
+		elCode.textContent = oExplain.strLast;
+		const elItem = document.createElement("li");
+		elItem.append(elCode);
+		arrItem.push(elItem);
+	}
+	elSteps.replaceChildren(...arrItem);
+	elStepsNote.textContent =
+		oExplain === undefined ? "Run an expression to see how it is calculated, one part at a time." : `${oExplain.arrStep.length} step(s), in the order DevCalc calculates them : ( ) first, then by precedence, left to right.`;
+}
+
 // Lesson 14: a <button> in each line, so Tab reaches it and Enter or Space picks it (an <li> can't take focus)
 function ShowHistory(): void {
 	const arrItem = [...oHistory].map((oEval) => {
@@ -192,18 +222,21 @@ function Calculate(strInput: string): void {
 	const oWord = CurrentWord();
 	const arrExpr = SplitExpressions(strInput); // lesson 11 : ';' is not a separator
 	for (const strOne of arrExpr) {
-		const oResult = Evaluate(strOne, oWord, oHistory.Latest()?.biValue, mapVar);
+		const oResult = Explain(strOne, oWord, oHistory.Latest()?.biValue, mapVar); // lesson 16 : the evaluation and its steps
 		if (!oResult.bOk) {
 			ShowError(oResult.vError);
+			ShowSteps(undefined);
 			break;
 		}
-		if (oResult.vValue.strAssign !== undefined) {
-			mapVar.set(oResult.vValue.strAssign, oResult.vValue.biValue);
+		const oEval = oResult.vValue.oEval;
+		if (oEval.strAssign !== undefined) {
+			mapVar.set(oEval.strAssign, oEval.biValue);
 		}
 		ShowError(undefined);
-		oHistory.Add(oResult.vValue);
-		ShowResult(oResult.vValue, oWord);
-		elAnnounce.textContent = `${oResult.vValue.strExpr} = ${ToHex(oResult.vValue.biValue)}`; // read aloud by screen readers
+		oHistory.Add(oEval);
+		ShowResult(oEval, oWord);
+		ShowSteps(oResult.vValue);
+		elAnnounce.textContent = `${oEval.strExpr} = ${ToHex(oEval.biValue)}`; // read aloud by screen readers
 	}
 	ShowHistory();
 	ShowGrid();
@@ -301,6 +334,7 @@ if (oLatest !== undefined) {
 	ShowResult(oLatest, CurrentWord());
 }
 ShowGrid();
+ShowSteps(undefined);
 nRecall = oHistory.nCount;
 // Lesson 15: tools/build-single.ts puts a text in place of DEVCALC_BUILD (esbuild define).
 // Without that build the name does not exist, and typeof of a missing name is "undefined", not an error

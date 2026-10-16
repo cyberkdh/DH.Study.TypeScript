@@ -13,6 +13,7 @@
 //					  2026-10-15 CYBERKDH Lesson 11: usage and help show the new input (~ ** >>> 1Fh 1'000 4K 'A'), SplitExpressions, Lv6
 //					  2026-10-15 CYBERKDH Lesson 12: rows from OutputRows(), --all adds OCT and CHAR, --bits=128, Lv7
 //					  2026-10-15 CYBERKDH Lesson 13: functions and variables (mapVar), REPL "help <function>" and "vars", Lv8
+//					  2026-10-16 CYBERKDH Lesson 16: --steps prints how the expression is calculated (Explain), Lv11
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,10 +22,11 @@
 //         node devcalc/src/main.ts "popcount(0xF0F0)"               (functions : abs min max bit popcount ...)
 //         node devcalc/src/main.ts "mask = 0xFF00; 0x1234 & mask"   (variables live until the program ends)
 //         node devcalc/src/main.ts "(0xFF + 1) << 4" [--bits=8] ...
+//         node devcalc/src/main.ts "10 + 30 * (100 + 2) / 10 + 20" --steps   (each part as it is calculated)
 //         node devcalc/src/main.ts "~0 >>> 4" --bits=32           (quote it : the shell reads ** and > itself)
 //         node devcalc/src/main.ts "0xFF + 1; ans * 2" [--bits=8] ...
 //         node devcalc/src/main.ts --repl [--bits=8] ...
-import { ToHex, CWordSize, IsWordBits, Evaluate, CHistory, FunctionHelp, OperatorHelp, OutputHelp, OutputRows, SplitExpressions, WORD_BITS, type IFormatOptions, type IEvaluation, type TWordBits } from "./core/index.ts";
+import { ToHex, CWordSize, IsWordBits, Evaluate, Explain, Ok, CHistory, FunctionHelp, OperatorHelp, OutputHelp, OutputRows, SplitExpressions, WORD_BITS, type IFormatOptions, type IEvaluation, type IExplanation, type TEvalResult, type TWordBits } from "./core/index.ts";
 import { CopyToClipboard } from "./cli/Clipboard.ts";
 import { RunRepl } from "./cli/Repl.ts";
 
@@ -37,7 +39,7 @@ let strExpr = arrArg
 	.trim();
 
 // Lesson 08: the switches are one list; TSwitch is made from it, and --bits=N is a template literal type
-const SWITCHES = ["--no-group", "--lower", "--no-prefix", "--copy", "--repl", "--all"] as const;
+const SWITCHES = ["--no-group", "--lower", "--no-prefix", "--copy", "--repl", "--all", "--steps"] as const;
 type TSwitch = (typeof SWITCHES)[number];
 type TBitsFlag = `--bits=${TWordBits}`; // "--bits=8" | "--bits=16" | ... | "--bits=128"
 
@@ -72,7 +74,7 @@ const bRepl = HasSwitch("--repl");
 const bCopy = HasSwitch("--copy");
 
 if (strExpr === "" && !bRepl) {
-	console.log(`Usage: node devcalc/src/main.ts <integer> | "<expression>" | "<expr>; <expr>" | --repl [${strBitsFlag}] [--no-group] [--lower] [--no-prefix] [--copy] [--all]`);
+	console.log(`Usage: node devcalc/src/main.ts <integer> | "<expression>" | "<expr>; <expr>" | --repl [${strBitsFlag}] [--no-group] [--lower] [--no-prefix] [--copy] [--all] [--steps]`);
 	console.log("(no input given, so running the example 255)");
 	strExpr = "255";
 }
@@ -101,6 +103,32 @@ function PrintEvaluation(oEval: IEvaluation): void {
 	}
 }
 
+// Lesson 16: --steps. Each line : the expression so far, then the part calculated next
+const bSteps = HasSwitch("--steps");
+
+function PrintSteps(oExplain: IExplanation): void {
+	const nWidth = Math.max(0, ...oExplain.arrStep.map((oStep) => oStep.strExpr.length));
+	console.log(`Steps : ${oExplain.arrStep.length}`);
+	for (const { strExpr, strWork, strNote } of oExplain.arrStep) {
+		console.log(`  ${strExpr.padEnd(nWidth)}   ${strWork}${strNote === "" ? "" : `   (${strNote})`}`);
+	}
+	console.log(`  ${oExplain.strLast}`);
+}
+
+// Lesson 16: Explain gives the same evaluation as Evaluate, plus the steps
+function EvaluateOne(strOne: string): TEvalResult {
+	const biAns = oHistory.Latest()?.biValue;
+	if (!bSteps) {
+		return Evaluate(strOne, oWord, biAns, mapVar);
+	}
+	const oExplain = Explain(strOne, oWord, biAns, mapVar);
+	if (!oExplain.bOk) {
+		return oExplain;
+	}
+	PrintSteps(oExplain.vValue);
+	return Ok(oExplain.vValue.oEval);
+}
+
 // Lesson 05: Evaluate() returns TResult (no printing inside), CHistory<T> keeps the results for "ans".
 // "a; b; c" runs in order and stops at the first error. Returns the exit code.
 const oHistory = new CHistory<IEvaluation>(20);
@@ -115,7 +143,7 @@ function Calculate(strInput: string): number {
 		if (arrExpr.length > 1) {
 			console.log(`${nIndex > 0 ? "\n" : ""}[${nIndex + 1}] ${strOne}`);
 		}
-		const oResult = Evaluate(strOne, oWord, oHistory.Latest()?.biValue, mapVar);
+		const oResult = EvaluateOne(strOne);
 		if (!oResult.bOk) {
 			const { strTitle, strWhy, strFix } = oResult.vError;
 			console.log(strTitle);

@@ -27,6 +27,8 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 | 13 | [Function Tables and Scope](lessons/13-functions-scope/README.md) | Overloads, a typed function table, `Map` vs object, block scope, TDZ, closures | Lv8 built-in functions (`popcount` `rol` `bswap` …), variables (`mask = 0xFF00`) | ✅ |
 | 14 | [DOM in Depth](lessons/14-events-accessibility/README.md) | Capture and bubble, delegation with `closest()`, `key` vs `code`, IME, roving tabindex, `aria-*` | Lv9 clickable bit grid, live preview, history keys, help panel | ✅ |
 | 15 | [Bundling and Build](lessons/15-bundling-release/README.md) | Module waves and `file://`, esbuild (CLI and API), tree shaking, minify, `satisfies BuildOptions`, `define` + `declare const`, inlining traps (`$&`, `</script>`) | Lv10 one HTML file (`npm run build:single`), opens with a double-click | ✅ |
+| **Part 3** | | | | |
+| 16 | [Trees and Recursion](lessons/16-trees-steps/README.md) | Drawing and walking a tree (pre/in/post-order), a stack for post-order, immutable rewriting and structural sharing, `readonly` vs `Object.freeze`, `never` checks, listener callbacks, `Map` keyed by objects | Lv11 calculation steps (`--steps`, web Steps panel) | ✅ |
 
 ## How to study
 
@@ -83,6 +85,7 @@ Building a parser from scratch is hard for a beginner, so we build **a small wor
 | Lv8 Functions and variables | `popcount(x)`, `rol(x, n)`, `mask = 0xFF00; 0x1234 & mask` | 13 |
 | Lv9 Bit grid and keyboard | Click a bit to flip it, preview while typing, ArrowUp for history, no mouse needed | 14 |
 | Lv10 One file | `dist/web/DevCalc.html` : the whole page in one file, no server, works from a USB stick | 15 |
+| Lv11 Calculation steps | `10 + 30 * (100 + 2) / 10 + 20` → `10 + 30 * 102 / 10 + 20` → … → `336`, the next part highlighted | 16 |
 
 > Even stopping at Lv3 gives you a genuinely useful radix calculator.
 

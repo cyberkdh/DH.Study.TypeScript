@@ -8,6 +8,7 @@
 //					  2026-10-15 CYBERKDH Lesson 11: Literal.ts (ParseLiteral, ParseChar), unary operators, OperatorAssoc, OperatorHelp, SplitExpressions
 //					  2026-10-15 CYBERKDH Lesson 12: ToOct, ToChar, Output.ts (OutputRows, OutputHelp), WORD_BITS
 //					  2026-10-15 CYBERKDH Lesson 13: Functions.ts (CallFunction, FunctionHelp, IsFunction, TFunction)
+//					  2026-10-16 CYBERKDH Lesson 16: EvaluateTree, TStepListener, Steps.ts (Explain, IStep, IExplanation)
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,4 +38,5 @@ export { CHistory } from "./History.ts";
 export { Lex, SplitExpressions, type TToken } from "./Lexer.ts";
 export { CallFunction, CheckArgCount, FunctionHelp, FunctionUsage, IsFunction, type TFunction } from "./Functions.ts";
 export { Parse, ToText, type TNode } from "./Parser.ts";
-export { Evaluate, type IEvaluation, type IEvalError, type TEvalResult } from "./Evaluate.ts";
+export { Evaluate, EvaluateTree, type IEvaluation, type IEvalError, type TEvalResult, type TStepListener } from "./Evaluate.ts";
+export { Explain, type IExplanation, type IStep } from "./Steps.ts";
