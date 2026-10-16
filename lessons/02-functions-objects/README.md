@@ -346,8 +346,8 @@ Line 6 shows the point of section 3-2: `readonly` disappears at runtime, `Object
 ```
 > node lessons/02-functions-objects/callbacks.ts
 1) PrintAll with a hex callback:
-   0xA
-   0xFF
+10 =>    0xA
+255 =>    0xFF
 2) map: [ 1, 2, 4, 8 ] / filter: [ 32, 64 ] / reduce: 120
 3) 0xFF 0b101
 4) counter after 3 calls = 3
@@ -465,6 +465,8 @@ HEX : 0xFF
 DEC : 255
 BIN : 0b1111_1111
 ```
+
+> These are the outputs as of lesson 02. Later lessons add more options (`--copy`, `--repl`, `--all`, `--bits=…`), so the "Why" line lists more of them there.
 
 With npm, put the arguments after `--`: `npm run devcalc -- 255 --lower`.
 

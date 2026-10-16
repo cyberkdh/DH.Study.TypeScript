@@ -4,6 +4,8 @@
 //	Module			: devcalc / tests / Web
 //	History			: 2026-10-15 CYBERKDH Initial - Lesson 07 DevCalc step
 //					  2026-10-15 CYBERKDH Lesson 09: runs on Vitest (test from "vitest", node:assert kept)
+//					  2026-10-15 CYBERKDH Lesson 14: BitGrid.ts imports nothing, App.ts imports the core and BitGrid.ts
+//					  2026-10-15 CYBERKDH Lesson 15: index.html keeps the two tags tools/build-single.ts replaces
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,12 +15,19 @@ import { readFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 import { ResolvePath } from "../../tools/serve.ts";
 
-const APP_FILE = join(import.meta.dirname, "../web/App.ts");
+const WEB_DIR = join(import.meta.dirname, "../web");
 
-test("web/App.ts: imports only the core (the browser has no node: modules)", async () => {
-	const strCode = await readFile(APP_FILE, "utf8");
-	const arrFrom = [...strCode.matchAll(/from\s+["']([^"']+)["']/g)].map((arrMatch) => arrMatch[1]);
-	assert.deepEqual(arrFrom, ["../src/core/index.ts"]);
+async function ImportsOf(strFile: string): Promise<(string | undefined)[]> {
+	const strCode = await readFile(join(WEB_DIR, strFile), "utf8");
+	return [...strCode.matchAll(/from\s+["']([^"']+)["']/g)].map((arrMatch) => arrMatch[1]);
+}
+
+test("web/App.ts: imports only the core and BitGrid.ts (the browser has no node: modules)", async () => {
+	assert.deepEqual(await ImportsOf("App.ts"), ["../src/core/index.ts", "./BitGrid.ts"]);
+});
+
+test("web/BitGrid.ts: imports nothing (DOM only, lesson 14)", async () => {
+	assert.deepEqual(await ImportsOf("BitGrid.ts"), []);
 });
 
 test("serve ResolvePath: files inside the project only", () => {
@@ -30,4 +39,14 @@ test("serve ResolvePath: files inside the project only", () => {
 	assert.equal(ResolvePath("/.git/config"), undefined); // hidden folders
 	assert.equal(ResolvePath("/node_modules/typescript/package.json"), undefined);
 	assert.equal(ResolvePath("/%E0%A4%A"), undefined); // a broken %-escape
+});
+
+test("web/index.html: has the exact tags tools/build-single.ts replaces (lesson 15)", async () => {
+	const strHtml = await readFile(join(WEB_DIR, "index.html"), "utf8");
+	const strTool = await readFile(join(WEB_DIR, "../../tools/build-single.ts"), "utf8");
+	for (const strTag of ['<link rel="stylesheet" href="./style.css" />', '<script type="module" src="./App.ts"></script>']) {
+		assert.ok(strHtml.includes(strTag), `index.html lost ${strTag}`);
+		assert.ok(strTool.includes(`'${strTag}'`), `build-single.ts no longer looks for ${strTag}`);
+	}
+	assert.equal(strHtml.match(/<\/script/gi)?.length, 1); // one script tag : the one that gets the bundle
 });

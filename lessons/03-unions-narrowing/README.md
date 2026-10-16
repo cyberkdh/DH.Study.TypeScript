@@ -485,6 +485,8 @@ Why : "g" is not a valid hex digit
 Fix : use an integer like 255, -0xFF, 0b1010, 0o17 or 1_000.
 ```
 
+> These are the outputs as of lesson 03. [Lesson 11](../11-regex-literal-types/README.md) adds `1'000`, `1Fh`, `4K` and `'A'`, so the "Fix" line lists those too.
+
 The DevCalc output can now be fed back in: `0xFFFF_FFFF` was rejected in lesson 02.
 
 Tests: [devcalc/tests/Parse.test.ts](../../devcalc/tests/Parse.test.ts) is new.

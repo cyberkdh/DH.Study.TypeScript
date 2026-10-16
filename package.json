@@ -22,10 +22,12 @@
     "devcalc": "node devcalc/src/main.ts",
     "js": "node tools/show-js.ts",
     "build:web": "node tools/build-web.ts",
+    "build:single": "node tools/build-single.ts",
     "web": "node --disable-warning=ExperimentalWarning tools/serve.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
+    "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.4"

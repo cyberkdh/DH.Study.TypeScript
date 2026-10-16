@@ -1,6 +1,6 @@
 **English** · [한국어](README.ko.md)
 
-[← Previous: 09. Testing and Tooling](../09-testing-tooling/README.md) · [Contents](../../README.md) · Next: none (last lesson)
+[← Previous: 09. Testing and Tooling](../09-testing-tooling/README.md) · [Contents](../../README.md) · [Next: 11. Regular Expressions and Literal Types →](../11-regex-literal-types/README.md)
 
 # 10. (Challenge) Lexer and Parser — Recursion, Syntax Trees and Whole Expressions
 
@@ -558,6 +558,8 @@ Why : division by zero
 Fix : the right side of / must not be 0.
 ```
 
+> These are the outputs as of lesson 10. [Lesson 11](../11-regex-literal-types/README.md) adds `**`, `>>>` and `~`, so the operator list is longer there and `2 ** 3` gives 8.
+
 **The depth limit.** `(` and unary `-` nest by recursion. `MAX_DEPTH = 100` turns `((((…` and `-----…1` into an error message instead of a `RangeError` (section 1-2). A test checks 100 levels (OK), 101 (error) and 5,000 minus signs (error, no crash).
 
 ### Evaluate : walking the tree
@@ -646,14 +648,16 @@ Things to try:
 
 ## Where next
 
-This was the last lesson of the series. DevCalc now has a lexer, a parser, an evaluator, a command line, a REPL, a web page, tests and CI — all in strict TypeScript, without a build step.
+This was the last lesson of Part 1. DevCalc now has a lexer, a parser, an evaluator, a command line, a REPL, a web page, tests and CI — all in strict TypeScript, without a build step.
 
-Some directions from here:
+[Lesson 11](../11-regex-literal-types/README.md) starts Part 2: regular expressions and literal types, and with them `~`, `**`, `>>>` and the literals developers type (`1Fh`, `1'000`, `4K`, `'A'`) — the first two "Things to try" above, done properly.
 
-- **Extend DevCalc** with the "Things to try" of this lesson: `~`, `**`, `--tree`, then variables (`x = 0xFF; x << 4`) — a new token kind, a new node kind and a `Map<string, bigint>`.
+Other directions from here:
+
+- **Extend DevCalc** yourself: `--tree`, then variables (`x = 0xFF; x << 4`) — a new token kind, a new node kind and a `Map<string, bigint>` (lesson 13 does this).
 - **Read real parsers**: the TypeScript compiler's own `scanner.ts` and `parser.ts` use the same ideas (a scanning loop, recursive descent, precedence from a table), at a much larger scale.
 - **Go back to lesson 08** and type the tree in a different way: `Extract<TNode, { eKind: "binary" }>` gives one node kind; a mapped type over `TNode["eKind"]` can type a table of node handlers.
 
 ---
 
-[← Previous: 09. Testing and Tooling](../09-testing-tooling/README.md) · [Contents](../../README.md) · Next: none (last lesson)
+[← Previous: 09. Testing and Tooling](../09-testing-tooling/README.md) · [Contents](../../README.md) · [Next: 11. Regular Expressions and Literal Types →](../11-regex-literal-types/README.md)

@@ -346,8 +346,8 @@ for (const [strLabel, fnFormat] of arrFormatter) { ... }
 ```
 > node lessons/02-functions-objects/callbacks.ko.ts
 1) PrintAll with a hex callback:
-   0xA
-   0xFF
+10 =>    0xA
+255 =>    0xFF
 2) map: [ 1, 2, 4, 8 ] / filter: [ 32, 64 ] / reduce: 120
 3) 0xFF 0b101
 4) counter after 3 calls = 3
@@ -465,6 +465,8 @@ HEX : 0xFF
 DEC : 255
 BIN : 0b1111_1111
 ```
+
+> 02강 시점의 출력이다. 뒤 강의에서 옵션 (`--copy`, `--repl`, `--all`, `--bits=…`) 이 늘어나므로, 거기서는 "Why" 줄의 목록이 길어진다.
 
 npm 으로 실행할 때는 `--` 뒤에 인자를 둔다: `npm run devcalc -- 255 --lower`.
 

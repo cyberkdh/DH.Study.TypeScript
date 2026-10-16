@@ -1,6 +1,6 @@
 [English](README.md) · **한국어**
 
-[← 이전: 09. 테스트와 도구](../09-testing-tooling/README.ko.md) · [목차](../../README.ko.md) · 다음: 없음 (마지막 강의)
+[← 이전: 09. 테스트와 도구](../09-testing-tooling/README.ko.md) · [목차](../../README.ko.md) · [다음: 11. 정규식과 리터럴 타입 →](../11-regex-literal-types/README.ko.md)
 
 # 10. (도전) 렉서와 파서 — 재귀, 구문 트리, 수식 전체 계산
 
@@ -558,6 +558,8 @@ Why : division by zero
 Fix : the right side of / must not be 0.
 ```
 
+> 10강 시점의 출력이다. [11강](../11-regex-literal-types/README.ko.md) 에서 `**`, `>>>`, `~` 가 추가되므로, 거기서는 연산자 목록이 길어지고 `2 ** 3` 은 8 이 된다.
+
 **깊이 제한.** `(` 와 단항 `-` 는 재귀로 중첩된다. `MAX_DEPTH = 100` 은 `((((…` 와 `-----…1` 을 `RangeError` (1-2 절) 대신 오류 메시지로 바꾼다. 테스트가 100 단계 (OK), 101 단계 (오류), 마이너스 5,000 개 (오류, 크래시 없음) 를 확인한다.
 
 ### Evaluate : 트리 순회
@@ -646,14 +648,16 @@ test("precedence follows C / JavaScript", () => {
 
 ## 다음으로 갈 곳
 
-이것이 시리즈의 마지막 강의다. DevCalc 에는 이제 렉서, 파서, 평가기, 명령줄, REPL, 웹 페이지, 테스트, CI 가 있다 — 모두 strict TypeScript 이고, 빌드 단계가 없다.
+이것이 1부의 마지막 강의다. DevCalc 에는 이제 렉서, 파서, 평가기, 명령줄, REPL, 웹 페이지, 테스트, CI 가 있다 — 모두 strict TypeScript 이고, 빌드 단계가 없다.
 
-여기서 갈 수 있는 방향:
+[11강](../11-regex-literal-types/README.ko.md) 부터 2부가 시작된다: 정규식과 리터럴 타입, 그리고 그것으로 `~`, `**`, `>>>` 와 개발자가 입력하는 리터럴 (`1Fh`, `1'000`, `4K`, `'A'`) 을 만든다 — 위 "해 볼 것" 의 처음 두 개를 제대로 한 것이다.
 
-- 이 강의의 "해 볼 것" 으로 **DevCalc 를 확장**하자: `~`, `**`, `--tree`, 그다음 변수 (`x = 0xFF; x << 4`) — 새 토큰 종류, 새 노드 종류, 그리고 `Map<string, bigint>`.
+그 밖에 갈 수 있는 방향:
+
+- 직접 **DevCalc 를 확장**하자: `--tree`, 그다음 변수 (`x = 0xFF; x << 4`) — 새 토큰 종류, 새 노드 종류, 그리고 `Map<string, bigint>` (13강에서 다룸).
 - **실제 파서를 읽자**: TypeScript 컴파일러 자신의 `scanner.ts` 와 `parser.ts` 가 같은 생각 (스캔 루프, 재귀 하강, 표에서 오는 우선순위) 을 훨씬 큰 규모로 쓴다.
 - **08강으로 돌아가** 트리를 다른 방식으로 타입 지정하자: `Extract<TNode, { eKind: "binary" }>` 는 노드 종류 하나를 준다. `TNode["eKind"]` 를 순회하는 매핑된 타입(Mapped type)은 노드 핸들러 표의 타입을 만들 수 있다.
 
 ---
 
-[← 이전: 09. 테스트와 도구](../09-testing-tooling/README.ko.md) · [목차](../../README.ko.md) · 다음: 없음 (마지막 강의)
+[← 이전: 09. 테스트와 도구](../09-testing-tooling/README.ko.md) · [목차](../../README.ko.md) · [다음: 11. 정규식과 리터럴 타입 →](../11-regex-literal-types/README.ko.md)

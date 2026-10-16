@@ -5,10 +5,16 @@
 	Module		: devcalc / web / index.html (DevCalc in the browser)
 	History		: 2026-10-15 CYBERKDH Initial - Lesson 07 DevCalc step, Lv4
 				  2026-10-15 CYBERKDH Title Lv5 (lesson 10 engine), static build for GitHub Pages
+				  2026-10-15 CYBERKDH Lesson 11: Lv6, placeholder shows the new input
+				  2026-10-15 CYBERKDH Lesson 12: Lv7, 128-bit option
+				  2026-10-15 CYBERKDH Lesson 13: Lv8, placeholder shows a function and a variable
+				  2026-10-15 CYBERKDH Lesson 14: Lv9, preview, bit grid, help panel, live region for results
+				  2026-10-15 CYBERKDH Lesson 15: Lv10, build label (one file : npm run build:single)
 	Copyrights	: Copyright (C)CYBERKDH. All Rights Reserved.
 
 	Open with the dev server : npm run web → http://127.0.0.1:5173/devcalc/web/
 	Static build             : npm run build:web → dist/web/ (published to GitHub Pages)
+	One file                 : npm run build:single → dist/web/DevCalc.html (opens without a server)
 -->
 <html lang="en">
 	<head>
@@ -20,19 +26,21 @@
 	</head>
 	<body>
 		<main>
-			<h1>DevCalc <span class="muted">Lv5 · web</span></h1>
+			<h1>DevCalc <span class="muted">Lv10 · web</span></h1>
 
 			<form id="calc-form" autocomplete="off">
-				<input id="expr" name="expr" placeholder='0xFF &amp; 0x0F   ·   0xFF + 1; ans * 2' aria-label="expression" />
+				<input id="expr" name="expr" placeholder="0xFF &amp; 0x0F   ·   popcount(0xF0)   ·   mask = 0xFF00   ·   'A' + 1" aria-label="expression" />
 				<select id="bits" name="bits" aria-label="word size">
 					<option value="">no limit</option>
 					<option value="8">8-bit</option>
 					<option value="16">16-bit</option>
 					<option value="32" selected>32-bit</option>
 					<option value="64">64-bit</option>
+					<option value="128">128-bit</option>
 				</select>
 				<button type="submit">=</button>
 			</form>
+			<output id="preview" for="expr" class="muted"></output>
 
 			<div id="error" class="error" hidden>
 				<strong id="error-title"></strong>
@@ -45,10 +53,21 @@
 			</table>
 			<p id="note" class="muted"></p>
 
+			<h2>Bits</h2>
+			<div id="grid" class="grid" role="group" aria-label="bits"></div>
+			<p id="grid-note" class="muted"></p>
+
+			<details id="help">
+				<summary>Help</summary>
+				<pre id="help-text"></pre>
+			</details>
+
 			<h2>History <button id="clear" type="button">clear</button></h2>
 			<ol id="history"></ol>
-			<p class="muted">Click a line to put it back in the box. The history stays after a reload (localStorage).</p>
+			<p class="muted">Click a line (or Tab to it and press Enter) to put it back in the box. ArrowUp / ArrowDown in the box do the same. The history stays after a reload (localStorage).</p>
 			<p id="status" class="muted" role="status"></p>
+			<p id="announce" class="sr-only" role="status"></p>
+			<p id="build" class="muted"></p>
 		</main>
 		<script type="module" src="./App.ts"></script>
 	</body>

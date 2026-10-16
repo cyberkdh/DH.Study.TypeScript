@@ -21,6 +21,12 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 | 08 | [고급 타입](lessons/08-advanced-types/README.ko.md) | 유틸리티·매핑·조건부·템플릿 리터럴 타입 | 타입이 지정된 연산자 표 | ✅ |
 | 09 | [테스트와 도구](lessons/09-testing-tooling/README.ko.md) | node:test, 모의 객체, Vitest, ESLint 없이 린트 | Vitest, 이름 규칙 검사 | ✅ |
 | 10 | [(도전) 렉서와 파서](lessons/10-lexer-parser/README.ko.md) | 재귀, 재귀 타입, 렉서(Lexer), 파서(Parser) | Lv5 수식 계산 | ✅ |
+| **2부** | | | | |
+| 11 | [정규식과 리터럴 타입](lessons/11-regex-literal-types/README.ko.md) | 정규식(Regex: 그룹, 플래그, 전후방 탐색), 리터럴·템플릿 리터럴 타입 | Lv6 `1Fh` `1'000` `4K` `'A'`, `~` `**` `>>>` | ✅ |
+| 12 | [bigint 와 고정 크기 워드](lessons/12-bigint-words/README.ko.md) | bigint 심화, `asIntN`/`asUintN`, 2의 보수, 바이트 순서, 타입 표기 vs `as` vs `satisfies` | Lv7 OCT·CHAR 행 (`--all`), 128 비트, 출력 표 하나 | ✅ |
+| 13 | [함수 표와 스코프](lessons/13-functions-scope/README.ko.md) | 오버로드(Overload), 타입 있는 함수 표, `Map` 과 객체, 블록 스코프(Block scope), TDZ, 클로저(Closure) | Lv8 내장 함수 (`popcount` `rol` `bswap` …), 변수 (`mask = 0xFF00`) | ✅ |
+| 14 | [DOM 심화](lessons/14-events-accessibility/README.ko.md) | 캡처(Capture)와 버블(Bubble), `closest()` 로 위임(Delegation), `key` 와 `code`, IME, 로빙 탭인덱스(Roving tabindex), `aria-*` | Lv9 클릭하는 비트 그리드, 실시간 미리보기, 기록 키, 도움말 패널 | ✅ |
+| 15 | [번들러와 빌드](lessons/15-bundling-release/README.ko.md) | 모듈 물결(Wave)과 `file://`, esbuild (명령줄과 API), 트리 셰이킹(Tree shaking), 압축(Minify), `satisfies BuildOptions`, `define` + `declare const`, 넣기의 함정 (`$&`, `</script>`) | Lv10 HTML 파일 하나 (`npm run build:single`), 더블클릭으로 열림 | ✅ |
 
 ## 공부하는 방법
 
@@ -72,6 +78,11 @@ TypeScript 를 순서대로 배우면서, 마지막에는 **개발자용 계산�
 | Lv3 두 수 계산 | `0xFF & 0x0F`, 워드 크기(Word Size), 에러 처리 | 04~06 |
 | Lv4 웹 화면 | 브라우저에서 입력·결과 표시 | 07~09 |
 | Lv5 (선택) 수식 계산 | `(3 + 2) * 10` — 렉서(Lexer) + 파서(Parser) | 10 |
+| Lv6 개발자용 리터럴과 연산자 | `1Fh`, `1'000`, `4K`, `'A'`, `~0 >>> 4`, `2 ** 10` | 11 |
+| Lv7 모든 출력 형식 | HEX DEC BIN INT OCT CHAR, 128 비트 워드 | 12 |
+| Lv8 함수와 변수 | `popcount(x)`, `rol(x, n)`, `mask = 0xFF00; 0x1234 & mask` | 13 |
+| Lv9 비트 그리드와 키보드 | 비트를 클릭해 뒤집기, 입력하는 동안 미리보기, ArrowUp 으로 기록, 마우스 없이 사용 | 14 |
+| Lv10 파일 하나 | `dist/web/DevCalc.html` : 페이지 전체가 파일 하나, 서버 없이 USB 메모리에서도 동작 | 15 |
 
 > Lv3 까지만 해도 "쓸 만한 개발자용 진법 변환 계산기"가 된다.
 

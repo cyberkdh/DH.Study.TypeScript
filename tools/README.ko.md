@@ -146,4 +146,24 @@ Done : dist/web/ (open devcalc/web/index.html through any static web server)
 - 타입 에러가 있으면 빌드가 멈춘다. `dist/` 는 커밋하지 않는다 (`.gitignore`).
 - `.github/workflows/pages.yml` 이 `main` 에 push 할 때마다 `npm test` 와 이 빌드를 실행하고 `dist/web` 을 <https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/> 에 배포한다.
   저장소에서 한 번만 설정: **Settings → Pages → Source: GitHub Actions**.
-- 모듈 스크립트는 `file://` 에서 실행되지 않는다: 더블 클릭이 아니라 웹 서버로 `dist/web/` 을 연다.
+- 다른 파일을 불러오는 모듈 스크립트는 `file://` 에서 실행되지 않는다: 웹 서버로 `dist/web/` 을 열거나, 아래 `build-single.ts` 를 쓴다.
+
+## build-single.ts — DevCalc 를 HTML 파일 하나로 (15강)
+
+`build-web.ts` 는 웹 서버가 필요한 `.js` 파일 15 개를 만든다. `build-single.ts` 는 **esbuild** 로 그 파일들을 묶고 CSS 와 JS 를 페이지 안에 넣어서, 파일 하나면 된다:
+
+```
+> npm run build:web && npm run build:single
+[1] tsc --noEmit -p tsconfig.web.json
+[2] esbuild devcalc/web/App.ts  →  one module
+    15 files → 23.7 KB
+[3] index.html + style.css + module  →  dist/web/DevCalc.html
+[4] checks ok · 29.7 KB · one file · built 2026-10-16 · esbuild 0.28.2
+Done : dist/web/DevCalc.html (double-click it : no server needed)
+```
+
+- `build:web` **다음에** 실행한다 : `build:web` 이 먼저 `dist/web` 을 비운다.
+- esbuild 는 타입을 검사하지 않으므로 [1] 단계에서 `tsc --noEmit` 을 먼저 실행한다.
+- 페이지 맨 아래 줄에 빌드 정보가 나온다 (`define` 이 `DEVCALC_BUILD` 를 바꿈). `npm run web` 으로 열면 `modules (not bundled)` 로 나온다.
+- `pages.yml` 이 두 빌드를 모두 실행하므로 파일 하나 버전도 <https://cyberkdh.github.io/DH.Study.TypeScript/DevCalc.html> 에 올라간다.
+- 동작 원리를 단계별로 : [15강](../lessons/15-bundling-release/README.ko.md).

@@ -1,0 +1,174 @@
+<!doctype html>
+<!--
+	Projects	: DH.Study.TypeScript
+	Author		: CYBERKDH
+	Module		: 14-events-accessibility / index.html (Page for the lesson 14 examples)
+	History		: 2026-10-15 CYBERKDH Initial
+	Copyrights	: Copyright (C)CYBERKDH. All Rights Reserved.
+
+	Open with the dev server : npm run web → http://127.0.0.1:5173/lessons/14-events-accessibility/
+	Add ?ko to load the Korean-comment files (x.ko.ts). The code and the output are the same.
+-->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Lesson 14 · DOM in Depth</title>
+		<link rel="icon" href="data:," />
+		<style>
+			:root {
+				--bg: #ffffff;
+				--fg: #1f2328;
+				--muted: #59636e;
+				--line: #d1d9e0;
+				--panel: #f6f8fa;
+				--accent: #0969da;
+				--on: #ddf4ff;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #0d1117;
+					--fg: #e6edf3;
+					--muted: #9198a1;
+					--line: #3d444d;
+					--panel: #151b23;
+					--accent: #4493f8;
+					--on: #121d2f;
+				}
+			}
+			body {
+				margin: 0 auto;
+				max-width: 860px;
+				padding: 16px;
+				background: var(--bg);
+				color: var(--fg);
+				font: 15px/1.5 system-ui, sans-serif;
+			}
+			section {
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				padding: 12px 16px;
+				margin: 16px 0;
+			}
+			h2 {
+				margin: 0 0 8px;
+				font-size: 18px;
+			}
+			code,
+			pre,
+			input,
+			button,
+			output {
+				font-family: ui-monospace, Consolas, monospace;
+			}
+			input,
+			button {
+				font-size: 14px;
+				padding: 4px 8px;
+			}
+			pre.log {
+				background: var(--panel);
+				border-radius: 6px;
+				padding: 8px 12px;
+				margin: 8px 0 0;
+				white-space: pre-wrap;
+				overflow-wrap: anywhere;
+			}
+			.muted {
+				color: var(--muted);
+			}
+			.box {
+				border: 1px dashed var(--line);
+				padding: 6px 10px;
+				margin: 4px 0;
+			}
+			#menu {
+				display: flex;
+				gap: 8px;
+				list-style: none;
+				padding: 0;
+			}
+			#kb-input {
+				width: 100%;
+				box-sizing: border-box;
+			}
+			/* aria-pressed is the state : the style only follows it */
+			[aria-pressed="true"] {
+				background: var(--on);
+				border-color: var(--accent);
+				color: var(--accent);
+			}
+			:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(8, 2.2em);
+				gap: 4px;
+			}
+			.grid button {
+				padding: 4px 0;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Lesson 14 · DOM in Depth</h1>
+		<p class="muted">Each section below is run by one .ts file. The grey box shows what the code did (also in DevTools → Console). Try the keyboard too : Tab, arrow keys, Enter, Esc.</p>
+
+		<section id="propagation">
+			<h2>1. Propagation — <code>propagation.ts</code></h2>
+			<div id="outer" class="box">
+				outer
+				<div id="inner" class="box">
+					inner
+					<button id="leaf" type="button">leaf button</button>
+				</div>
+			</div>
+			<ul id="menu">
+				<li><button type="button" data-cmd="copy"><span>⧉</span> copy</button></li>
+				<li><button type="button" data-cmd="clear"><span>✕</span> clear</button></li>
+			</ul>
+			<pre class="log" id="propagation-log"></pre>
+		</section>
+
+		<section id="keyboard">
+			<h2>2. Keyboard — <code>keyboard.ts</code></h2>
+			<input id="kb-input" placeholder="press keys here : Enter, Esc, ArrowUp, ArrowDown, Ctrl+K" aria-label="keyboard test" />
+			<pre class="log" id="keyboard-log"></pre>
+		</section>
+
+		<section id="focus">
+			<h2>3. Focus and ARIA — <code>focus.ts</code></h2>
+			<div id="toolbar" role="toolbar" aria-label="number format">
+				<button type="button" data-flag="group">group</button>
+				<button type="button" data-flag="upper">upper</button>
+				<button type="button" data-flag="prefix">prefix</button>
+				<button type="button" data-flag="signed">signed</button>
+			</div>
+			<div id="plain" class="box">a plain div</div>
+			<details id="help">
+				<summary>Help</summary>
+				<p>Arrow keys move inside the toolbar. Tab leaves it. Enter or Space toggles a button.</p>
+			</details>
+			<p id="focus-status" role="status"></p>
+			<pre class="log" id="focus-log"></pre>
+		</section>
+
+		<section id="bitgrid">
+			<h2>4. Build it — a bit grid — <code>bitgrid.ts</code></h2>
+			<div id="grid" class="grid" role="group" aria-label="bits 15 to 0"></div>
+			<p>value = <output id="grid-value">0x0000</output></p>
+			<pre class="log" id="bitgrid-log"></pre>
+		</section>
+
+		<script type="module">
+			// Plain JavaScript : load each example. ?ko → the Korean-comment twins (same code)
+			const strSuffix = new URLSearchParams(location.search).has("ko") ? ".ko.ts" : ".ts";
+			for (const strName of ["propagation", "keyboard", "focus", "bitgrid"]) {
+				await import(`./${strName}${strSuffix}`);
+			}
+			document.body.dataset.done = "true"; // the examples finished (used by the headless check)
+		</script>
+	</body>
+</html>

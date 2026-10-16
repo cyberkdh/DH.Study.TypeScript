@@ -485,6 +485,8 @@ Why : "g" is not a valid hex digit
 Fix : use an integer like 255, -0xFF, 0b1010, 0o17 or 1_000.
 ```
 
+> 03강 시점의 출력이다. [11강](../11-regex-literal-types/README.ko.md) 에서 `1'000`, `1Fh`, `4K`, `'A'` 가 추가되므로, 거기서는 "Fix" 줄에 그것도 나온다.
+
 이제 DevCalc 의 출력을 다시 입력으로 넣을 수 있다: 02강에서는 `0xFFFF_FFFF` 가 거부됐다.
 
 테스트: [devcalc/tests/Parse.test.ts](../../devcalc/tests/Parse.test.ts) 를 새로 만들었다.

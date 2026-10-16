@@ -1,6 +1,6 @@
 name: Pages
 
-# Publishes the DevCalc web page (dist/web, made by npm run build:web) to GitHub Pages.
+# Publishes the DevCalc web page (dist/web, made by npm run build:web and build:single) to GitHub Pages.
 # One-time setup in the repository : Settings → Pages → Source : GitHub Actions
 
 on:
@@ -29,6 +29,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build:web
+      - run: npm run build:single # dist/web/DevCalc.html : the same page as one file (lesson 15)
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

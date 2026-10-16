@@ -10,14 +10,21 @@
 //					  2026-10-15 CYBERKDH Lesson 06: core/index.ts barrel, --copy (cli/Clipboard.ts), --repl (cli/Repl.ts), async Main
 //					  2026-10-15 CYBERKDH Lesson 08: typed switches (TSwitch, TBitsFlag template literal type, HasSwitch)
 //					  2026-10-15 CYBERKDH Lesson 10: whole expressions (Lv5), overflow note shows the value that did not fit
+//					  2026-10-15 CYBERKDH Lesson 11: usage and help show the new input (~ ** >>> 1Fh 1'000 4K 'A'), SplitExpressions, Lv6
+//					  2026-10-15 CYBERKDH Lesson 12: rows from OutputRows(), --all adds OCT and CHAR, --bits=128, Lv7
+//					  2026-10-15 CYBERKDH Lesson 13: functions and variables (mapVar), REPL "help <function>" and "vars", Lv8
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Usage : node devcalc/src/main.ts 0xFF [--bits=8] [--no-group] [--lower] [--no-prefix] [--copy]
+// Usage : node devcalc/src/main.ts 0xFF [--bits=8] [--no-group] [--lower] [--no-prefix] [--copy] [--all]
+//         node devcalc/src/main.ts "'Hi' << 8" --all                (OCT and CHAR rows too)
+//         node devcalc/src/main.ts "popcount(0xF0F0)"               (functions : abs min max bit popcount ...)
+//         node devcalc/src/main.ts "mask = 0xFF00; 0x1234 & mask"   (variables live until the program ends)
 //         node devcalc/src/main.ts "(0xFF + 1) << 4" [--bits=8] ...
+//         node devcalc/src/main.ts "~0 >>> 4" --bits=32           (quote it : the shell reads ** and > itself)
 //         node devcalc/src/main.ts "0xFF + 1; ans * 2" [--bits=8] ...
 //         node devcalc/src/main.ts --repl [--bits=8] ...
-import { ToBin, ToDec, ToHex, CWordSize, IsWordBits, Evaluate, CHistory, type IFormatOptions, type TFormatter, type IEvaluation, type TWordBits } from "./core/index.ts";
+import { ToHex, CWordSize, IsWordBits, Evaluate, CHistory, FunctionHelp, OperatorHelp, OutputHelp, OutputRows, SplitExpressions, WORD_BITS, type IFormatOptions, type IEvaluation, type TWordBits } from "./core/index.ts";
 import { CopyToClipboard } from "./cli/Clipboard.ts";
 import { RunRepl } from "./cli/Repl.ts";
 
@@ -30,9 +37,9 @@ let strExpr = arrArg
 	.trim();
 
 // Lesson 08: the switches are one list; TSwitch is made from it, and --bits=N is a template literal type
-const SWITCHES = ["--no-group", "--lower", "--no-prefix", "--copy", "--repl"] as const;
+const SWITCHES = ["--no-group", "--lower", "--no-prefix", "--copy", "--repl", "--all"] as const;
 type TSwitch = (typeof SWITCHES)[number];
-type TBitsFlag = `--bits=${TWordBits}`; // "--bits=8" | "--bits=16" | "--bits=32" | "--bits=64"
+type TBitsFlag = `--bits=${TWordBits}`; // "--bits=8" | "--bits=16" | ... | "--bits=128"
 
 function IsSwitch(strFlag: string): strFlag is TSwitch {
 	return (SWITCHES as readonly string[]).includes(strFlag);
@@ -47,7 +54,8 @@ function HasSwitch(eSwitch: TSwitch): boolean {
 	return arrFlag.includes(eSwitch);
 }
 
-const arrKnownFlag = [...SWITCHES, "--bits=8|16|32|64"];
+const strBitsFlag = `--bits=${WORD_BITS.join("|")}`; // lesson 12 : made from the list, so 128 appears by itself
+const arrKnownFlag = [...SWITCHES, strBitsFlag];
 let oWord: CWordSize | undefined; // undefined = no word size (unlimited)
 for (const strFlag of arrFlag) {
 	if (IsBitsFlag(strFlag)) {
@@ -64,7 +72,7 @@ const bRepl = HasSwitch("--repl");
 const bCopy = HasSwitch("--copy");
 
 if (strExpr === "" && !bRepl) {
-	console.log(`Usage: node devcalc/src/main.ts <integer> | "<expression>" | "<expr>; <expr>" | --repl [--bits=8|16|32|64] [--no-group] [--lower] [--no-prefix] [--copy]`);
+	console.log(`Usage: node devcalc/src/main.ts <integer> | "<expression>" | "<expr>; <expr>" | --repl [${strBitsFlag}] [--no-group] [--lower] [--no-prefix] [--copy] [--all]`);
 	console.log("(no input given, so running the example 255)");
 	strExpr = "255";
 }
@@ -77,22 +85,19 @@ const oOptions: IFormatOptions = {
 	nBits: oWord?.nBits,
 };
 
-// Function table : [label, formatter]
-const arrRow: [string, TFormatter][] = [
-	["HEX", ToHex],
-	["DEC", ToDec],
-	["BIN", ToBin],
-];
+// Lesson 12: the rows come from one table (core/Output.ts), shared with the web page
+const bAll = HasSwitch("--all");
 
 function PrintEvaluation(oEval: IEvaluation): void {
-	for (const [strLabel, fnFormat] of arrRow) {
-		console.log(`${strLabel} : ${fnFormat(oEval.biValue, oOptions)}`);
+	for (const { eRow, strText } of OutputRows(oEval.biValue, oOptions, oWord, bAll)) {
+		const strNote = eRow === "INT" && oWord !== undefined ? ` (${oWord.nBits}-bit signed)` : "";
+		console.log(`${eRow.padEnd(bAll ? 4 : 3)} : ${strText}${strNote}`);
 	}
-	if (oWord !== undefined) {
-		console.log(`INT : ${ToDec(oWord.ToSigned(oEval.biValue), oOptions)} (${oWord.nBits}-bit signed)`);
-		if (oEval.bOverflow) {
-			console.log(`Note: ${oEval.biExact} does not fit in ${oWord.nBits} bits (${oWord.strName}), so it wrapped to ${oWord.ToUnsigned(oEval.biExact)}.`);
-		}
+	if (oWord !== undefined && oEval.bOverflow) {
+		console.log(`Note: ${oEval.biExact} does not fit in ${oWord.nBits} bits (${oWord.strName}), so it wrapped to ${oWord.ToUnsigned(oEval.biExact)}.`);
+	}
+	if (bAll && oWord === undefined && oEval.biValue < 0n) {
+		console.log("Note: a negative number has no bytes for CHAR until a word size is chosen (--bits=8|16|...).");
 	}
 }
 
@@ -100,25 +105,27 @@ function PrintEvaluation(oEval: IEvaluation): void {
 // "a; b; c" runs in order and stops at the first error. Returns the exit code.
 const oHistory = new CHistory<IEvaluation>(20);
 
+// Lesson 13: the variables. Evaluate only reads them; "x = …" comes back as strAssign and is kept here.
+// A Map, not an object : any name is safe as a key (toString, __proto__), and keys keep their order
+const mapVar = new Map<string, bigint>();
+
 function Calculate(strInput: string): number {
-	const arrExpr = strInput
-		.split(";")
-		.map((strPart) => strPart.trim())
-		.filter((strPart) => strPart !== "");
-	if (arrExpr.length === 0) {
-		arrExpr.push(strInput); // only ";" : let Evaluate explain what is wrong
-	}
+	const arrExpr = SplitExpressions(strInput); // lesson 11 : ';' is not a separator
 	for (const [nIndex, strOne] of arrExpr.entries()) {
 		if (arrExpr.length > 1) {
 			console.log(`${nIndex > 0 ? "\n" : ""}[${nIndex + 1}] ${strOne}`);
 		}
-		const oResult = Evaluate(strOne, oWord, oHistory.Latest()?.biValue);
+		const oResult = Evaluate(strOne, oWord, oHistory.Latest()?.biValue, mapVar);
 		if (!oResult.bOk) {
 			const { strTitle, strWhy, strFix } = oResult.vError;
 			console.log(strTitle);
 			console.log(`Why : ${strWhy}`);
 			console.log(`Fix : ${strFix}`);
 			return 1;
+		}
+		const { strAssign, biValue } = oResult.vValue;
+		if (strAssign !== undefined) {
+			mapVar.set(strAssign, biValue);
 		}
 		oHistory.Add(oResult.vValue);
 		PrintEvaluation(oResult.vValue);
@@ -155,19 +162,48 @@ function PrintHistory(): void {
 	}
 }
 
+// Lesson 13: the variables in the order they were first set (a Map keeps that order)
+function PrintVariables(): void {
+	if (mapVar.size === 0) {
+		console.log('(no variables yet : "mask = 0xFF00")');
+		return;
+	}
+	for (const [strName, biValue] of mapVar) {
+		console.log(`${strName} = ${ToHex(biValue, oOptions)}`);
+	}
+}
+
+// Lesson 13: "help rol" → one function's usage (FunctionHelp's second overload)
+function PrintFunctionHelp(strName: string): void {
+	console.log(FunctionHelp(strName) ?? `"${strName}" is not a function. Functions: ${FunctionHelp()}`);
+}
+
 // One REPL line : a command or an expression. Returns false to stop the loop
 async function RunLine(strLine: string): Promise<boolean> {
-	switch (strLine.toLowerCase()) {
+	const strCommand = strLine.toLowerCase();
+	if (strCommand.startsWith("help ")) {
+		PrintFunctionHelp(strLine.slice("help ".length).trim());
+		return true;
+	}
+	switch (strCommand) {
 		case "":
 			return true;
 		case "exit":
 		case "quit":
 			return false;
 		case "help":
-			console.log(`Type an expression ("0xFF & 0x0F", "ans << 8", "1; ans + 1") or: history, copy, help, exit`);
+			console.log(`Type an expression ("0xFF & 0x0F", "ans << 8", "1; ans + 1") or: history, vars, copy, help, exit`);
+			console.log(`Operators : ${OperatorHelp()}`);
+			console.log(`Numbers   : 255  0xFF  0b1010  0o17  1_000  1'000  1Fh  4K  'A'`);
+			console.log(`Rows      : ${OutputHelp()} (OCT and CHAR with --all)`);
+			console.log(`Functions : ${FunctionHelp()} ("help rol" for one)`);
+			console.log(`Variables : mask = 0xFF00, then 0x1234 & mask ("vars" lists them)`);
 			return true;
 		case "history":
 			PrintHistory();
+			return true;
+		case "vars":
+			PrintVariables();
 			return true;
 		case "copy":
 			await CopyLatest();

@@ -3,6 +3,7 @@
 	Author		: CYBERKDH
 	Module		: devcalc / web / style.css (Styles for the DevCalc page)
 	History		: 2026-10-15 CYBERKDH Initial - Lesson 07 DevCalc step, Lv4
+				  2026-10-15 CYBERKDH Lesson 14: bit grid, preview, help panel, history buttons, focus ring, sr-only
 	Copyrights	: Copyright (C)CYBERKDH. All Rights Reserved.
 */
 :root {
@@ -56,6 +57,8 @@ input,
 select,
 button,
 td,
+output,
+pre,
 #history {
 	font-family: ui-monospace, Consolas, monospace;
 	font-size: 14px;
@@ -94,14 +97,77 @@ td:last-child {
 	width: 4.5em;
 	text-align: right;
 }
-#history li {
+/* Lesson 14: each history line is a <button>, styled like text */
+#history button {
+	all: unset;
 	cursor: pointer;
 	padding: 2px 4px;
 	border-radius: 4px;
+	overflow-wrap: anywhere;
 }
-#history li:hover {
+#history button:focus-visible {
+	outline: 2px solid var(--accent); /* all: unset removed it */
+}
+#history button:hover {
 	background: var(--panel);
 	color: var(--accent);
+}
+/* Lesson 14: a visible ring for keyboard users only (not after a mouse click) */
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+#preview {
+	display: block;
+	min-height: 1.5em;
+	margin-top: 4px;
+}
+/* Lesson 14: 16 bits per row. GRID_COLUMNS in BitGrid.ts must match (ArrowUp / ArrowDown) */
+.grid {
+	display: grid;
+	grid-template-columns: repeat(16, minmax(0, 1fr));
+	gap: 3px;
+	max-width: 640px;
+}
+.grid button {
+	padding: 4px 0;
+	min-width: 0;
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	background: var(--bg);
+	color: var(--muted);
+}
+.grid button.nibble {
+	margin-right: 6px;
+}
+/* aria-pressed is the state : the style only follows it */
+.grid button[aria-pressed="true"] {
+	background: var(--panel);
+	border-color: var(--accent);
+	color: var(--accent);
+	font-weight: bold;
+}
+details {
+	margin-top: 16px;
+}
+summary {
+	cursor: pointer;
+	font-weight: bold;
+}
+#help-text {
+	background: var(--panel);
+	border-radius: 6px;
+	padding: 8px 12px;
+	white-space: pre-wrap;
+}
+/* Read by screen readers, not shown on the screen */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
 }
 .invalid {
 	outline: 2px solid var(--bad);

@@ -1,15 +1,16 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //	Projects		: DH.Study.TypeScript
 //	Author			: CYBERKDH
-//	Module			: devcalc / core / WordSize (8/16/32/64-bit word size)
+//	Module			: devcalc / core / WordSize (8/16/32/64/128-bit word size)
 //	History			: 2026-10-15 CYBERKDH Initial - Lesson 04 DevCalc step, Lv3
+//					  2026-10-15 CYBERKDH Lesson 12: 128-bit (OWORD), names checked with satisfies
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type TWordBits = 8 | 16 | 32 | 64;
+export type TWordBits = 8 | 16 | 32 | 64 | 128;
 
-const WORD_BITS: readonly TWordBits[] = [8, 16, 32, 64];
-const WORD_NAMES: Readonly<Record<TWordBits, string>> = { 8: "BYTE", 16: "WORD", 32: "DWORD", 64: "QWORD" };
+export const WORD_BITS = [8, 16, 32, 64, 128] as const satisfies readonly TWordBits[];
+const WORD_NAMES = { 8: "BYTE", 16: "WORD", 32: "DWORD", 64: "QWORD", 128: "OWORD" } as const satisfies Record<TWordBits, string>;
 
 export function IsWordBits(nValue: number): nValue is TWordBits {
 	return (WORD_BITS as readonly number[]).includes(nValue);

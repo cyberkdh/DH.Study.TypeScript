@@ -146,4 +146,24 @@ Done : dist/web/ (open devcalc/web/index.html through any static web server)
 - A type error stops the build. `dist/` is not committed (`.gitignore`).
 - `.github/workflows/pages.yml` runs `npm test` and this build on every push to `main`, then publishes `dist/web` to <https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/>.
   One-time setup in the repository: **Settings → Pages → Source: GitHub Actions**.
-- Module scripts do not run from `file://`: open `dist/web/` through a web server, not by double-clicking.
+- Module scripts that load other files do not run from `file://`: open `dist/web/` through a web server, or use `build-single.ts` below.
+
+## build-single.ts — DevCalc as one HTML file (lesson 15)
+
+`build-web.ts` makes 15 `.js` files that need a web server. `build-single.ts` bundles them with **esbuild** and puts the CSS and JS inside the page, so one file is all you need:
+
+```
+> npm run build:web && npm run build:single
+[1] tsc --noEmit -p tsconfig.web.json
+[2] esbuild devcalc/web/App.ts  →  one module
+    15 files → 23.7 KB
+[3] index.html + style.css + module  →  dist/web/DevCalc.html
+[4] checks ok · 29.7 KB · one file · built 2026-10-16 · esbuild 0.28.2
+Done : dist/web/DevCalc.html (double-click it : no server needed)
+```
+
+- Run it **after** `build:web` : `build:web` empties `dist/web` first.
+- esbuild does not check types, so step [1] runs `tsc --noEmit` before it.
+- The bottom line of the page shows the build (`define` replaces `DEVCALC_BUILD`). Through `npm run web` it says `modules (not bundled)`.
+- `pages.yml` runs both builds, so the one-file version is also at <https://cyberkdh.github.io/DH.Study.TypeScript/DevCalc.html>.
+- How it works, step by step : [lesson 15](../lessons/15-bundling-release/README.md).

@@ -21,6 +21,12 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 | 08 | [Advanced Types](lessons/08-advanced-types/README.md) | Utility, mapped, conditional, template literal types | Typed operator table | ✅ |
 | 09 | [Testing and Tooling](lessons/09-testing-tooling/README.md) | node:test, mocks, Vitest, lint without ESLint | Vitest, naming-rule check | ✅ |
 | 10 | [(Challenge) Lexer and Parser](lessons/10-lexer-parser/README.md) | Recursion, recursive types, lexer, parser | Lv5 expression evaluation | ✅ |
+| **Part 2** | | | | |
+| 11 | [Regular Expressions and Literal Types](lessons/11-regex-literal-types/README.md) | Regex (groups, flags, lookaround), literal and template literal types | Lv6 `1Fh` `1'000` `4K` `'A'`, `~` `**` `>>>` | ✅ |
+| 12 | [bigint and Fixed-Size Words](lessons/12-bigint-words/README.md) | bigint in depth, `asIntN`/`asUintN`, two's complement, byte order, annotation vs `as` vs `satisfies` | Lv7 OCT and CHAR rows (`--all`), 128-bit, one output table | ✅ |
+| 13 | [Function Tables and Scope](lessons/13-functions-scope/README.md) | Overloads, a typed function table, `Map` vs object, block scope, TDZ, closures | Lv8 built-in functions (`popcount` `rol` `bswap` …), variables (`mask = 0xFF00`) | ✅ |
+| 14 | [DOM in Depth](lessons/14-events-accessibility/README.md) | Capture and bubble, delegation with `closest()`, `key` vs `code`, IME, roving tabindex, `aria-*` | Lv9 clickable bit grid, live preview, history keys, help panel | ✅ |
+| 15 | [Bundling and Build](lessons/15-bundling-release/README.md) | Module waves and `file://`, esbuild (CLI and API), tree shaking, minify, `satisfies BuildOptions`, `define` + `declare const`, inlining traps (`$&`, `</script>`) | Lv10 one HTML file (`npm run build:single`), opens with a double-click | ✅ |
 
 ## How to study
 
@@ -72,6 +78,11 @@ Building a parser from scratch is hard for a beginner, so we build **a small wor
 | Lv3 Two-operand math | `0xFF & 0x0F`, word size, error handling | 04–06 |
 | Lv4 Web UI | Input and results in the browser | 07–09 |
 | Lv5 (optional) Expressions | `(3 + 2) * 10` — lexer + parser | 10 |
+| Lv6 Programmer literals and operators | `1Fh`, `1'000`, `4K`, `'A'`, `~0 >>> 4`, `2 ** 10` | 11 |
+| Lv7 Every output format | HEX DEC BIN INT OCT CHAR, 128-bit words | 12 |
+| Lv8 Functions and variables | `popcount(x)`, `rol(x, n)`, `mask = 0xFF00; 0x1234 & mask` | 13 |
+| Lv9 Bit grid and keyboard | Click a bit to flip it, preview while typing, ArrowUp for history, no mouse needed | 14 |
+| Lv10 One file | `dist/web/DevCalc.html` : the whole page in one file, no server, works from a USB stick | 15 |
 
 > Even stopping at Lv3 gives you a genuinely useful radix calculator.
 

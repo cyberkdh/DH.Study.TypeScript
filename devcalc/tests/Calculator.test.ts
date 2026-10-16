@@ -5,13 +5,14 @@
 //	History			: 2026-10-15 CYBERKDH Initial - Lesson 04 DevCalc step
 //					  2026-10-15 CYBERKDH Lesson 08: operator table test
 //					  2026-10-15 CYBERKDH Lesson 09: runs on Vitest (test from "vitest", node:assert kept)
+//					  2026-10-15 CYBERKDH Lesson 11: ** >>> ~, >> keeps the sign with a word size
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { test } from "vitest";
 import assert from "node:assert/strict";
 import { CWordSize, IsWordBits } from "../src/core/WordSize.ts";
-import { CCalcError, CCalculator, IsOperator, OperatorList, OperatorName } from "../src/core/Calculator.ts";
+import { CCalcError, CCalculator, IsOperator, IsUnaryOperator, OperatorAssoc, OperatorHelp, OperatorList, OperatorName } from "../src/core/Calculator.ts";
 
 test("WordSize: ranges and wrapping", () => {
 	const oByte = new CWordSize(8);
@@ -48,7 +49,7 @@ test("Calculator: word size wraps and reports overflow", () => {
 	const oCalc = new CCalculator(new CWordSize(8));
 	const oAdd = oCalc.Calculate(0xffn, "+", 1n);
 	assert.deepEqual(oAdd, { biValue: 0n, biExact: 256n, bOverflow: true });
-	assert.equal(oCalc.Calculate(-1n, ">>", 1n).biValue, 0x7fn); // -1 is 0xFF in 8 bits
+	assert.equal(oCalc.Calculate(-1n, ">>", 1n).biValue, 0xffn); // lesson 11 : >> keeps the sign (was 0x7F)
 	assert.equal(oCalc.Calculate(2n, "-", 5n).biValue, 0xfdn);
 	assert.equal(oCalc.Calculate(2n, "-", 5n).bOverflow, false); // -3 fits as signed
 	assert.equal(oCalc.Calculate(0x80n, "*", 2n).bOverflow, true);
@@ -61,11 +62,12 @@ test("Calculator: errors", () => {
 	assert.throws(() => oCalc.Calculate(1n, "<<", 17n), { message: "shift count 17 is out of range" });
 	assert.throws(() => new CCalculator().Calculate(1n, "<<", -1n), CCalcError);
 	assert.equal(IsOperator("&"), true);
-	assert.equal(IsOperator("**"), false);
+	assert.equal(IsOperator("**"), true); // lesson 11
+	assert.equal(IsOperator("<>"), false);
 });
 
 test("Calculator: operator table", () => {
-	assert.equal(OperatorList(), "+ - * / % & | ^ << >>"); // same order as before lesson 08
+	assert.equal(OperatorList(), "+ - * / % ** & | ^ << >> >>>"); // lesson 11 : ** and >>>
 	assert.equal(IsOperator("toString"), false); // Object.hasOwn : inherited keys are not operators
 	assert.equal(OperatorName("^"), "xor");
 	const oCalc = new CCalculator(new CWordSize(8));
@@ -74,4 +76,36 @@ test("Calculator: operator table", () => {
 		assert.equal(typeof oCalc.Calculate(12n, strOp, 3n).biValue, "bigint"); // every row can be applied
 		assert.notEqual(OperatorName(strOp), "");
 	}
+});
+
+test("Calculator: >> keeps the sign, >>> fills with 0 (lesson 11)", () => {
+	const oByte = new CCalculator(new CWordSize(8));
+	assert.equal(oByte.Calculate(0x80n, ">>", 1n).biValue, 0xc0n);
+	assert.equal(oByte.Calculate(0x80n, ">>>", 1n).biValue, 0x40n);
+	assert.equal(oByte.Calculate(0x40n, ">>", 1n).biValue, 0x20n); // the same when the top bit is 0
+	assert.equal(new CCalculator(new CWordSize(32)).Calculate(-16n, ">>>", 28n).biValue, 0xfn);
+	assert.equal(new CCalculator().Calculate(16n, ">>>", 2n).biValue, 4n);
+	assert.throws(() => new CCalculator().Calculate(-16n, ">>>", 2n), { message: ">>> of a negative number needs a word size" });
+});
+
+test("Calculator: ** (lesson 11)", () => {
+	const oCalc = new CCalculator();
+	assert.equal(oCalc.Calculate(2n, "**", 10n).biValue, 1024n);
+	assert.equal(oCalc.Calculate(-3n, "**", 3n).biValue, -27n);
+	assert.equal(oCalc.Calculate(0n, "**", 0n).biValue, 1n);
+	assert.equal(oCalc.Calculate(1n, "**", 1_000_000n).biValue, 1n); // 1 has no bits to grow
+	assert.equal(OperatorAssoc("**"), "right");
+	assert.equal(OperatorAssoc("-"), "left");
+	assert.throws(() => oCalc.Calculate(2n, "**", -1n), { message: "negative exponent -1" });
+	assert.throws(() => oCalc.Calculate(3n, "**", 5000n), { message: "3 ** 5000 has more than 4096 bits" });
+	assert.deepEqual(new CCalculator(new CWordSize(8)).Calculate(2n, "**", 8n), { biValue: 0n, biExact: 256n, bOverflow: true });
+});
+
+test("Calculator: unary - and ~ (lesson 11)", () => {
+	assert.equal(new CCalculator().CalculateUnary("~", 0n).biValue, -1n);
+	assert.deepEqual(new CCalculator(new CWordSize(8)).CalculateUnary("~", 0x0fn), { biValue: 0xf0n, biExact: 0xf0n, bOverflow: false });
+	assert.deepEqual(new CCalculator(new CWordSize(8)).CalculateUnary("-", 1n), { biValue: 0xffn, biExact: -1n, bOverflow: false });
+	assert.equal(IsUnaryOperator("~"), true);
+	assert.equal(IsUnaryOperator("+"), false);
+	assert.equal(OperatorHelp(), "+ - * / % ** & | ^ << >> >>>, unary - ~");
 });
