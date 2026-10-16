@@ -1,0 +1,112 @@
+<!doctype html>
+<!--
+	Projects	: DH.Study.TypeScript
+	Author		: CYBERKDH
+	Module		: 17-tree-view / index.html (Page for the lesson 17 browser example)
+	History		: 2026-10-16 CYBERKDH Initial
+	Copyrights	: Copyright (C)CYBERKDH. All Rights Reserved.
+
+	Open with the dev server : npm run web → http://127.0.0.1:5173/lessons/17-tree-view/
+	Add ?ko to load the Korean-comment file (svgdom.ko.ts). The code and the output are the same.
+-->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Lesson 17 · Drawing a Tree</title>
+		<link rel="icon" href="data:," />
+		<style>
+			:root {
+				--bg: #ffffff;
+				--fg: #1f2328;
+				--muted: #59636e;
+				--line: #d1d9e0;
+				--panel: #f6f8fa;
+				--accent: #0969da;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #0d1117;
+					--fg: #e6edf3;
+					--muted: #9198a1;
+					--line: #3d444d;
+					--panel: #151b23;
+					--accent: #4493f8;
+				}
+			}
+			body {
+				margin: 0 auto;
+				max-width: 860px;
+				padding: 16px;
+				background: var(--bg);
+				color: var(--fg);
+				font: 15px/1.5 system-ui, sans-serif;
+			}
+			section {
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				padding: 12px 16px;
+				margin: 16px 0;
+			}
+			h2 {
+				margin: 0 0 8px;
+				font-size: 18px;
+			}
+			code,
+			pre {
+				font-family: ui-monospace, Consolas, monospace;
+			}
+			pre.log {
+				background: var(--panel);
+				border-radius: 6px;
+				padding: 8px 12px;
+				margin: 8px 0 0;
+				white-space: pre-wrap;
+				overflow-wrap: anywhere;
+			}
+			.muted {
+				color: var(--muted);
+			}
+			/* SVG takes CSS too : fill and stroke instead of background and border */
+			svg line {
+				stroke: var(--muted);
+				stroke-width: 1.5;
+			}
+			svg rect {
+				fill: var(--bg);
+				stroke: var(--muted);
+			}
+			svg rect.box {
+				fill: var(--panel);
+				stroke: var(--accent);
+			}
+			svg text {
+				fill: var(--fg);
+				font: 14px ui-monospace, Consolas, monospace;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Lesson 17 · Drawing a Tree</h1>
+		<p class="muted">The page is run by <code>svgdom.ts</code>. The grey box shows what the code did (also in DevTools → Console).</p>
+
+		<section>
+			<h2>1–3. SVG elements from code</h2>
+			<div id="try"></div>
+		</section>
+
+		<section>
+			<h2>4. A tree from DevCalc's layout</h2>
+			<div id="drawing"></div>
+		</section>
+
+		<pre class="log" id="log"></pre>
+
+		<script type="module">
+			// Plain JavaScript : load the example. ?ko → the Korean-comment twin (same code)
+			const strSuffix = new URLSearchParams(location.search).has("ko") ? ".ko.ts" : ".ts";
+			await import(`./svgdom${strSuffix}`);
+			document.body.dataset.done = "true"; // the example finished (used by the headless check)
+		</script>
+	</body>
+</html>

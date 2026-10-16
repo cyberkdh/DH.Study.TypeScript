@@ -29,6 +29,7 @@ Learn TypeScript step by step, and finish by building a **developer calculator (
 | 15 | [Bundling and Build](lessons/15-bundling-release/README.md) | Module waves and `file://`, esbuild (CLI and API), tree shaking, minify, `satisfies BuildOptions`, `define` + `declare const`, inlining traps (`$&`, `</script>`) | Lv10 one HTML file (`npm run build:single`), opens with a double-click | ✅ |
 | **Part 3** | | | | |
 | 16 | [Trees and Recursion](lessons/16-trees-steps/README.md) | Drawing and walking a tree (pre/in/post-order), a stack for post-order, immutable rewriting and structural sharing, `readonly` vs `Object.freeze`, `never` checks, listener callbacks, `Map` keyed by objects | Lv11 calculation steps (`--steps`, web Steps panel) | ✅ |
+| 17 | [Drawing a Tree](lessons/17-tree-view/README.md) | Layout before drawing (leaf slots, a parent in the middle), SVG as text (`viewBox`, `line`, `rect`, `text`, `g`), escaping with `&` first, `createElementNS` and `SVGElementTagNameMap`, `role="img"` + `<title>`, `aria-current` | Lv12 tree view (`--tree`, web Tree panel that follows the picked step) | ✅ |
 
 ## How to study
 
@@ -86,6 +87,7 @@ Building a parser from scratch is hard for a beginner, so we build **a small wor
 | Lv9 Bit grid and keyboard | Click a bit to flip it, preview while typing, ArrowUp for history, no mouse needed | 14 |
 | Lv10 One file | `dist/web/DevCalc.html` : the whole page in one file, no server, works from a USB stick | 15 |
 | Lv11 Calculation steps | `10 + 30 * (100 + 2) / 10 + 20` → `10 + 30 * 102 / 10 + 20` → … → `336`, the next part highlighted | 16 |
+| Lv12 Tree view | The expression drawn as an SVG tree; pick a step and the finished parts show their values | 17 |
 
 > Even stopping at Lv3 gives you a genuinely useful radix calculator.
 

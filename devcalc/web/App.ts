@@ -11,13 +11,16 @@
 //					  2026-10-15 CYBERKDH Lesson 14: bit grid, preview while typing, Esc / ArrowUp / ArrowDown, help panel, history buttons, Lv9
 //					  2026-10-15 CYBERKDH Lesson 15: build label (DEVCALC_BUILD, set by tools/build-single.ts), Lv10
 //					  2026-10-16 CYBERKDH Lesson 16: steps panel (Explain), the part calculated next in a <mark>, Lv11
+//					  2026-10-16 CYBERKDH Fix text in web words (the word size list, no quoting)
+//					  2026-10-16 CYBERKDH Lesson 17: tree view (TreeView.ts), a step is a button that picks the tree's state, Lv12
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 // The same core as the command line (lesson 06 made it free of node: imports).
 // Only the web/ files know about the DOM : the core still returns values, the page shows them.
-import { ToHex, CWordSize, IsWordBits, Evaluate, Explain, CHistory, OutputRows, SplitExpressions, FunctionHelp, OperatorHelp, type IFormatOptions, type IEvaluation, type IEvalError, type IExplanation } from "../src/core/index.ts";
+import { ToHex, CWordSize, IsWordBits, Evaluate, Explain, LayoutTree, CHistory, OutputRows, SplitExpressions, FunctionHelp, OperatorHelp, type IFormatOptions, type IEvaluation, type IEvalError, type IExplanation, type ITreeLayout } from "../src/core/index.ts";
 import { CBitGrid } from "./BitGrid.ts";
+import { CTreeView } from "./TreeView.ts";
 
 declare const DEVCALC_BUILD: string; // set only by tools/build-single.ts (see the end of this file)
 
@@ -53,6 +56,8 @@ const elAnnounce = ById("announce", HTMLParagraphElement);
 const elBuild = ById("build", HTMLParagraphElement);
 const elSteps = ById("steps", HTMLOListElement);
 const elStepsNote = ById("steps-note", HTMLParagraphElement);
+const elTree = ById("tree", HTMLDivElement);
+const elTreeNote = ById("tree-note", HTMLParagraphElement);
 
 // localStorage holds strings, and JSON has no bigint : keep the numbers as decimal text
 interface ISavedEval {
@@ -131,18 +136,25 @@ function ShowResult(oEval: IEvaluation, oWord: CWordSize | undefined): void {
 	elNote.textContent = oWord !== undefined && oEval.bOverflow ? `${oEval.biExact} does not fit in ${oWord.nBits} bits (${oWord.strName}), so it wrapped to ${oWord.ToUnsigned(oEval.biExact)}.` : "";
 }
 
+// The core writes Fix for the command line. On the page the word size is the list next to the input,
+// and there is no shell, so nothing needs quoting (lesson 11 : replace with a regular expression)
+function WebFix(strFix: string): string {
+	return strFix.replace(/\(--bits=[\d|]+\)/, "in the list next to the input").replace(" (quote the expression)", "");
+}
+
 function ShowError(oError: IEvalError | undefined): void {
 	elError.hidden = oError === undefined;
 	elExpr.classList.toggle("invalid", oError !== undefined);
 	elErrorTitle.textContent = oError?.strTitle ?? "";
 	elErrorWhy.textContent = oError?.strWhy ?? "";
-	elErrorFix.textContent = oError?.strFix ?? "";
+	elErrorFix.textContent = WebFix(oError?.strFix ?? "");
 }
 
 // Lesson 16: one line per step : the expression with the part calculated next in a <mark>, then the work.
-// Text nodes only (append, textContent), never innerHTML : an expression is user input
+// Text nodes only (append, textContent), never innerHTML : an expression is user input.
+// Lesson 17: each line is a <button> (Tab, Enter, Space) that shows the tree at that step
 function ShowSteps(oExplain: IExplanation | undefined): void {
-	const arrItem = (oExplain?.arrStep ?? []).map(({ strExpr, nStart, nEnd, strWork, strNote }) => {
+	const arrItem = (oExplain?.arrStep ?? []).map(({ strExpr, nStart, nEnd, strWork, strNote }, nIndex) => {
 		const elMark = document.createElement("mark");
 		elMark.textContent = strExpr.slice(nStart, nEnd);
 		const elCode = document.createElement("code");
@@ -150,20 +162,57 @@ function ShowSteps(oExplain: IExplanation | undefined): void {
 		const elWork = document.createElement("span");
 		elWork.className = "muted";
 		elWork.textContent = strNote === "" ? strWork : `${strWork}  (${strNote})`;
-		const elItem = document.createElement("li");
-		elItem.append(elCode, elWork);
-		return elItem;
+		return StepItem(nIndex, elCode, elWork);
 	});
 	if (oExplain !== undefined) {
 		const elCode = document.createElement("code");
 		elCode.textContent = oExplain.strLast;
-		const elItem = document.createElement("li");
-		elItem.append(elCode);
-		arrItem.push(elItem);
+		arrItem.push(StepItem(oExplain.arrStep.length, elCode));
 	}
 	elSteps.replaceChildren(...arrItem);
 	elStepsNote.textContent =
 		oExplain === undefined ? "Run an expression to see how it is calculated, one part at a time." : `${oExplain.arrStep.length} step(s), in the order DevCalc calculates them : ( ) first, then by precedence, left to right.`;
+}
+
+function StepItem(nStep: number, ...arrPart: Node[]): HTMLLIElement {
+	const elButton = document.createElement("button");
+	elButton.type = "button";
+	elButton.dataset.step = String(nStep);
+	elButton.append(...arrPart);
+	const elItem = document.createElement("li");
+	elItem.append(elButton);
+	return elItem;
+}
+
+// Lesson 17: the latest explanation and its layout. The layout is made once per expression;
+// picking another step only draws it again with a different nAt
+let oShown: { oExplain: IExplanation; oLayout: ITreeLayout } | undefined;
+const oTreeView = new CTreeView(elTree);
+
+function ShowTree(nAt: number): void {
+	oTreeView.Show(oShown?.oLayout, oShown?.oExplain.arrStep ?? [], nAt, oShown?.oExplain.oEval.strExpr ?? "");
+	for (const elButton of elSteps.querySelectorAll<HTMLButtonElement>("button[data-step]")) {
+		// aria-current="step" tells a screen reader which line the tree shows; the CSS styles the same attribute.
+		// The value matters : an empty aria-current means false
+		if (Number(elButton.dataset.step) === nAt) {
+			elButton.setAttribute("aria-current", "step");
+		} else {
+			elButton.removeAttribute("aria-current");
+		}
+	}
+	const nSteps = oShown?.oExplain.arrStep.length ?? 0;
+	elTreeNote.textContent =
+		oShown === undefined
+			? "Run an expression to see the tree the parser built."
+			: nAt < nSteps
+				? `Step ${nAt + 1} of ${nSteps} : the highlighted part is calculated next, a blue box is done. Click a line in Steps to see another step.`
+				: "Every part is done : the root holds the result. Click a line in Steps to go back.";
+}
+
+function ShowExplanation(oExplain: IExplanation | undefined): void {
+	oShown = oExplain === undefined ? undefined : { oExplain, oLayout: LayoutTree(oExplain.oRoot) };
+	ShowSteps(oExplain);
+	ShowTree(0);
 }
 
 // Lesson 14: a <button> in each line, so Tab reaches it and Enter or Space picks it (an <li> can't take focus)
@@ -225,7 +274,7 @@ function Calculate(strInput: string): void {
 		const oResult = Explain(strOne, oWord, oHistory.Latest()?.biValue, mapVar); // lesson 16 : the evaluation and its steps
 		if (!oResult.bOk) {
 			ShowError(oResult.vError);
-			ShowSteps(undefined);
+			ShowExplanation(undefined);
 			break;
 		}
 		const oEval = oResult.vValue.oEval;
@@ -235,7 +284,7 @@ function Calculate(strInput: string): void {
 		ShowError(undefined);
 		oHistory.Add(oEval);
 		ShowResult(oEval, oWord);
-		ShowSteps(oResult.vValue);
+		ShowExplanation(oResult.vValue);
 		elAnnounce.textContent = `${oEval.strExpr} = ${ToHex(oEval.biValue)}`; // read aloud by screen readers
 	}
 	ShowHistory();
@@ -305,6 +354,14 @@ elExpr.addEventListener("keydown", (oEvent) => {
 	}
 });
 
+// Lesson 17: one listener for every step line (delegation, lesson 14)
+elSteps.addEventListener("click", (oEvent) => {
+	const elButton = oEvent.target instanceof Element ? oEvent.target.closest<HTMLButtonElement>("button[data-step]") : null;
+	if (elButton?.dataset.step !== undefined) {
+		ShowTree(Number(elButton.dataset.step));
+	}
+});
+
 elBits.addEventListener("change", () => {
 	ShowGrid();
 	elPreview.value = Preview(elExpr.value);
@@ -334,7 +391,7 @@ if (oLatest !== undefined) {
 	ShowResult(oLatest, CurrentWord());
 }
 ShowGrid();
-ShowSteps(undefined);
+ShowExplanation(undefined);
 nRecall = oHistory.nCount;
 // Lesson 15: tools/build-single.ts puts a text in place of DEVCALC_BUILD (esbuild define).
 // Without that build the name does not exist, and typeof of a missing name is "undefined", not an error

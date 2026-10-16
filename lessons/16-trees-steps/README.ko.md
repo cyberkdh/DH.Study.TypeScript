@@ -1,6 +1,6 @@
 [English](README.md) · **한국어**
 
-[← 이전: 15. 번들러와 빌드](../15-bundling-release/README.ko.md) · [목차](../../README.ko.md)
+[← 이전: 15. 번들러와 빌드](../15-bundling-release/README.ko.md) · [목차](../../README.ko.md) · [다음: 17. 트리 그리기 →](../17-tree-view/README.ko.md)
 
 # 16. 트리와 재귀 — 계산 과정을 한 단계씩 보기
 
@@ -492,10 +492,10 @@ check-names : 38 files, 0 problems
 
 이 강의에서 만든 것 위에 올릴 아이디어:
 
-- **트리 보기**: 페이지에 `Children()` 을 중첩 상자나 SVG 트리로 그리고, 현재 단계의 노드를 강조한다.
+- **트리 보기**: 페이지에 `Children()` 을 중첩 상자나 SVG 트리로 그리고, 현재 단계의 노드를 강조한다. → [17강](../17-tree-view/README.ko.md)
 - **한 단계씩 넘기기**: 한 번에 한 단계만 보여주는 ◀ ▶ 버튼, 14강의 키보드 패턴과 함께.
 - **부동소수점 비트**: DevCalc 는 정수로 계산한다. IEEE 754 강의 (`0.1 + 0.2`, 부호·지수·가수 비트, `DataView` 와 `Float64Array`) 로 왜 `0.1 + 0.2 !== 0.3` 인지 볼 수 있다.
 
 ---
 
-[← 이전: 15. 번들러와 빌드](../15-bundling-release/README.ko.md) · [목차](../../README.ko.md)
+[← 이전: 15. 번들러와 빌드](../15-bundling-release/README.ko.md) · [목차](../../README.ko.md) · [다음: 17. 트리 그리기 →](../17-tree-view/README.ko.md)

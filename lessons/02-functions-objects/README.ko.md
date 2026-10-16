@@ -346,8 +346,8 @@ for (const [strLabel, fnFormat] of arrFormatter) { ... }
 ```
 > node lessons/02-functions-objects/callbacks.ko.ts
 1) PrintAll with a hex callback:
-10 =>    0xA
-255 =>    0xFF
+   10 => 0xA
+   255 => 0xFF
 2) map: [ 1, 2, 4, 8 ] / filter: [ 32, 64 ] / reduce: 120
 3) 0xFF 0b101
 4) counter after 3 calls = 3

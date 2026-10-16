@@ -3,6 +3,7 @@
 //	Author			: CYBERKDH
 //	Module			: devcalc / core / Steps (How an expression is calculated, one part at a time)
 //	History			: 2026-10-16 CYBERKDH Initial - Lesson 16 DevCalc step, Lv11
+//					  2026-10-16 CYBERKDH Lesson 17: IStep.oNode and biValue, IExplanation.oRoot (for the tree view), Lv12
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,9 +26,12 @@ export interface IStep {
 	readonly nEnd: number;
 	readonly strWork: string; // "100 + 2 = 102", "x → 21"
 	readonly strNote: string; // "" or why the value may surprise : a dropped remainder, a wrap
+	readonly oNode: TNode; // lesson 17 : the part this step calculates (the tree view highlights it)
+	readonly biValue: bigint; // lesson 17 : its value (the tree view shows it in place of the part)
 }
 
 export interface IExplanation {
+	readonly oRoot: TNode; // lesson 17 : the parsed tree, the same objects the steps point at
 	readonly arrStep: readonly IStep[];
 	readonly strLast: string; // the expression after the last step : "336", "x = 336"
 	readonly oEval: IEvaluation; // the same result Evaluate() gives
@@ -180,11 +184,11 @@ export function Explain(strExpr: string, oWord?: CWordSize, biAns?: bigint, mapV
 			return;
 		}
 		const { strText, nStart, nEnd } = Draw(oRoot, mapDone, oNode);
-		arrStep.push({ strExpr: strText, nStart, nEnd, strWork: WorkFor(oNode, oCalc.biValue, mapDone), strNote });
+		arrStep.push({ strExpr: strText, nStart, nEnd, strWork: WorkFor(oNode, oCalc.biValue, mapDone), strNote, oNode, biValue: oCalc.biValue });
 		mapDone.set(oNode, oCalc.biValue);
 	});
 	if (!oResult.bOk) {
 		return oResult;
 	}
-	return Ok({ arrStep, strLast: Draw(oRoot, mapDone).strText, oEval: oResult.vValue });
+	return Ok({ oRoot, arrStep, strLast: Draw(oRoot, mapDone).strText, oEval: oResult.vValue });
 }

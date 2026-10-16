@@ -14,6 +14,7 @@
 //					  2026-10-15 CYBERKDH Lesson 12: rows from OutputRows(), --all adds OCT and CHAR, --bits=128, Lv7
 //					  2026-10-15 CYBERKDH Lesson 13: functions and variables (mapVar), REPL "help <function>" and "vars", Lv8
 //					  2026-10-16 CYBERKDH Lesson 16: --steps prints how the expression is calculated (Explain), Lv11
+//					  2026-10-16 CYBERKDH Lesson 17: --tree prints the syntax tree (TreeLines), Lv12
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,10 +24,11 @@
 //         node devcalc/src/main.ts "mask = 0xFF00; 0x1234 & mask"   (variables live until the program ends)
 //         node devcalc/src/main.ts "(0xFF + 1) << 4" [--bits=8] ...
 //         node devcalc/src/main.ts "10 + 30 * (100 + 2) / 10 + 20" --steps   (each part as it is calculated)
+//         node devcalc/src/main.ts "1 + 2 * 3" --tree                       (the tree the parser built)
 //         node devcalc/src/main.ts "~0 >>> 4" --bits=32           (quote it : the shell reads ** and > itself)
 //         node devcalc/src/main.ts "0xFF + 1; ans * 2" [--bits=8] ...
 //         node devcalc/src/main.ts --repl [--bits=8] ...
-import { ToHex, CWordSize, IsWordBits, Evaluate, Explain, Ok, CHistory, FunctionHelp, OperatorHelp, OutputHelp, OutputRows, SplitExpressions, WORD_BITS, type IFormatOptions, type IEvaluation, type IExplanation, type TEvalResult, type TWordBits } from "./core/index.ts";
+import { ToHex, CWordSize, IsWordBits, Evaluate, Explain, Ok, Parse, TreeLines, CHistory, FunctionHelp, OperatorHelp, OutputHelp, OutputRows, SplitExpressions, WORD_BITS, type IFormatOptions, type IEvaluation, type IExplanation, type TEvalResult, type TWordBits } from "./core/index.ts";
 import { CopyToClipboard } from "./cli/Clipboard.ts";
 import { RunRepl } from "./cli/Repl.ts";
 
@@ -39,7 +41,7 @@ let strExpr = arrArg
 	.trim();
 
 // Lesson 08: the switches are one list; TSwitch is made from it, and --bits=N is a template literal type
-const SWITCHES = ["--no-group", "--lower", "--no-prefix", "--copy", "--repl", "--all", "--steps"] as const;
+const SWITCHES = ["--no-group", "--lower", "--no-prefix", "--copy", "--repl", "--all", "--steps", "--tree"] as const;
 type TSwitch = (typeof SWITCHES)[number];
 type TBitsFlag = `--bits=${TWordBits}`; // "--bits=8" | "--bits=16" | ... | "--bits=128"
 
@@ -74,7 +76,7 @@ const bRepl = HasSwitch("--repl");
 const bCopy = HasSwitch("--copy");
 
 if (strExpr === "" && !bRepl) {
-	console.log(`Usage: node devcalc/src/main.ts <integer> | "<expression>" | "<expr>; <expr>" | --repl [${strBitsFlag}] [--no-group] [--lower] [--no-prefix] [--copy] [--all] [--steps]`);
+	console.log(`Usage: node devcalc/src/main.ts <integer> | "<expression>" | "<expr>; <expr>" | --repl [${strBitsFlag}] [--no-group] [--lower] [--no-prefix] [--copy] [--all] [--steps] [--tree]`);
 	console.log("(no input given, so running the example 255)");
 	strExpr = "255";
 }
@@ -115,9 +117,26 @@ function PrintSteps(oExplain: IExplanation): void {
 	console.log(`  ${oExplain.strLast}`);
 }
 
+// Lesson 17: --tree. The tree is printed before the calculation, so it shows even when 1 / 0 fails later
+const bTree = HasSwitch("--tree");
+
+function PrintTree(strOne: string): void {
+	const oTree = Parse(strOne.trim());
+	if (!oTree.bOk) {
+		return; // the calculation below reports the same error
+	}
+	console.log("Tree :");
+	for (const strLine of TreeLines(oTree.vValue)) {
+		console.log(`  ${strLine}`);
+	}
+}
+
 // Lesson 16: Explain gives the same evaluation as Evaluate, plus the steps
 function EvaluateOne(strOne: string): TEvalResult {
 	const biAns = oHistory.Latest()?.biValue;
+	if (bTree) {
+		PrintTree(strOne);
+	}
 	if (!bSteps) {
 		return Evaluate(strOne, oWord, biAns, mapVar);
 	}

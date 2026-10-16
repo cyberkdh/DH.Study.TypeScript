@@ -4,7 +4,7 @@
 
 The developer calculator that this lesson series builds. Each lesson adds one more part.
 
-## Current stage: Lv11 calculation steps (lessons 01–16)
+## Current stage: Lv12 tree view (lessons 01–17)
 
 ```bash
 node devcalc/src/main.ts 255
@@ -23,9 +23,10 @@ node devcalc/src/main.ts "rol(0x81, 1)" --bits=8   # functions: abs min max bit 
 node devcalc/src/main.ts "mask = 0xFF00; 0x1234 & mask"   # variables (kept until the program ends)
 node devcalc/src/main.ts "0xFF + 1" --copy         # copy the HEX result to the clipboard
 node devcalc/src/main.ts "10 + 30 * (100 + 2) / 10 + 20" --steps   # how it is calculated, one part at a time
+node devcalc/src/main.ts "(1 << 4) & 'A'" --tree   # the tree the parser built, before the result
 node devcalc/src/main.ts --repl                    # interactive: history, vars, copy, help, help <function>, exit
 
-npm run web     # web page: http://127.0.0.1:5173/devcalc/web/ (bit grid, steps, preview, Esc, ArrowUp/ArrowDown history, help)
+npm run web     # web page: http://127.0.0.1:5173/devcalc/web/ (bit grid, steps, tree, preview, Esc, ArrowUp/ArrowDown history, help)
 npm run build:web   # static web page → dist/web/ (GitHub Pages: https://cyberkdh.github.io/DH.Study.TypeScript/devcalc/web/)
 npm run build:single  # after build:web : the same page as one file → dist/web/DevCalc.html (double-click, no server)
 
@@ -53,5 +54,6 @@ npm run test:watch  # Vitest watch mode
 | [14](../lessons/14-events-accessibility/README.md) | `web/BitGrid.ts` (`CBitGrid`: one button per bit, delegated click and keydown, roving tabindex, `aria-pressed`), live preview, Esc and ArrowUp/ArrowDown in the box, history items as buttons, help panel (`<details>`), `role="status"` announcements |
 | [15](../lessons/15-bundling-release/README.md) | `tools/build-single.ts` (`tsc --noEmit`, esbuild bundle, CSS and JS inlined, checks) → `dist/web/DevCalc.html`, `build:single` in `package.json` and `pages.yml`, build line on the page (`declare const DEVCALC_BUILD`), `Web.test.ts` checks the tags the build replaces |
 | [16](../lessons/16-trees-steps/README.md) | `core/Steps.ts` (`Explain`: the whole expression after each step, fewest `( )`, the part calculated next, notes for a dropped remainder and a wrap), `EvaluateTree` with a `TStepListener`, number nodes keep `strText`, `--steps`, web Steps panel (`<mark>`), `tests/Steps.test.ts` |
+| [17](../lessons/17-tree-view/README.md) | `core/Tree.ts` (`NodeLabel`, `NodeChildren`, `LayoutTree`: leaf slots and levels, `TreeLines`), `oNode` and `biValue` in `IStep`, `oRoot` in `IExplanation`, `--tree`, `web/TreeView.ts` (`CTreeView`: SVG tree, done / focus / faded), step lines as buttons with `aria-current="step"`, `tests/Tree.test.ts` |
 
 Each lesson's state is tagged in git: `git checkout lesson-01`

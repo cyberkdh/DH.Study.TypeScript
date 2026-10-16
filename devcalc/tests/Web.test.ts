@@ -6,6 +6,7 @@
 //					  2026-10-15 CYBERKDH Lesson 09: runs on Vitest (test from "vitest", node:assert kept)
 //					  2026-10-15 CYBERKDH Lesson 14: BitGrid.ts imports nothing, App.ts imports the core and BitGrid.ts
 //					  2026-10-15 CYBERKDH Lesson 15: index.html keeps the two tags tools/build-single.ts replaces
+//					  2026-10-16 CYBERKDH Lesson 17: App.ts also imports TreeView.ts, TreeView.ts imports only core types
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -22,8 +23,14 @@ async function ImportsOf(strFile: string): Promise<(string | undefined)[]> {
 	return [...strCode.matchAll(/from\s+["']([^"']+)["']/g)].map((arrMatch) => arrMatch[1]);
 }
 
-test("web/App.ts: imports only the core and BitGrid.ts (the browser has no node: modules)", async () => {
-	assert.deepEqual(await ImportsOf("App.ts"), ["../src/core/index.ts", "./BitGrid.ts"]);
+test("web/App.ts: imports only the core, BitGrid.ts and TreeView.ts (the browser has no node: modules)", async () => {
+	assert.deepEqual(await ImportsOf("App.ts"), ["../src/core/index.ts", "./BitGrid.ts", "./TreeView.ts"]);
+});
+
+test("web/TreeView.ts: imports only core types (import type is erased, lesson 17)", async () => {
+	assert.deepEqual(await ImportsOf("TreeView.ts"), ["../src/core/index.ts"]);
+	const strCode = await readFile(join(WEB_DIR, "TreeView.ts"), "utf8");
+	assert.match(strCode, /^import type \{[^}]+\} from "\.\.\/src\/core\/index\.ts";$/m);
 });
 
 test("web/BitGrid.ts: imports nothing (DOM only, lesson 14)", async () => {

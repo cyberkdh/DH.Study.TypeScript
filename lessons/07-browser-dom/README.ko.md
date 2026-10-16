@@ -389,7 +389,7 @@ function Render(oView: IRadixView): void { ... }
 oView.elInput.addEventListener("input", () => Render(oView));
 ```
 
-`TParsed` 는 판별 유니온(Discriminated union, 04강)이다: `{ bOk: true; biValue } | { bOk: false; strError }`.
+`TParsed` 는 판별 유니온(Discriminated union, 03강)이다: `{ bOk: true; biValue } | { bOk: false; strError }`.
 
 출력 (코드가 직접 다섯 값을 입력한다):
 
@@ -477,7 +477,7 @@ function IsSavedEval(vValue: unknown): vValue is ISavedEval {
 }
 ```
 
-`const vParsed: unknown = JSON.parse(...)` 로 `any` 를 `unknown` 으로 바꾸면, 타입 가드(Type guard, 04강)가 확인하기 전에는 아무것도 쓸 수 없다. 깨진 데이터 (`"strValue":"zz"` → `BigInt` 가 throw) 는 잡혀서 기록이 빈 상태로 시작한다.
+`const vParsed: unknown = JSON.parse(...)` 로 `any` 를 `unknown` 으로 바꾸면, 타입 가드(Type guard, 03강)가 확인하기 전에는 아무것도 쓸 수 없다. 깨진 데이터 (`"strValue":"zz"` → `BigInt` 가 throw) 는 잡혀서 기록이 빈 상태로 시작한다.
 
 ### navigator.clipboard
 

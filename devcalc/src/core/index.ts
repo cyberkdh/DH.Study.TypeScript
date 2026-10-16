@@ -9,6 +9,7 @@
 //					  2026-10-15 CYBERKDH Lesson 12: ToOct, ToChar, Output.ts (OutputRows, OutputHelp), WORD_BITS
 //					  2026-10-15 CYBERKDH Lesson 13: Functions.ts (CallFunction, FunctionHelp, IsFunction, TFunction)
 //					  2026-10-16 CYBERKDH Lesson 16: EvaluateTree, TStepListener, Steps.ts (Explain, IStep, IExplanation)
+//					  2026-10-16 CYBERKDH Lesson 17: Tree.ts (LayoutTree, TreeLines, NodeLabel, NodeChildren, ITreeLayout, ITreeBox)
 //	Copyrights		: Copyright (C)CYBERKDH. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,3 +41,4 @@ export { CallFunction, CheckArgCount, FunctionHelp, FunctionUsage, IsFunction, t
 export { Parse, ToText, type TNode } from "./Parser.ts";
 export { Evaluate, EvaluateTree, type IEvaluation, type IEvalError, type TEvalResult, type TStepListener } from "./Evaluate.ts";
 export { Explain, type IExplanation, type IStep } from "./Steps.ts";
+export { LayoutTree, TreeLines, NodeLabel, NodeChildren, type ITreeLayout, type ITreeBox } from "./Tree.ts";

@@ -1,6 +1,6 @@
 **English** · [한국어](README.ko.md)
 
-[← Previous: 15. Bundling and Build](../15-bundling-release/README.md) · [Contents](../../README.md)
+[← Previous: 15. Bundling and Build](../15-bundling-release/README.md) · [Contents](../../README.md) · [Next: 17. Drawing a Tree →](../17-tree-view/README.md)
 
 # 16. Trees and Recursion — Watching a Calculation Step by Step
 
@@ -488,10 +488,10 @@ Things to try:
 
 Ideas built on what this lesson made:
 
-- **A tree view**: draw `Children()` as nested boxes or an SVG tree on the page, and highlight the node of the current step.
+- **A tree view**: draw `Children()` as nested boxes or an SVG tree on the page, and highlight the node of the current step. → [Lesson 17](../17-tree-view/README.md)
 - **Step through**: ◀ ▶ buttons that show one step at a time, with the keyboard patterns from lesson 14.
 - **Floating point bits**: DevCalc works on integers. A lesson on IEEE 754 (`0.1 + 0.2`, sign, exponent and fraction bits, `DataView` and `Float64Array`) would show why `0.1 + 0.2 !== 0.3`.
 
 ---
 
-[← Previous: 15. Bundling and Build](../15-bundling-release/README.md) · [Contents](../../README.md)
+[← Previous: 15. Bundling and Build](../15-bundling-release/README.md) · [Contents](../../README.md) · [Next: 17. Drawing a Tree →](../17-tree-view/README.md)

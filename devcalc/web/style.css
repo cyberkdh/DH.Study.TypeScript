@@ -5,6 +5,7 @@
 	History		: 2026-10-15 CYBERKDH Initial - Lesson 07 DevCalc step, Lv4
 				  2026-10-15 CYBERKDH Lesson 14: bit grid, preview, help panel, history buttons, focus ring, sr-only
 				  2026-10-16 CYBERKDH Lesson 16: steps list, --mark color
+				  2026-10-16 CYBERKDH Lesson 17: step lines are buttons, the tree drawing (SVG styled by the same variables)
 	Copyrights	: Copyright (C)CYBERKDH. All Rights Reserved.
 */
 :root {
@@ -191,6 +192,65 @@ summary {
 }
 .steps li:last-child code {
 	font-weight: bold;
+}
+/* Lesson 17: each step line is a <button> that picks the tree's state, styled like text */
+.steps button {
+	all: unset;
+	cursor: pointer;
+	padding: 1px 4px;
+	border-radius: 4px;
+	font-family: ui-monospace, Consolas, monospace;
+	font-size: 14px;
+}
+.steps button:hover {
+	background: var(--panel);
+}
+.steps button:focus-visible {
+	outline: 2px solid var(--accent); /* all: unset removed it */
+}
+.steps button[aria-current="step"] {
+	background: var(--panel);
+	box-shadow: inset 3px 0 0 var(--accent);
+}
+/* Lesson 17: the tree. SVG takes CSS too : fill and stroke instead of background and border.
+   The same variables as the page, so the dark theme needs nothing more */
+.tree-box {
+	overflow-x: auto;
+	margin-top: 8px;
+}
+.tree {
+	display: block;
+	max-width: none;
+	font-family: ui-monospace, Consolas, monospace;
+	font-size: 14px;
+}
+.tree line {
+	stroke: var(--line);
+	stroke-width: 1.5;
+}
+.tree rect {
+	fill: var(--bg);
+	stroke: var(--muted);
+}
+.tree text {
+	fill: var(--fg);
+}
+.tree .focus rect {
+	fill: var(--mark);
+	stroke: var(--fg);
+	stroke-width: 2;
+}
+.tree .done rect {
+	fill: var(--panel);
+	stroke: var(--accent);
+	stroke-width: 2;
+}
+.tree .done text {
+	fill: var(--accent);
+	font-weight: bold;
+}
+.tree .faded {
+	opacity: 0.3;
 }
 .invalid {
 	outline: 2px solid var(--bad);

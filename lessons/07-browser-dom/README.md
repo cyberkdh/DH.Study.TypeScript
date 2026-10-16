@@ -389,7 +389,7 @@ function Render(oView: IRadixView): void { ... }
 oView.elInput.addEventListener("input", () => Render(oView));
 ```
 
-`TParsed` is a discriminated union (lesson 04): `{ bOk: true; biValue } | { bOk: false; strError }`.
+`TParsed` is a discriminated union (lesson 03): `{ bOk: true; biValue } | { bOk: false; strError }`.
 
 Output (the code types five values by itself):
 
@@ -477,7 +477,7 @@ function IsSavedEval(vValue: unknown): vValue is ISavedEval {
 }
 ```
 
-`const vParsed: unknown = JSON.parse(...)` turns the `any` into `unknown`, so nothing is used before the type guard (lesson 04) checks it. Broken data (`"strValue":"zz"` → `BigInt` throws) is caught and the history starts empty.
+`const vParsed: unknown = JSON.parse(...)` turns the `any` into `unknown`, so nothing is used before the type guard (lesson 03) checks it. Broken data (`"strValue":"zz"` → `BigInt` throws) is caught and the history starts empty.
 
 ### navigator.clipboard
 

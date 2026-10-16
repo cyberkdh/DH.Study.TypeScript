@@ -10,7 +10,7 @@
 //    The ": (biValue: bigint) => string" part is [TS]
 function PrintAll(arrValue: bigint[], fnFormat: (biValue: bigint) => string): void {
 	for (const biValue of arrValue) {
-		console.log(biValue + " => " + "  ", fnFormat(biValue));
+		console.log("   " + biValue + " => " + fnFormat(biValue));
 	}
 }
 console.log("1) PrintAll with a hex callback:");
